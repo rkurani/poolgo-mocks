@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chart — POOL.GO (Operator)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter+Tight:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter Tight', sans-serif;
+      background: #FFFFFF;
+      color: #000000;
+      line-height: 1.4;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+
+    /* ------- nav ------- */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 32px;
+      border-bottom: 3px solid #000;
+      background: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .wordmark {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 26px;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+    .wordmark .dot { color: #0066AB; }
+    .nav-tabs {
+      display: flex;
+      border: 2px solid #000;
+    }
+    .nav-tabs a {
+      padding: 10px 18px;
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #000;
+      border-right: 2px solid #000;
+    }
+    .nav-tabs a:last-child { border-right: none; }
+    .nav-tabs a.active { background: #000; color: #fff; }
+    .nav-tabs a:hover:not(.active) { background: #f4f4f4; }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .avatar {
+      width: 36px; height: 36px;
+      background: #000;
+      color: #FFD23F;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 13px;
+      letter-spacing: -0.04em;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ------- yellow strip ------- */
+    .strip {
+      background: #FFD23F;
+      color: #000;
+      padding: 14px 32px;
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 3px solid #000;
+    }
+    .strip .right span:not(:last-child)::after {
+      content: '·'; margin: 0 14px;
+    }
+
+    /* ------- main ------- */
+    .main {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 48px 32px 64px;
+    }
+
+    /* ------- hero ------- */
+    .hero {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 32px;
+      align-items: stretch;
+      margin-bottom: 32px;
+    }
+    @media (max-width: 980px) { .hero { grid-template-columns: 1fr; } }
+
+    .hero-stat {
+      background: #000;
+      color: #fff;
+      padding: 40px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-stat::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(
+          135deg,
+          transparent 0,
+          transparent 13px,
+          rgba(255, 210, 63, 0.04) 13px,
+          rgba(255, 210, 63, 0.04) 14px
+        );
+      pointer-events: none;
+    }
+    .hero-stat-eyebrow {
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #FFD23F;
+      position: relative; z-index: 2;
+    }
+    .hero-stat-row {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin: 16px 0 8px;
+      position: relative; z-index: 2;
+    }
+    .hero-stat-value {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(120px, 18vw, 220px);
+      line-height: 0.82;
+      letter-spacing: -0.06em;
+      color: #fff;
+    }
+    .hero-stat-unit {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 28px;
+      letter-spacing: -0.02em;
+      color: #0066AB;
+    }
+    .hero-stat-label {
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #fff;
+      position: relative; z-index: 2;
+    }
+    .hero-stat-trend {
+      display: inline-block;
+      margin-top: 24px;
+      padding: 8px 14px;
+      background: #FFD23F;
+      color: #000;
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      position: relative; z-index: 2;
+    }
+    .hero-stat-verdict {
+      margin-top: 32px;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(28px, 3vw, 40px);
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: #FFD23F;
+      text-transform: uppercase;
+      max-width: 16ch;
+      position: relative; z-index: 2;
+    }
+
+    /* ------- bar chart ------- */
+    .chart-card {
+      background: #fff;
+      border: 3px solid #000;
+      padding: 32px;
+    }
+    .chart-card-label {
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #000;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .chart-card-label .meta { color: #666; font-weight: 700; }
+    .bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 220px;
+      border-bottom: 2px solid #000;
+      padding-bottom: 4px;
+    }
+    .bar {
+      flex: 1;
+      background: #000;
+      position: relative;
+      min-width: 0;
+    }
+    .bar.high { background: #0066AB; }
+    .bar.mark::after {
+      content: '';
+      position: absolute;
+      top: -4px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0; height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 6px solid #FFD23F;
+    }
+    .bar-axis {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 12px;
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #666;
+    }
+
+    /* ------- secondary stats ------- */
+    .grid-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border: 3px solid #000;
+      margin-bottom: 32px;
+    }
+    @media (max-width: 880px) { .grid-stats { grid-template-columns: repeat(2, 1fr); } }
+    .grid-stat {
+      padding: 24px;
+      border-right: 3px solid #000;
+      border-bottom: 3px solid #000;
+      background: #fff;
+    }
+    .grid-stat:nth-child(4n) { border-right: none; }
+    .grid-stat:nth-last-child(-n+4) { border-bottom: none; }
+    @media (max-width: 880px) {
+      .grid-stat { border-right: 3px solid #000; border-bottom: 3px solid #000 !important; }
+      .grid-stat:nth-child(2n) { border-right: none; }
+      .grid-stat:nth-last-child(-n+2) { border-bottom: none !important; }
+    }
+    .grid-stat-name {
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #666;
+    }
+    .grid-stat-value {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 56px;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin: 12px 0 6px;
+      color: #000;
+    }
+    .grid-stat-value .unit {
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      color: #666;
+      text-transform: uppercase;
+      margin-left: 6px;
+    }
+    .grid-stat-pill {
+      display: inline-block;
+      padding: 4px 10px;
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 800;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .grid-stat-pill.good { background: #000; color: #FFD23F; }
+    .grid-stat-pill.warn { background: #FFD23F; color: #000; }
+    .grid-stat-pill.bad { background: #000; color: #fff; border: 2px solid #FFD23F; }
+
+    /* ------- what to do ------- */
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0;
+      border: 3px solid #000;
+    }
+    @media (max-width: 880px) { .actions { grid-template-columns: 1fr; } }
+    .action {
+      padding: 32px;
+      border-right: 3px solid #000;
+      background: #fff;
+    }
+    .action:last-child { border-right: none; }
+    @media (max-width: 880px) {
+      .action { border-right: none; border-bottom: 3px solid #000; }
+      .action:last-child { border-bottom: none; }
+    }
+    .action-num {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 96px;
+      letter-spacing: -0.06em;
+      line-height: 0.85;
+      color: #FFD23F;
+      -webkit-text-stroke: 2px #000;
+    }
+    .action-title {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+      text-transform: uppercase;
+      margin-top: 16px;
+    }
+    .action-body {
+      margin-top: 12px;
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      color: #444;
+      line-height: 1.45;
+    }
+    .actions-header {
+      grid-column: 1 / -1;
+      padding: 24px 32px;
+      background: #000;
+      color: #fff;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .actions-header .right {
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.14em;
+    }
+
+    /* ------- bottom bar ------- */
+    .bottom-bar {
+      margin-top: 48px;
+      background: #000;
+      color: #fff;
+      padding: 28px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .bottom-bar .right {
+      background: #FFD23F;
+      color: #000;
+      padding: 12px 22px;
+      letter-spacing: 0.14em;
+    }
+
+    /* ------- caption ------- */
+    .page-caption {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      background: #FFD23F;
+      color: #000;
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 8px 14px;
+      border: 2px solid #000;
+      z-index: 100;
+    }
+    .page-caption .num { color: #0066AB; margin-right: 8px; }
+  </style>
+</head>
+<body>
+
+  <!-- Top nav -->
+  <nav class="nav">
+    <div class="wordmark">POOL<span class="dot">.</span>GO</div>
+    <div class="nav-tabs">
+      <a href="#">My Pool</a>
+      <a href="#" class="active">Chart</a>
+      <a href="#">Connect</a>
+      <a href="#">Routines</a>
+      <a href="#">Discover</a>
+    </div>
+    <div class="nav-right">
+      <span>R Kurani</span>
+      <div class="avatar">RK</div>
+    </div>
+  </nav>
+
+  <!-- Yellow strip -->
+  <div class="strip">
+    <span>Free Chlorine · Last 30 days</span>
+    <div class="right">
+      <span>Roseville 95661</span>
+      <span>The Big Blue</span>
+      <span>8 tests</span>
+      <span>Tested today 09:14</span>
+    </div>
+  </div>
+
+  <main class="main">
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-stat">
+        <div class="hero-stat-eyebrow">Today · Sun Country Pools</div>
+        <div class="hero-stat-row">
+          <div class="hero-stat-value">2.4</div>
+          <div class="hero-stat-unit">PPM</div>
+        </div>
+        <div class="hero-stat-label">Free chlorine</div>
+        <div class="hero-stat-trend">▲ +0.2 vs last week</div>
+        <div class="hero-stat-verdict">In range. Nothing to do today.</div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-card-label">
+          <span>30-day trend</span>
+          <span class="meta">Min 1.6 · Max 2.7 · Avg 2.2</span>
+        </div>
+        <div class="bars">
+          <div class="bar" style="height: 56%"></div>
+          <div class="bar" style="height: 60%"></div>
+          <div class="bar" style="height: 64%"></div>
+          <div class="bar" style="height: 50%"></div>
+          <div class="bar" style="height: 48%"></div>
+          <div class="bar" style="height: 44%"></div>
+          <div class="bar" style="height: 52%"></div>
+          <div class="bar high" style="height: 68%"></div>
+          <div class="bar high" style="height: 70%"></div>
+          <div class="bar high" style="height: 72%"></div>
+          <div class="bar" style="height: 64%"></div>
+          <div class="bar" style="height: 58%"></div>
+          <div class="bar" style="height: 50%"></div>
+          <div class="bar" style="height: 46%"></div>
+          <div class="bar" style="height: 42%"></div>
+          <div class="bar" style="height: 38%"></div>
+          <div class="bar" style="height: 36%"></div>
+          <div class="bar" style="height: 40%"></div>
+          <div class="bar" style="height: 48%"></div>
+          <div class="bar" style="height: 54%"></div>
+          <div class="bar" style="height: 60%"></div>
+          <div class="bar" style="height: 64%"></div>
+          <div class="bar high" style="height: 72%"></div>
+          <div class="bar" style="height: 66%"></div>
+          <div class="bar" style="height: 60%"></div>
+          <div class="bar" style="height: 62%"></div>
+          <div class="bar" style="height: 64%"></div>
+          <div class="bar" style="height: 60%"></div>
+          <div class="bar" style="height: 56%"></div>
+          <div class="bar mark" style="height: 60%"></div>
+        </div>
+        <div class="bar-axis">
+          <span>Apr 5</span><span>Apr 12</span><span>Apr 19</span><span>Apr 26</span><span>May 5</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Secondary stats grid -->
+    <section class="grid-stats">
+      <div class="grid-stat">
+        <div class="grid-stat-name">pH</div>
+        <div class="grid-stat-value">7.4</div>
+        <span class="grid-stat-pill good">In range</span>
+      </div>
+      <div class="grid-stat">
+        <div class="grid-stat-name">Total alk.</div>
+        <div class="grid-stat-value">90<span class="unit">ppm</span></div>
+        <span class="grid-stat-pill good">In range</span>
+      </div>
+      <div class="grid-stat">
+        <div class="grid-stat-name">CYA</div>
+        <div class="grid-stat-value">42<span class="unit">ppm</span></div>
+        <span class="grid-stat-pill warn">Creeping up</span>
+      </div>
+      <div class="grid-stat">
+        <div class="grid-stat-name">Salt</div>
+        <div class="grid-stat-value">3.2<span class="unit">k ppm</span></div>
+        <span class="grid-stat-pill good">In range</span>
+      </div>
+      <div class="grid-stat">
+        <div class="grid-stat-name">ORP</div>
+        <div class="grid-stat-value">680<span class="unit">mv</span></div>
+        <span class="grid-stat-pill good">Healthy</span>
+      </div>
+      <div class="grid-stat">
+        <div class="grid-stat-name">Calcium</div>
+        <div class="grid-stat-value">340<span class="unit">ppm</span></div>
+        <span class="grid-stat-pill good">In range</span>
+      </div>
+      <div class="grid-stat">
+        <div class="grid-stat-name">Phosphate</div>
+        <div class="grid-stat-value">120<span class="unit">ppb</span></div>
+        <span class="grid-stat-pill warn">Watch</span>
+      </div>
+      <div class="grid-stat">
+        <div class="grid-stat-name">Temp</div>
+        <div class="grid-stat-value">84<span class="unit">°f</span></div>
+        <span class="grid-stat-pill good">Comfortable</span>
+      </div>
+    </section>
+
+    <!-- What to do -->
+    <section class="actions">
+      <div class="actions-header">
+        <span>What to do this week</span>
+        <span class="right">3 actions · 2 optional · 1 do this Saturday</span>
+      </div>
+      <div class="action">
+        <div class="action-num">01</div>
+        <div class="action-title">Backwash filter</div>
+        <p class="action-body">Filter PSI is 18, up from 16 six weeks ago. Run a backwash this Saturday morning. Two minutes, no chemicals.</p>
+      </div>
+      <div class="action">
+        <div class="action-num">02</div>
+        <div class="action-title">Watch the CYA</div>
+        <p class="action-body">Stabilizer is 42 and climbing. If it crosses 50, plan a partial drain before July. Not urgent yet.</p>
+      </div>
+      <div class="action">
+        <div class="action-num">03</div>
+        <div class="action-title">Phosphate check</div>
+        <p class="action-body">Bring a sample to Sun Country next visit. If still high, one bottle of phosphate remover will reset it.</p>
+      </div>
+    </section>
+
+    <!-- Bottom bar -->
+    <div class="bottom-bar">
+      <span>Next test scheduled · May 12 · Sun Country Pools</span>
+      <span class="right">Build a routine →</span>
+    </div>
+
+  </main>
+
+  <div class="page-caption"><span class="num">03 / 03</span> Operator · See your data</div>
+</body>
+</html>

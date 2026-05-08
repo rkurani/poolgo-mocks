@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Directory — PoolGo (Field Notebook)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'IBM Plex Sans', sans-serif;
+      background: #EFE6D2;
+      color: #1A1A1A;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      background-image: repeating-linear-gradient(to bottom,
+        transparent 0, transparent 31px,
+        rgba(26,26,26,0.05) 31px, rgba(26,26,26,0.05) 32px);
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+
+    .masthead {
+      background: #1F5051; color: #EFE6D2;
+      padding: 12px 32px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+      display: flex; justify-content: space-between;
+    }
+    .masthead .right span:not(:last-child)::after {
+      content: '·'; margin: 0 12px; opacity: 0.5;
+    }
+
+    .nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 24px 32px; border-bottom: 1px solid #1A1A1A; background: #EFE6D2;
+    }
+    .wordmark {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-variation-settings: 'opsz' 96;
+      font-size: 32px; font-weight: 600;
+      letter-spacing: -0.04em; color: #1F5051;
+    }
+    .nav-tabs {
+      display: flex;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    .nav-tabs a {
+      padding: 10px 16px; color: #5A5A5A;
+      border-right: 1px solid rgba(26,26,26,0.15);
+    }
+    .nav-tabs a:first-child { border-left: 1px solid rgba(26,26,26,0.15); }
+    .nav-tabs a.active { background: #1F5051; color: #EFE6D2; border-color: #1F5051; }
+    .nav-right {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .nav-right .avatar {
+      width: 32px; height: 32px; background: #C99A38; color: #1A1A1A;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 600; font-size: 13px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .crumbs {
+      max-width: 1200px; margin: 32px auto 0; padding: 0 32px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: #5A5A5A;
+    }
+    .crumbs .sep { margin: 0 8px; opacity: 0.5; }
+
+    .entry-header {
+      max-width: 1200px; margin: 24px auto 0;
+      padding: 0 32px 24px;
+      border-bottom: 1px dashed rgba(26,26,26,0.4);
+    }
+    .entry-meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: #C99A38; margin-bottom: 16px;
+    }
+    .entry-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-variation-settings: 'opsz' 96;
+      font-size: clamp(40px, 5.5vw, 72px);
+      font-weight: 500; letter-spacing: -0.035em;
+      line-height: 0.98; color: #1A1A1A; max-width: 22ch;
+    }
+    .entry-sub {
+      margin-top: 16px; font-size: 16px;
+      color: #3D3D3D; max-width: 60ch;
+    }
+
+    /* filter row */
+    .filter-row {
+      max-width: 1200px; margin: 24px auto 0;
+      padding: 0 32px;
+      display: flex; flex-wrap: wrap; gap: 16px;
+      align-items: center;
+    }
+    .filter-search {
+      flex: 1; min-width: 280px;
+      display: flex; gap: 12px; align-items: center;
+      padding: 12px 16px;
+      background: #EFE6D2;
+      border: 1px solid rgba(26,26,26,0.25);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+    }
+    .filter-search input {
+      flex: 1; border: none; background: transparent;
+      font-family: inherit; font-size: 13px;
+      color: #1A1A1A; outline: none;
+    }
+    .filter-pills {
+      display: flex; gap: 6px;
+    }
+    .filter-pill {
+      padding: 10px 14px;
+      background: transparent;
+      border: 1px solid rgba(26,26,26,0.25);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: #5A5A5A;
+      cursor: pointer;
+    }
+    .filter-pill.active {
+      background: #1F5051; color: #EFE6D2; border-color: #1F5051;
+    }
+
+    /* index header */
+    .index-header {
+      max-width: 1200px; margin: 32px auto 0;
+      padding: 0 32px;
+      display: flex; justify-content: space-between;
+      align-items: baseline;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: #5A5A5A;
+      padding-bottom: 12px;
+      border-bottom: 1px dashed rgba(26,26,26,0.3);
+    }
+    .index-header strong { color: #C99A38; font-weight: 500; }
+
+    /* directory entries */
+    .directory {
+      max-width: 1200px; margin: 0 auto;
+      padding: 0 32px 64px;
+    }
+    .entry {
+      display: grid;
+      grid-template-columns: 60px 1fr auto;
+      gap: 32px;
+      padding: 32px 0;
+      border-bottom: 1px solid rgba(26,26,26,0.15);
+      align-items: start;
+    }
+    @media (max-width: 700px) {
+      .entry { grid-template-columns: 50px 1fr; gap: 16px; }
+      .entry-side { grid-column: 1 / -1; padding-left: 66px; }
+    }
+    .entry-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.1em;
+      color: #C99A38;
+      padding-top: 4px;
+    }
+    .entry-main { }
+    .entry-name {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-variation-settings: 'opsz' 48;
+      font-size: 28px; font-weight: 500;
+      letter-spacing: -0.02em; line-height: 1.05;
+      color: #1A1A1A;
+    }
+    .entry-name .specialty {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: #5A5A5A;
+      font-weight: 400;
+      margin-left: 12px;
+      vertical-align: middle;
+      padding: 2px 8px;
+      border: 1px solid rgba(26,26,26,0.3);
+    }
+    .entry-services {
+      margin-top: 8px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.06em;
+      color: #1F5051;
+    }
+    .entry-services span:not(:last-child)::after {
+      content: '·'; margin: 0 8px; opacity: 0.5;
+    }
+    .entry-quote {
+      margin-top: 16px;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 16px; line-height: 1.45;
+      color: #3D3D3D;
+      max-width: 56ch;
+    }
+    .entry-attr {
+      margin-top: 8px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: #5A5A5A;
+    }
+    .entry-side {
+      text-align: right;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+    }
+    .entry-rating {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 24px; letter-spacing: -0.02em;
+      color: #1A1A1A;
+    }
+    .entry-rating .stars {
+      color: #C99A38;
+      margin-right: 6px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .entry-reviews {
+      font-size: 11px; letter-spacing: 0.08em;
+      color: #5A5A5A;
+      margin-top: 4px;
+    }
+    .entry-meta-grid {
+      margin-top: 16px;
+      font-size: 11px; letter-spacing: 0.06em;
+      color: #5A5A5A;
+      text-transform: uppercase;
+      text-align: right;
+    }
+    .entry-meta-grid div { padding: 3px 0; }
+    .entry-meta-grid strong {
+      color: #1A1A1A; font-weight: 500;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .entry-cta {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid #1F5051;
+      color: #1F5051;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .entry-cta:hover { background: #1F5051; color: #EFE6D2; }
+
+    /* footnote */
+    .footnote {
+      max-width: 1200px; margin: 0 auto;
+      padding: 32px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.06em;
+      color: #5A5A5A;
+      border-top: 1px dashed rgba(26,26,26,0.3);
+      max-width: 60ch;
+    }
+
+    .page-caption {
+      position: fixed; bottom: 24px; left: 24px;
+      background: #1F5051; color: #EFE6D2;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 8px 14px; z-index: 100;
+    }
+    .page-caption .num { color: #C99A38; margin-right: 6px; }
+  </style>
+</head>
+<body>
+
+  <div class="masthead">
+    <span>poolgo · field log</span>
+    <div class="right">
+      <span>Vol. 12</span>
+      <span>No. 8</span>
+      <span>2026-05-05</span>
+      <span>Roseville, CA</span>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <div class="wordmark">poolgo</div>
+    <div class="nav-tabs">
+      <a href="#">My Pool</a>
+      <a href="#">Chart</a>
+      <a href="#">Connect</a>
+      <a href="#">Routines</a>
+      <a href="#" class="active">Discover</a>
+    </div>
+    <div class="nav-right">
+      <span>R Kurani</span>
+      <div class="avatar">RK</div>
+    </div>
+  </nav>
+
+  <div class="crumbs">
+    <a href="#">Discover</a>
+    <span class="sep">/</span>
+    <span style="color: #1F5051;">Service & Retail · Roseville, CA</span>
+  </div>
+
+  <header class="entry-header">
+    <div class="entry-meta">Directory · Service & Retail · 95661 · 14 entries</div>
+    <h1 class="entry-title">The directory.</h1>
+    <p class="entry-sub">Pool service techs, retail stores, and builders within eight miles of you. Listings are vouched-for by other pool owners. No paid placement.</p>
+  </header>
+
+  <!-- Filter row -->
+  <div class="filter-row">
+    <div class="filter-search">
+      <span style="color: #5A5A5A;">[ZIP]</span>
+      <input value="95661" />
+      <span style="color: #5A5A5A;">·</span>
+      <input value="Roseville, CA" style="flex: 2;" />
+    </div>
+    <div class="filter-pills">
+      <button class="filter-pill active">All</button>
+      <button class="filter-pill">Service</button>
+      <button class="filter-pill">Retail</button>
+      <button class="filter-pill">Builders</button>
+    </div>
+  </div>
+
+  <!-- Index header -->
+  <div class="index-header">
+    <span><strong>14 listings</strong> · within 8 miles · sorted by nearest</span>
+    <span>Also: highest-rated · most reviewed · open today</span>
+  </div>
+
+  <!-- Directory entries -->
+  <div class="directory">
+
+    <article class="entry">
+      <div class="entry-num">No. 01</div>
+      <div class="entry-main">
+        <h3 class="entry-name">Marina Pool Service<span class="specialty">Service</span></h3>
+        <p class="entry-services">
+          <span>Weekly cleaning</span><span>Equipment repair</span><span>Salt cells</span>
+        </p>
+        <p class="entry-quote">"I've used Marina for six years. They show up the same morning every week, and they actually look at the pump. Carlos is wonderful with our dog."</p>
+        <p class="entry-attr">— Susan K, Rocklin · vouched 2024</p>
+      </div>
+      <div class="entry-side">
+        <div class="entry-rating"><span class="stars">★★★★★</span>4.9</div>
+        <div class="entry-reviews">142 reviews · 18 vouches</div>
+        <div class="entry-meta-grid">
+          <div>Distance · <strong>2.3 mi</strong></div>
+          <div>Response · <strong>2 hrs</strong></div>
+          <div>Hours · <strong>OPEN</strong></div>
+        </div>
+        <a href="#" class="entry-cta">Send a note →</a>
+      </div>
+    </article>
+
+    <article class="entry">
+      <div class="entry-num">No. 02</div>
+      <div class="entry-main">
+        <h3 class="entry-name">Sun Country Pools<span class="specialty">Retail</span></h3>
+        <p class="entry-services">
+          <span>Free water testing</span><span>Chemicals</span><span>Service department</span><span>Equipment</span>
+        </p>
+        <p class="entry-quote">"Anthony at the front counter remembered my CYA from last summer. Felt like the old hardware store. They keep printed records and digital."</p>
+        <p class="entry-attr">— Ravi K, Roseville · vouched 2018</p>
+      </div>
+      <div class="entry-side">
+        <div class="entry-rating"><span class="stars">★★★★★</span>4.8</div>
+        <div class="entry-reviews">98 reviews · 31 vouches</div>
+        <div class="entry-meta-grid">
+          <div>Distance · <strong>3.1 mi</strong></div>
+          <div>Hours · <strong>9 am – 6 pm</strong></div>
+          <div>Phone · <strong>(916) 783-4400</strong></div>
+        </div>
+        <a href="#" class="entry-cta">Get directions →</a>
+      </div>
+    </article>
+
+    <article class="entry">
+      <div class="entry-num">No. 03</div>
+      <div class="entry-main">
+        <h3 class="entry-name">Foothill Pool Care<span class="specialty">Service</span></h3>
+        <p class="entry-services">
+          <span>Weekly cleaning</span><span>Salt cell rebuilds</span>
+        </p>
+        <p class="entry-quote">"They drove out on a Saturday for a stuck valve. Didn't charge me weekend rates. Small operation, two trucks, but they answer the phone."</p>
+        <p class="entry-attr">— David W, Rocklin · vouched 2022</p>
+      </div>
+      <div class="entry-side">
+        <div class="entry-rating"><span class="stars">★★★★☆</span>4.6</div>
+        <div class="entry-reviews">67 reviews · 9 vouches</div>
+        <div class="entry-meta-grid">
+          <div>Distance · <strong>4.0 mi</strong></div>
+          <div>Response · <strong>1 day</strong></div>
+          <div>Hours · <strong>OPEN</strong></div>
+        </div>
+        <a href="#" class="entry-cta">Send a note →</a>
+      </div>
+    </article>
+
+    <article class="entry">
+      <div class="entry-num">No. 04</div>
+      <div class="entry-main">
+        <h3 class="entry-name">Blue Drop Pools<span class="specialty">Service · Repair</span></h3>
+        <p class="entry-services">
+          <span>Equipment repair</span><span>Heater specialists</span><span>Pump rebuilds</span>
+        </p>
+        <p class="entry-quote">"My MasterTemp 400 had been clicking off for weeks. Three other techs missed it. Blue Drop diagnosed a bad flame sensor in twenty minutes and had the part on the truck."</p>
+        <p class="entry-attr">— Jim T, Lincoln · vouched 2023</p>
+      </div>
+      <div class="entry-side">
+        <div class="entry-rating"><span class="stars">★★★★★</span>4.9</div>
+        <div class="entry-reviews">211 reviews · 24 vouches</div>
+        <div class="entry-meta-grid">
+          <div>Distance · <strong>5.2 mi</strong></div>
+          <div>Response · <strong>SAME DAY</strong></div>
+          <div>Hours · <strong>OPEN</strong></div>
+        </div>
+        <a href="#" class="entry-cta">Send a note →</a>
+      </div>
+    </article>
+
+    <article class="entry">
+      <div class="entry-num">No. 05</div>
+      <div class="entry-main">
+        <h3 class="entry-name">Westshore Pool Builders<span class="specialty">Builder</span></h3>
+        <p class="entry-services">
+          <span>New construction</span><span>Remodels</span><span>Tile</span><span>Plaster</span>
+        </p>
+        <p class="entry-quote">"They built my pool in 2019. The plaster still looks the day they polished it. Site was clean every evening, neighbors had no complaints."</p>
+        <p class="entry-attr">— Alicia R, Loomis · vouched 2019</p>
+      </div>
+      <div class="entry-side">
+        <div class="entry-rating"><span class="stars">★★★★★</span>4.7</div>
+        <div class="entry-reviews">34 reviews · 4 vouches</div>
+        <div class="entry-meta-grid">
+          <div>Distance · <strong>6.8 mi</strong></div>
+          <div>Response · <strong>BY APPT</strong></div>
+          <div>Lead time · <strong>4–6 mo</strong></div>
+        </div>
+        <a href="#" class="entry-cta">Request a consult →</a>
+      </div>
+    </article>
+
+    <article class="entry">
+      <div class="entry-num">No. 06</div>
+      <div class="entry-main">
+        <h3 class="entry-name">Anthony's Pool Plastering<span class="specialty">Plaster · Tile</span></h3>
+        <p class="entry-services">
+          <span>Plaster</span><span>Tile</span><span>Coping</span>
+        </p>
+        <p class="entry-quote">"Quietly the best plaster crew in the foothills. Booked out two months and worth the wait. Anthony walked us through three quartz options and steered us to the cheaper one."</p>
+        <p class="entry-attr">— Paul M, Auburn · vouched 2021</p>
+      </div>
+      <div class="entry-side">
+        <div class="entry-rating"><span class="stars">★★★★★</span>4.8</div>
+        <div class="entry-reviews">56 reviews · 7 vouches</div>
+        <div class="entry-meta-grid">
+          <div>Distance · <strong>8.1 mi</strong></div>
+          <div>Quotes · <strong>FREE</strong></div>
+          <div>Lead time · <strong>2 mo</strong></div>
+        </div>
+        <a href="#" class="entry-cta">Send a note →</a>
+      </div>
+    </article>
+
+  </div>
+
+  <div class="footnote">
+    Listings are gathered from PoolGo users in the area, then verified for license and insurance. PoolGo does not accept payment for placement. Reviews and vouches are from confirmed customers, dated by year of first service.
+  </div>
+
+  <div class="page-caption"><span class="num">FN · 04</span> Field Notebook · Directory</div>
+</body>
+</html>

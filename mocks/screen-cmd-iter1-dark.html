@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Command Center · Iter 1 (Dark IoT) — PoolGo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ================================================================
+       ITER 1 — DARK IoT
+       References: Tesla mobile app, Pentair Home, Sense Energy Monitor
+       Charcoal surfaces, water-cyan accent, pool visualization at top,
+       tactile sliders, big toggles. The "Tesla for your pool" approach.
+       ================================================================ */
+
+    :root {
+      --bg: #0D1416;
+      --surface: #161E22;
+      --surface-2: #1F292E;
+      --surface-3: #2A363B;
+      --line: #2F3D43;
+      --text: #E5EAEB;
+      --text-mute: #8FA1A6;
+      --text-deep: #5A6E73;
+      --water: #4FB7C9;
+      --water-deep: #2C8AA0;
+      --water-glow: rgba(79, 183, 201, 0.18);
+      --sage: #7AC97D;
+      --gold: #E2B655;
+      --coral: #E07A5F;
+      --coral-soft: rgba(224, 122, 95, 0.16);
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+
+    /* ----- nav ----- */
+    .nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 32px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--line);
+      position: sticky; top: 0; z-index: 10;
+    }
+    .wordmark {
+      font-family: 'Inter', sans-serif;
+      font-weight: 700; font-size: 18px;
+      letter-spacing: -0.02em; color: var(--text);
+    }
+    .wordmark .accent { color: var(--water); }
+    .nav-tabs {
+      display: flex; gap: 4px;
+      background: var(--surface);
+      padding: 4px; border-radius: 10px;
+    }
+    .nav-tab {
+      padding: 7px 14px; border-radius: 8px;
+      font-size: 13px; font-weight: 500; color: var(--text-mute);
+    }
+    .nav-tab:hover { color: var(--text); }
+    .nav-tab.active { background: var(--surface-3); color: var(--text); }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .nav-bell {
+      width: 34px; height: 34px; border-radius: 8px;
+      background: var(--surface);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-mute); position: relative;
+    }
+    .nav-bell::after {
+      content: ''; position: absolute;
+      top: 8px; right: 9px; width: 6px; height: 6px;
+      background: var(--coral); border-radius: 50%;
+    }
+    .nav-avatar {
+      width: 34px; height: 34px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--water) 0%, var(--water-deep) 100%);
+      color: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 12px; letter-spacing: -0.02em;
+    }
+
+    /* ----- header band ----- */
+    .header {
+      max-width: 1320px; margin: 0 auto;
+      padding: 28px 32px 16px;
+      display: flex; justify-content: space-between; align-items: end;
+    }
+    .header-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; letter-spacing: 0.1em;
+      color: var(--text-mute); margin-bottom: 8px;
+    }
+    .header-title {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600; font-size: 26px;
+      letter-spacing: -0.02em; color: var(--text);
+    }
+    .header-actions { display: flex; gap: 10px; }
+    .btn {
+      padding: 9px 16px; border-radius: 10px;
+      font-size: 13px; font-weight: 500;
+      border: 1px solid transparent;
+      transition: background 120ms ease;
+    }
+    .btn-primary { background: var(--water); color: var(--bg); }
+    .btn-primary:hover { background: #5EC6D8; }
+    .btn-ghost {
+      background: var(--surface);
+      color: var(--text);
+      border-color: var(--line);
+    }
+    .btn-ghost:hover { background: var(--surface-2); }
+
+    /* ----- HERO POOL VISUALIZATION ----- */
+    .hero-pool {
+      max-width: 1320px; margin: 16px auto 0;
+      padding: 0 32px;
+      display: grid; grid-template-columns: 1.3fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 980px) { .hero-pool { grid-template-columns: 1fr; } }
+
+    .pool-viz {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      min-height: 380px;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    /* the actual pool shape */
+    .pool-shape {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 70%; height: 60%;
+      border-radius: 50%;
+      background:
+        radial-gradient(ellipse at 35% 30%, rgba(79,183,201,0.5) 0%, transparent 60%),
+        radial-gradient(ellipse at 65% 65%, rgba(44,138,160,0.7) 0%, transparent 65%),
+        linear-gradient(135deg, var(--water-deep) 0%, var(--water) 100%);
+      box-shadow:
+        0 0 80px rgba(79,183,201,0.35),
+        inset 0 0 60px rgba(255,255,255,0.08);
+    }
+    /* light dots inside pool (off state — small) */
+    .pool-light {
+      position: absolute;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      box-shadow: 0 0 8px rgba(255,255,255,0.2);
+    }
+    .pool-light.l1 { top: 38%; left: 40%; }
+    .pool-light.l2 { top: 38%; left: 60%; }
+    .pool-light.l3 { top: 60%; left: 50%; }
+    /* flow direction arrows */
+    .pool-flow {
+      position: absolute;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: rgba(255,255,255,0.55);
+      letter-spacing: 0.1em;
+    }
+    .pool-flow.intake { top: 32%; left: 22%; }
+    .pool-flow.return { top: 56%; right: 22%; }
+    .pool-viz-meta {
+      position: relative; z-index: 2;
+      display: flex; justify-content: space-between; align-items: flex-start;
+    }
+    .pool-name {
+      font-weight: 600; font-size: 17px;
+      letter-spacing: -0.01em; color: var(--text);
+    }
+    .pool-spec {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; color: var(--text-mute);
+      margin-top: 4px;
+      letter-spacing: 0.04em;
+    }
+    .pool-state {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 6px 10px; border-radius: 999px;
+      background: rgba(122,201,125,0.12);
+      border: 1px solid rgba(122,201,125,0.3);
+      color: var(--sage);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; letter-spacing: 0.06em;
+    }
+    .pool-state .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--sage);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 rgba(122,201,125,0.6); }
+      50% { opacity: 0.6; box-shadow: 0 0 8px rgba(122,201,125,0.6); }
+    }
+    .pool-quick {
+      position: relative; z-index: 2;
+      margin-top: auto;
+      display: flex; gap: 24px; flex-wrap: wrap;
+    }
+    .pool-quick-stat .num {
+      font-family: 'Inter', sans-serif;
+      font-size: 36px; font-weight: 600;
+      letter-spacing: -0.025em; line-height: 1;
+      color: var(--text);
+    }
+    .pool-quick-stat .num .sm {
+      font-size: 0.45em; color: var(--text-mute); margin-left: 2px;
+    }
+    .pool-quick-stat .label {
+      margin-top: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.1em;
+      color: var(--text-mute); text-transform: uppercase;
+    }
+
+    /* AI panel */
+    .ai-panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 24px;
+      position: relative; overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    .ai-panel::after {
+      content: ''; position: absolute;
+      bottom: -60px; right: -60px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(79,183,201,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .ai-top {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 14px;
+      position: relative; z-index: 2;
+    }
+    .ai-mark {
+      width: 28px; height: 28px;
+      background: var(--water); color: var(--bg);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 12px; letter-spacing: -0.04em;
+    }
+    .ai-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--text-mute);
+    }
+    .ai-text {
+      font-size: 15px; line-height: 1.5; color: var(--text);
+      max-width: 38ch;
+      position: relative; z-index: 2;
+    }
+    .ai-text strong { font-weight: 600; }
+    .ai-text mark {
+      background: var(--coral-soft); color: #F2A290;
+      padding: 0 4px; border-radius: 3px;
+    }
+    .ai-actions {
+      margin-top: auto; padding-top: 16px;
+      display: flex; gap: 8px;
+      position: relative; z-index: 2;
+    }
+    .ai-btn {
+      padding: 7px 12px; border-radius: 8px;
+      font-size: 12px; font-weight: 500;
+      background: var(--surface-3); color: var(--text);
+      border: 1px solid var(--line);
+    }
+    .ai-btn:hover { background: var(--surface-2); }
+    .ai-btn.primary { background: var(--water); color: var(--bg); border-color: var(--water); }
+    .ai-btn.primary:hover { background: #5EC6D8; }
+
+    /* ----- equipment grid ----- */
+    .grid {
+      max-width: 1320px; margin: 16px auto 0;
+      padding: 0 32px;
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+    @media (max-width: 980px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex; flex-direction: column;
+      min-height: 200px;
+    }
+    .card.imported {
+      background: var(--surface-2);
+    }
+    .card.span-2 { grid-column: span 2; }
+    .card.row-2 { grid-row: span 2; }
+    @media (max-width: 980px) { .card.span-2 { grid-column: span 2; } .card.row-2 { grid-row: span 1; } }
+
+    .card-source {
+      display: flex; align-items: center; gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.06em;
+      color: var(--text-mute); margin-bottom: 14px;
+    }
+    .src-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+    }
+    .src-dot.live { background: var(--sage); }
+    .src-dot.imported { background: var(--gold); }
+    .src-dot.human { background: var(--coral); }
+    .card-source .src-time { margin-left: auto; opacity: 0.7; }
+    .card-source strong { color: var(--text); font-weight: 500; }
+
+    .card-title {
+      font-weight: 600; font-size: 15px;
+      color: var(--text); letter-spacing: -0.005em;
+      margin-bottom: 4px;
+    }
+    .card-sub {
+      font-size: 12px; color: var(--text-mute);
+    }
+
+    /* equipment number stat */
+    .eq-num {
+      font-family: 'Inter', sans-serif;
+      font-size: 38px; font-weight: 600;
+      letter-spacing: -0.025em; line-height: 0.95;
+      color: var(--text);
+      margin-top: 12px;
+    }
+    .eq-num .unit {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; color: var(--text-mute);
+      margin-left: 4px; letter-spacing: 0;
+      font-weight: 400;
+    }
+    .eq-readouts {
+      margin-top: 12px;
+      display: grid; gap: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+    }
+    .eq-readout {
+      display: flex; justify-content: space-between;
+      color: var(--text-mute);
+    }
+    .eq-readout strong { color: var(--text); font-weight: 500; }
+
+    /* big toggle */
+    .toggle {
+      width: 44px; height: 26px; border-radius: 999px;
+      background: var(--sage); position: relative;
+      cursor: pointer; flex-shrink: 0;
+      transition: background 120ms ease;
+    }
+    .toggle::after {
+      content: ''; position: absolute;
+      top: 2px; right: 2px;
+      width: 22px; height: 22px;
+      border-radius: 50%; background: white;
+      transition: transform 120ms ease;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+    .toggle.off { background: var(--surface-3); }
+    .toggle.off::after { transform: translateX(-18px); background: var(--text-deep); }
+    .toggle-row {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: auto; padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+    .toggle-row .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; letter-spacing: 0.08em;
+      color: var(--text-mute); text-transform: uppercase;
+    }
+    .toggle-row .label.on { color: var(--sage); }
+
+    /* slider */
+    .slider {
+      margin-top: 12px;
+      width: 100%; height: 8px; border-radius: 999px;
+      background: var(--surface-3);
+      position: relative;
+    }
+    .slider-fill {
+      position: absolute; left: 0; top: 0; bottom: 0;
+      background: var(--water);
+      border-radius: 999px;
+      box-shadow: 0 0 12px rgba(79,183,201,0.4);
+    }
+    .slider-thumb {
+      position: absolute; top: 50%; transform: translate(-50%, -50%);
+      width: 20px; height: 20px;
+      border-radius: 50%; background: var(--text);
+      border: 3px solid var(--water);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    }
+    .slider-meta {
+      display: flex; justify-content: space-between;
+      margin-top: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.04em;
+      color: var(--text-mute);
+    }
+    .slider-meta strong { color: var(--text); font-weight: 500; }
+
+    /* lights tile row */
+    .light-row {
+      display: flex; gap: 8px;
+      margin-top: 14px;
+    }
+    .light-tile {
+      flex: 1; padding: 14px 8px;
+      background: var(--surface-3);
+      border-radius: 10px;
+      text-align: center;
+      cursor: pointer;
+      border: 1px solid var(--line);
+    }
+    .light-tile.on {
+      background: rgba(226,182,85,0.12);
+      border-color: var(--gold);
+      color: var(--gold);
+      box-shadow: 0 0 16px rgba(226,182,85,0.2);
+    }
+    .light-tile.off { color: var(--text-mute); }
+    .light-glyph { width: 22px; height: 22px; margin: 0 auto 6px; }
+    .light-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.04em;
+    }
+
+    /* heater dial */
+    .heater-row {
+      display: flex; gap: 16px; align-items: center;
+      margin-top: 12px;
+    }
+    .heater-dial {
+      width: 88px; height: 88px;
+      border-radius: 50%;
+      background: conic-gradient(
+        var(--coral) 0deg 252deg,
+        var(--surface-3) 252deg 360deg
+      );
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .heater-dial::before {
+      content: ''; position: absolute;
+      inset: 6px; border-radius: 50%; background: var(--surface);
+    }
+    .heater-dial-num {
+      position: relative; z-index: 2;
+      font-family: 'Inter', sans-serif;
+      font-size: 22px; font-weight: 600;
+      letter-spacing: -0.02em; color: var(--text);
+    }
+    .heater-set {
+      flex: 1;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-mute);
+    }
+    .heater-set .target {
+      color: var(--text); font-weight: 500;
+      font-size: 14px;
+      display: block;
+    }
+    .heater-set .row {
+      display: flex; gap: 4px; margin-top: 8px;
+    }
+    .heater-set .step {
+      flex: 1;
+      padding: 6px 0;
+      background: var(--surface-3);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; color: var(--text-mute);
+      text-align: center;
+    }
+    .heater-set .step.active {
+      background: var(--coral); color: var(--bg);
+      border-color: var(--coral);
+    }
+
+    /* water test card */
+    .water-mini {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+    .wm-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; letter-spacing: 0.06em;
+      color: var(--text-mute); text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+    .wm-val {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px; font-weight: 600;
+      color: var(--text); letter-spacing: -0.01em;
+    }
+    .wm-val.warn { color: var(--gold); }
+
+    /* trend chart */
+    .trend-svg { margin-top: 12px; width: 100%; height: 70px; }
+    .trend-meta {
+      display: flex; justify-content: space-between;
+      margin-top: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; color: var(--text-mute);
+      letter-spacing: 0.04em;
+    }
+
+    /* run-now button */
+    .run-now {
+      width: 100%; margin-top: auto;
+      padding: 12px; border-radius: 10px;
+      background: var(--water); color: var(--bg);
+      font-weight: 600; font-size: 14px;
+      border: none; letter-spacing: -0.005em;
+      cursor: pointer;
+    }
+    .run-now:hover { background: #5EC6D8; }
+
+    /* human card */
+    .human-card {
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+    }
+    .human-quote {
+      font-size: 14px; line-height: 1.5;
+      color: var(--text);
+      margin-top: 12px; max-width: 38ch;
+      font-style: italic;
+    }
+    .human-actions {
+      margin-top: auto; padding-top: 14px;
+      display: flex; gap: 8px;
+    }
+    .human-actions a {
+      padding: 6px 12px; border-radius: 8px;
+      background: var(--coral); color: var(--bg);
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .human-actions a.ghost {
+      background: var(--surface-3); color: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    /* scenes */
+    .scenes {
+      max-width: 1320px; margin: 24px auto 0;
+      padding: 0 32px;
+    }
+    .scenes-header {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-bottom: 14px;
+    }
+    .scenes-title {
+      font-weight: 600; font-size: 15px; color: var(--text);
+    }
+    .scenes-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; color: var(--water);
+    }
+    .scene-row {
+      display: grid; grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 880px) { .scene-row { grid-template-columns: repeat(2, 1fr); } }
+    .scene {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+      cursor: pointer;
+    }
+    .scene:hover { background: var(--surface-2); border-color: var(--surface-3); }
+    .scene-glyph {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 10px;
+      background: var(--surface-3); color: var(--water);
+    }
+    .scene-name {
+      font-weight: 600; font-size: 13px; color: var(--text);
+    }
+    .scene-desc {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; color: var(--text-mute);
+      margin-top: 4px; line-height: 1.4;
+    }
+
+    /* activity */
+    .activity {
+      max-width: 1320px; margin: 24px auto 0;
+      padding: 0 32px 64px;
+    }
+    .activity-header {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .activity-title { font-weight: 600; font-size: 15px; color: var(--text); }
+    .activity-row {
+      display: grid; grid-template-columns: 80px 16px 1fr 80px;
+      gap: 14px; padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+      align-items: center;
+      font-size: 12px;
+    }
+    .activity-row:last-child { border-bottom: none; }
+    .activity-time {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-mute); letter-spacing: 0.04em;
+    }
+    .activity-icon {
+      width: 16px; height: 16px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .activity-icon .dot { width: 6px; height: 6px; border-radius: 50%; }
+    .activity-icon.live { background: rgba(122,201,125,0.15); }
+    .activity-icon.live .dot { background: var(--sage); }
+    .activity-icon.imported { background: rgba(226,182,85,0.15); }
+    .activity-icon.imported .dot { background: var(--gold); }
+    .activity-icon.human { background: rgba(224,122,95,0.15); }
+    .activity-icon.human .dot { background: var(--coral); }
+    .activity-icon.ai { background: rgba(79,183,201,0.15); }
+    .activity-icon.ai .dot { background: var(--water); }
+    .activity-text { color: var(--text); }
+    .activity-text strong { font-weight: 600; }
+    .activity-source {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-mute); letter-spacing: 0.06em;
+      text-transform: uppercase; font-size: 10px;
+      text-align: right;
+    }
+
+    .page-caption {
+      position: fixed; bottom: 24px; left: 24px;
+      background: var(--water); color: var(--bg);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 8px 14px; border-radius: 999px; z-index: 100;
+    }
+    .page-caption .num { opacity: 0.7; margin-right: 6px; }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="#" class="wordmark">PoolGo<span class="accent">/</span></a>
+    <div class="nav-tabs">
+      <a href="#" class="nav-tab active">My Pool</a>
+      <a href="#" class="nav-tab">Care</a>
+      <a href="#" class="nav-tab">Equipment</a>
+      <a href="#" class="nav-tab">Routines</a>
+      <a href="#" class="nav-tab">Discover</a>
+      <a href="#" class="nav-tab">Inbox</a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-bell">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+          <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+        </svg>
+      </div>
+      <div class="nav-avatar">RK</div>
+    </div>
+  </nav>
+
+  <header class="header">
+    <div>
+      <div class="header-eyebrow">/COMMAND · WED MAY 6 · 78°F SUNNY</div>
+      <h1 class="header-title">The Big Blue</h1>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-ghost">All systems →</button>
+      <button class="btn btn-primary">Run a routine</button>
+    </div>
+  </header>
+
+  <!-- HERO POOL -->
+  <section class="hero-pool">
+    <div class="pool-viz">
+      <div class="pool-shape"></div>
+      <span class="pool-light l1"></span>
+      <span class="pool-light l2"></span>
+      <span class="pool-light l3"></span>
+      <span class="pool-flow intake">→ INTAKE</span>
+      <span class="pool-flow return">RETURN ←</span>
+
+      <div class="pool-viz-meta">
+        <div>
+          <div class="pool-name">The Big Blue</div>
+          <div class="pool-spec">18,500 GAL · PLASTER · SALT WATER</div>
+        </div>
+        <span class="pool-state"><span class="dot"></span>HEALTHY · ALL IN RANGE</span>
+      </div>
+
+      <div class="pool-quick">
+        <div class="pool-quick-stat">
+          <div class="num">82<span class="sm">°F</span></div>
+          <div class="label">Water · live</div>
+        </div>
+        <div class="pool-quick-stat">
+          <div class="num">2.4</div>
+          <div class="label">PPM · imported</div>
+        </div>
+        <div class="pool-quick-stat">
+          <div class="num">680</div>
+          <div class="label">ORP · live</div>
+        </div>
+        <div class="pool-quick-stat">
+          <div class="num">42</div>
+          <div class="label">CYA · imported</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ai-panel">
+      <div class="ai-top">
+        <div class="ai-mark">P</div>
+        <div>
+          <div class="ai-label">CONCIERGE · JUST NOW</div>
+        </div>
+      </div>
+      <p class="ai-text">Yesterday's <strong>Sun Country</strong> test and this morning's <strong>IntelliFlo3</strong> telemetry agree. Pool is healthy. The only thing climbing is <mark>CYA at 42</mark>. Drafted a partial-drain plan with Carlos for Tuesday.</p>
+      <div class="ai-actions">
+        <button class="ai-btn primary">See the plan →</button>
+        <button class="ai-btn">Ask</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- EQUIPMENT GRID -->
+  <section class="grid">
+
+    <!-- Water test (imported, span 2 row 2) -->
+    <div class="card imported span-2 row-2">
+      <div class="card-source">
+        <span class="src-dot imported"></span>
+        IMPORTED · <strong>SUN COUNTRY POOLS</strong>
+        <span class="src-time">YESTERDAY · 09:14</span>
+      </div>
+      <div class="card-title">Latest water test</div>
+      <div class="eq-num">2.4<span class="unit">ppm Free Cl</span></div>
+      <p class="card-sub" style="margin-top: 10px; max-width: 36ch;">All in range. Anthony noted CYA is climbing, third week running.</p>
+      <div class="water-mini">
+        <div><div class="wm-name">pH</div><div class="wm-val">7.4</div></div>
+        <div><div class="wm-name">TA</div><div class="wm-val">90</div></div>
+        <div><div class="wm-name">CYA</div><div class="wm-val warn">42</div></div>
+        <div><div class="wm-name">Salt</div><div class="wm-val">3,200</div></div>
+        <div><div class="wm-name">Calcium</div><div class="wm-val">340</div></div>
+        <div><div class="wm-name">Phos</div><div class="wm-val warn">120</div></div>
+        <div><div class="wm-name">ORP</div><div class="wm-val">680</div></div>
+        <div><div class="wm-name">Temp</div><div class="wm-val">82°</div></div>
+      </div>
+      <a href="#" style="margin-top: 14px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--water);">Full water log →</a>
+    </div>
+
+    <!-- Pump (live, controllable, span 2) -->
+    <div class="card span-2">
+      <div class="card-source">
+        <span class="src-dot live"></span>
+        LIVE · <strong>PENTAIR INTELLIFLO3</strong>
+        <span class="src-time">2s AGO</span>
+      </div>
+      <div class="card-title">Pump · Schedule B</div>
+      <div class="eq-num">1,750<span class="unit">rpm</span></div>
+      <div class="eq-readouts">
+        <div class="eq-readout"><span>FLOW</span><strong>42 gpm</strong></div>
+        <div class="eq-readout"><span>WATTS</span><strong>380</strong></div>
+        <div class="eq-readout"><span>FILTER PSI</span><strong>18</strong></div>
+      </div>
+      <div class="slider">
+        <div class="slider-fill" style="width: 58%"></div>
+        <div class="slider-thumb" style="left: 58%"></div>
+      </div>
+      <div class="slider-meta">
+        <span>SPEED</span>
+        <strong>1,750 / 3,000 RPM</strong>
+      </div>
+      <div class="toggle-row">
+        <span class="label on">RUNNING</span>
+        <div class="toggle"></div>
+      </div>
+    </div>
+
+    <!-- Lights (live, controllable) -->
+    <div class="card">
+      <div class="card-source">
+        <span class="src-dot live"></span>
+        LIVE · <strong>INTELLIBRITE</strong>
+        <span class="src-time">3D AGO</span>
+      </div>
+      <div class="card-title">Lights · 3 zones</div>
+      <p class="card-sub">All off</p>
+      <div class="light-row">
+        <div class="light-tile off">
+          <svg class="light-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg>
+          <div class="light-name">POOL</div>
+        </div>
+        <div class="light-tile off">
+          <svg class="light-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+          <div class="light-name">SPA</div>
+        </div>
+        <div class="light-tile off">
+          <svg class="light-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V11l7-7 7 7v10"/></svg>
+          <div class="light-name">DECK</div>
+        </div>
+      </div>
+      <div class="toggle-row">
+        <span class="label">ALL OFF</span>
+        <div class="toggle off"></div>
+      </div>
+    </div>
+
+    <!-- Heater (live, controllable) -->
+    <div class="card">
+      <div class="card-source">
+        <span class="src-dot live"></span>
+        LIVE · <strong>MASTERTEMP 400</strong>
+        <span class="src-time">OFF 4D</span>
+      </div>
+      <div class="card-title">Heater</div>
+      <div class="heater-row">
+        <div class="heater-dial">
+          <div class="heater-dial-num">82°</div>
+        </div>
+        <div class="heater-set">
+          CURRENT
+          <span class="target">SET 84°F</span>
+          <div class="row">
+            <span class="step">78</span>
+            <span class="step">80</span>
+            <span class="step active">84</span>
+            <span class="step">88</span>
+          </div>
+        </div>
+      </div>
+      <div class="toggle-row">
+        <span class="label">OFF</span>
+        <div class="toggle off"></div>
+      </div>
+    </div>
+
+    <!-- Cleaner -->
+    <div class="card">
+      <div class="card-source">
+        <span class="src-dot live"></span>
+        LIVE · <strong>POLARIS 9650iQ</strong>
+        <span class="src-time">2:00 PM</span>
+      </div>
+      <div class="card-title">Cleaner · idle</div>
+      <div class="eq-readouts">
+        <div class="eq-readout"><span>LAST RUN</span><strong>YESTERDAY · 38m</strong></div>
+        <div class="eq-readout"><span>MODE</span><strong>QUICK CLEAN</strong></div>
+        <div class="eq-readout"><span>BATTERY</span><strong>92%</strong></div>
+        <div class="eq-readout"><span>CYCLES MTD</span><strong>12</strong></div>
+      </div>
+      <button class="run-now">RUN NOW →</button>
+    </div>
+
+    <!-- Salt cell -->
+    <div class="card">
+      <div class="card-source">
+        <span class="src-dot live"></span>
+        LIVE · <strong>INTELLICHLOR IC40</strong>
+        <span class="src-time">HEALTHY</span>
+      </div>
+      <div class="card-title">Salt cell</div>
+      <div class="eq-num">60<span class="unit">% output</span></div>
+      <p class="card-sub" style="margin-top: 10px;">Generating chlorine. No scaling.</p>
+      <svg class="trend-svg" viewBox="0 0 240 70" preserveAspectRatio="none">
+        <polyline fill="none" stroke="#7AC97D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="0,40 30,42 60,32 90,28 120,46 150,40 180,34 210,28 240,32"/>
+      </svg>
+      <div class="trend-meta">
+        <span>7-DAY OUTPUT</span>
+        <span>AVG 58%</span>
+      </div>
+    </div>
+
+    <!-- 30-day trend (imported aggregate) -->
+    <div class="card imported span-2">
+      <div class="card-source">
+        <span class="src-dot imported"></span>
+        IMPORTED · <strong>SUN COUNTRY + LESLIE'S + MANUAL</strong>
+        <span class="src-time">8 TESTS · 30D</span>
+      </div>
+      <div class="card-title">Free chlorine · 30 days</div>
+      <div class="eq-num">2.2<span class="unit">ppm avg · 1.6–2.7</span></div>
+      <svg class="trend-svg" viewBox="0 0 480 70" preserveAspectRatio="none" style="height: 80px; margin-top: 14px;">
+        <polyline fill="none" stroke="#4FB7C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="0,46 48,50 96,32 144,22 192,52 240,60 288,50 336,32 384,24 432,20 480,28"/>
+        <circle cx="480" cy="28" r="4" fill="#E07A5F"/>
+      </svg>
+      <div class="trend-meta">
+        <span>APR 6</span>
+        <span>APR 16</span>
+        <span>APR 26</span>
+        <span>TODAY</span>
+      </div>
+    </div>
+
+    <!-- Carlos (human) -->
+    <div class="card human-card span-2">
+      <div class="card-source">
+        <span class="src-dot human"></span>
+        FROM <strong>CARLOS TORRES</strong> · MARINA POOL SERVICE
+        <span class="src-time">4D AGO</span>
+      </div>
+      <div class="card-title">From your last service visit</div>
+      <p class="human-quote">"Pool's looking great. Salt cell healthy, no scaling. CYA is climbing, so we should talk about a partial drain next visit."</p>
+      <div class="human-actions">
+        <a href="#">Open Carlos →</a>
+        <a href="#" class="ghost">Visit log</a>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- SCENES -->
+  <section class="scenes">
+    <div class="scenes-header">
+      <h2 class="scenes-title">Scenes</h2>
+      <a href="#" class="scenes-link">+ NEW SCENE</a>
+    </div>
+    <div class="scene-row">
+      <div class="scene">
+        <div class="scene-glyph"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke-linecap="round"/></svg></div>
+        <div class="scene-name">Morning swim</div>
+        <div class="scene-desc">Pump on · 80° · lights off</div>
+      </div>
+      <div class="scene">
+        <div class="scene-glyph" style="color: var(--coral);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21l4-12 6 14 4-10"/></svg></div>
+        <div class="scene-name">Evening party</div>
+        <div class="scene-desc">Lights cycle · 84° · cleaner pause</div>
+      </div>
+      <div class="scene">
+        <div class="scene-glyph"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 16.9A5 5 0 0 0 18 7h-1.26a8 8 0 1 0-11.62 9"/><polyline points="13 11 9 17 15 17 11 23"/></svg></div>
+        <div class="scene-name">Storm mode</div>
+        <div class="scene-desc">Pump high · heater off</div>
+      </div>
+      <div class="scene">
+        <div class="scene-glyph"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22l10-20 10 20"/></svg></div>
+        <div class="scene-name">Vacation</div>
+        <div class="scene-desc">Min filter · all off</div>
+      </div>
+      <div class="scene">
+        <div class="scene-glyph"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 6v6"/></svg></div>
+        <div class="scene-name">Everything off</div>
+        <div class="scene-desc">Pump idle · all off</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACTIVITY -->
+  <section class="activity">
+    <div class="activity-header">
+      <h2 class="activity-title">/ activity · today</h2>
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-mute);">8 EVENTS</span>
+    </div>
+    <div class="activity-row">
+      <div class="activity-time">JUST NOW</div>
+      <div class="activity-icon ai"><div class="dot"></div></div>
+      <div class="activity-text"><strong>Concierge</strong> drafted a partial-drain plan for Tuesday's visit with Carlos.</div>
+      <div class="activity-source">AI</div>
+    </div>
+    <div class="activity-row">
+      <div class="activity-time">09:14</div>
+      <div class="activity-icon imported"><div class="dot"></div></div>
+      <div class="activity-text">Test imported · <strong>Sun Country</strong> · Free Cl 2.4. Anthony noted climbing CYA.</div>
+      <div class="activity-source">IMPORT</div>
+    </div>
+    <div class="activity-row">
+      <div class="activity-time">08:42</div>
+      <div class="activity-icon human"><div class="dot"></div></div>
+      <div class="activity-text"><strong>Anthony</strong> at Sun Country messaged about CYA. Suggested partial drain quote.</div>
+      <div class="activity-source">HUMAN</div>
+    </div>
+    <div class="activity-row">
+      <div class="activity-time">05:30</div>
+      <div class="activity-icon live"><div class="dot"></div></div>
+      <div class="activity-text"><strong>IntelliFlo3</strong> started Schedule B · 1,750 RPM. Stops at 11:30.</div>
+      <div class="activity-source">EQUIP</div>
+    </div>
+    <div class="activity-row">
+      <div class="activity-time">YDAY</div>
+      <div class="activity-icon imported"><div class="dot"></div></div>
+      <div class="activity-text">Test imported · <strong>Leslie's Pool Supplies</strong>. Backup test you brought in.</div>
+      <div class="activity-source">IMPORT</div>
+    </div>
+    <div class="activity-row">
+      <div class="activity-time">YDAY</div>
+      <div class="activity-icon live"><div class="dot"></div></div>
+      <div class="activity-text">You turned <strong>heater</strong> off via PoolGo. Setpoint was 84°.</div>
+      <div class="activity-source">YOU</div>
+    </div>
+    <div class="activity-row">
+      <div class="activity-time">2D AGO</div>
+      <div class="activity-icon live"><div class="dot"></div></div>
+      <div class="activity-text"><strong>Polaris cleaner</strong> ran Quick Clean for 38 minutes. Battery 92%.</div>
+      <div class="activity-source">EQUIP</div>
+    </div>
+    <div class="activity-row">
+      <div class="activity-time">4D AGO</div>
+      <div class="activity-icon human"><div class="dot"></div></div>
+      <div class="activity-text"><strong>Carlos Torres</strong> serviced your pool. 36m · $58 · filter PSI 18.</div>
+      <div class="activity-source">HUMAN</div>
+    </div>
+  </section>
+
+  <div class="page-caption"><span class="num">ITER 1</span> Dark IoT · Tesla / Pentair Home / Sense</div>
+</body>
+</html>

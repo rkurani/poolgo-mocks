@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PoolGo — All 6 Brand Directions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Archivo+Black&family=Inter+Tight:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* --- Neutral compare-page chrome --- */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: #f5f5f5;
+      color: #1a1a1a;
+      line-height: 1.5;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+
+    /* Sticky nav */
+    .sticky-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(245, 245, 245, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #e5e5e5;
+      padding: 14px 32px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .sticky-nav-label {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #888;
+      font-weight: 500;
+      margin-right: 12px;
+    }
+    .sticky-chip {
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: white;
+      border: 1px solid #ddd;
+      font-size: 12px;
+      font-weight: 500;
+      color: #333;
+      transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+    }
+    .sticky-chip:hover { background: #1a1a1a; color: white; border-color: #1a1a1a; }
+    .sticky-chip .num { color: #888; margin-right: 4px; font-weight: 400; }
+    .sticky-chip:hover .num { color: rgba(255,255,255,0.6); }
+
+    .compare-header {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 32px 32px;
+    }
+    .compare-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #999;
+      font-weight: 500;
+    }
+    .compare-title {
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin: 8px 0 12px;
+      color: #1a1a1a;
+    }
+    .compare-sub {
+      max-width: 75ch;
+      color: #555;
+      font-size: 16px;
+    }
+
+    /* --- Overview grid: all 6 at a glance --- */
+    .overview {
+      max-width: 1200px;
+      margin: 32px auto 64px;
+      padding: 0 32px;
+    }
+    .overview-label {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #888;
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 880px) {
+      .overview-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .overview-grid { grid-template-columns: 1fr; }
+    }
+    .overview-card {
+      border-radius: 12px;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      position: relative;
+      cursor: pointer;
+      transition: transform 200ms ease, box-shadow 200ms ease;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.04);
+    }
+    .overview-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.06), 0 12px 24px rgba(0,0,0,0.08);
+    }
+    .overview-card-inner {
+      position: absolute;
+      inset: 0;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .overview-card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .overview-card-num {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 500;
+      opacity: 0.55;
+    }
+    .overview-card-name {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      opacity: 0.55;
+    }
+    .overview-card-stat {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .overview-card-stat-num { line-height: 0.9; }
+    .overview-card-stat-unit {
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      opacity: 0.6;
+    }
+    .overview-card-tagline {
+      font-size: 12px;
+      opacity: 0.65;
+      max-width: 22ch;
+    }
+
+    /* Per-card overview styling */
+    .ov-pc { background: #F4EBDD; color: #0E2B47; }
+    .ov-pc .overview-card-stat-num { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 64px; }
+    .ov-pc .overview-card-name-display { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 20px; letter-spacing: -0.02em; }
+
+    .ov-fn { background: #EFE6D2; color: #1A1A1A; }
+    .ov-fn .overview-card-stat-num { font-family: 'IBM Plex Mono', monospace; font-size: 56px; font-weight: 500; }
+    .ov-fn .overview-card-name-display { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 22px; letter-spacing: -0.04em; color: #1F5051; }
+
+    .ov-op { background: #000; color: #fff; }
+    .ov-op .overview-card-stat-num { font-family: 'Archivo Black', sans-serif; font-size: 72px; letter-spacing: -0.06em; }
+    .ov-op .overview-card-stat-unit { color: #FFD23F; }
+    .ov-op .overview-card-name-display { font-family: 'Archivo Black', sans-serif; font-size: 18px; letter-spacing: -0.04em; text-transform: uppercase; }
+    .ov-op .overview-card-name-display .dot { color: #0066AB; }
+
+    .ov-fn2 { background: #FBFAF7; color: #0F0F0F; }
+    .ov-fn2 .overview-card-stat-num { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 56px; letter-spacing: -0.04em; }
+    .ov-fn2 .overview-card-mark { width: 26px; height: 26px; background: #0F0F0F; border-radius: 7px; display: inline-flex; align-items: center; justify-content: center; color: #FFD23F; font-weight: 700; font-size: 12px; }
+
+    .ov-arc { background: linear-gradient(180deg, #F4EFE8 0%, #E8DFD1 100%); color: #0A0A0A; }
+    .ov-arc .overview-card-stat-num { font-family: 'Inter Tight', sans-serif; font-weight: 400; font-size: 80px; letter-spacing: -0.05em; }
+    .ov-arc .overview-card-name-display { font-family: 'Inter Tight', sans-serif; font-weight: 600; font-size: 16px; letter-spacing: -0.02em; }
+
+    .ov-cm {
+      background: #0F0E0C;
+      color: #F0E5D0;
+      position: relative;
+    }
+    .ov-cm .overview-card-inner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 250px 200px at 80% 80%, rgba(232, 144, 50, 0.45) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .ov-cm .overview-card-stat-num { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; font-size: 72px; letter-spacing: -0.04em; }
+    .ov-cm .overview-card-name-display { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 18px; }
+    .ov-cm .overview-card-name-display .dot { display: inline-block; width: 3px; height: 3px; background: #E89032; border-radius: 50%; margin: 0 3px 4px; vertical-align: middle; }
+
+    /* --- Direction sections --- */
+    .direction-section {
+      padding: 96px 0 64px;
+      border-top: 1px solid #e5e5e5;
+      scroll-margin-top: 80px;
+    }
+    .direction-header {
+      max-width: 1200px;
+      margin: 0 auto 48px;
+      padding: 0 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .direction-meta { max-width: 60%; }
+    .direction-num {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #999;
+      font-weight: 500;
+    }
+    .direction-name {
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      margin: 8px 0 12px;
+      color: #1a1a1a;
+    }
+    .direction-tagline {
+      color: #555;
+      font-size: 16px;
+      max-width: 60ch;
+    }
+    .direction-references {
+      font-size: 13px;
+      color: #888;
+    }
+    .direction-references strong { color: #1a1a1a; font-weight: 500; }
+
+    .stage {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 32px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+    @media (max-width: 880px) { .stage { grid-template-columns: 1fr; } }
+    .stage-cell {
+      border-radius: 16px;
+      overflow: hidden;
+      min-height: 540px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);
+    }
+
+    .palette-row {
+      display: flex;
+      max-width: 1200px;
+      margin: 32px auto 0;
+      padding: 0 32px;
+    }
+    .swatch {
+      flex: 1;
+      padding: 16px 12px;
+      font-size: 11px;
+    }
+    .swatch:first-child { border-radius: 8px 0 0 8px; }
+    .swatch:last-child { border-radius: 0 8px 8px 0; }
+    .swatch-name { display: block; font-weight: 500; margin-bottom: 4px; }
+    .swatch-hex { font-family: 'JetBrains Mono', monospace; font-size: 11px; opacity: 0.65; }
+
+    .type-spec {
+      max-width: 1200px;
+      margin: 24px auto 0;
+      padding: 0 32px;
+      font-size: 13px;
+      color: #555;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .type-spec strong { color: #1a1a1a; font-weight: 500; }
+
+    .vibe-grid {
+      max-width: 1200px;
+      margin: 24px auto 0;
+      padding: 0 32px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      font-size: 14px;
+      color: #555;
+    }
+    .vibe-grid h4 {
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #999;
+      font-weight: 500;
+      margin: 0 0 6px;
+    }
+    .vibe-grid p { margin: 0; }
+    @media (max-width: 700px) { .vibe-grid { grid-template-columns: 1fr; } }
+
+    /* ============================================================ */
+    /*  D1 — POOL CLUB                                                */
+    /* ============================================================ */
+    .pc-stage {
+      background: #F4EBDD; color: #0E2B47;
+      padding: 56px 48px;
+      font-family: 'DM Sans', sans-serif;
+      position: relative; overflow: hidden;
+    }
+    .pc-stage::after {
+      content: ''; position: absolute; bottom: -120px; right: -120px;
+      width: 320px; height: 320px; border-radius: 50%;
+      background: #F0CB35; opacity: 0.5;
+    }
+    .pc-wordmark {
+      font-family: 'DM Serif Display', serif; font-style: italic;
+      font-size: 64px; letter-spacing: -0.02em; line-height: 0.95;
+      color: #0E2B47; position: relative; z-index: 2;
+    }
+    .pc-wordmark .dot {
+      display: inline-block; width: 12px; height: 12px;
+      background: #C24E2E; border-radius: 2px; transform: rotate(45deg);
+      margin: 0 8px; vertical-align: middle;
+    }
+    .pc-tagline {
+      margin-top: 24px; font-family: 'DM Serif Display', serif;
+      font-size: 28px; letter-spacing: -0.015em; line-height: 1.15;
+      max-width: 18ch; position: relative; z-index: 2;
+    }
+    .pc-body {
+      margin-top: 24px; font-size: 14px; color: #3F5973;
+      max-width: 36ch; position: relative; z-index: 2;
+    }
+    .pc-card {
+      background: #3A8AC1; color: #F4EBDD; padding: 56px 48px;
+      font-family: 'DM Sans', sans-serif;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .pc-card-eyebrow {
+      font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+      font-weight: 500; color: #F0CB35;
+    }
+    .pc-card-stat {
+      font-family: 'DM Serif Display', serif; font-size: 144px; font-style: italic;
+      line-height: 0.85; letter-spacing: -0.04em; margin: 32px 0 16px; color: #F4EBDD;
+    }
+    .pc-card-unit { font-size: 14px; letter-spacing: 0.04em; opacity: 0.85; }
+    .pc-card-verdict {
+      font-family: 'DM Serif Display', serif; font-style: italic;
+      font-size: 22px; line-height: 1.3; margin-top: 32px;
+      max-width: 22ch; color: #F4EBDD;
+    }
+    .pc-card-meta {
+      margin-top: 32px; padding-top: 20px;
+      border-top: 1px solid rgba(244,235,221,0.35);
+      font-size: 12px; letter-spacing: 0.04em; opacity: 0.75;
+      display: flex; justify-content: space-between;
+    }
+
+    /* ============================================================ */
+    /*  D2 — FIELD NOTEBOOK                                           */
+    /* ============================================================ */
+    .fn-stage {
+      background: #EFE6D2; color: #1A1A1A;
+      padding: 56px 48px;
+      font-family: 'IBM Plex Sans', sans-serif;
+      background-image: repeating-linear-gradient(to bottom,
+        transparent 0, transparent 31px,
+        rgba(26,26,26,0.06) 31px, rgba(26,26,26,0.06) 32px);
+    }
+    .fn-wordmark {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-variation-settings: 'opsz' 96;
+      font-size: 56px; font-weight: 600;
+      letter-spacing: -0.045em; line-height: 1; color: #1F5051;
+    }
+    .fn-wordmark::before {
+      content: '~~~'; font-family: 'IBM Plex Mono', monospace;
+      display: block; font-size: 18px; letter-spacing: 0;
+      color: #C99A38; margin-bottom: 12px; font-weight: 400;
+    }
+    .fn-meta-row {
+      margin-top: 24px; display: flex; gap: 16px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: #5A5A5A;
+    }
+    .fn-meta-row span:not(:last-child)::after {
+      content: '·'; margin-left: 16px; opacity: 0.5;
+    }
+    .fn-tagline {
+      margin-top: 28px; font-family: 'Bricolage Grotesque', sans-serif;
+      font-variation-settings: 'opsz' 24;
+      font-size: 24px; font-weight: 500; letter-spacing: -0.015em;
+      line-height: 1.3; max-width: 26ch; color: #1A1A1A;
+    }
+    .fn-body {
+      margin-top: 20px; font-size: 14px; color: #3D3D3D;
+      max-width: 42ch; line-height: 1.6;
+    }
+    .fn-card {
+      background: #1F5051; color: #EFE6D2; padding: 48px;
+      font-family: 'IBM Plex Sans', sans-serif;
+      display: flex; flex-direction: column;
+    }
+    .fn-card-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: #C99A38; margin-bottom: 8px;
+    }
+    .fn-card-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-variation-settings: 'opsz' 24;
+      font-size: 18px; font-weight: 500; letter-spacing: -0.01em;
+    }
+    .fn-card-stat {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 96px; font-weight: 400; line-height: 1;
+      letter-spacing: -0.04em; margin-top: 32px; color: #EFE6D2;
+    }
+    .fn-card-unit {
+      font-size: 13px; font-family: 'IBM Plex Mono', monospace;
+      color: #A0A99A; margin-top: 4px; letter-spacing: 0.04em;
+    }
+    .fn-card-verdict {
+      margin-top: 32px; font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 16px; line-height: 1.45; max-width: 30ch;
+      color: rgba(239,230,210,0.9);
+    }
+    .fn-card-table {
+      margin-top: 32px; padding-top: 16px;
+      border-top: 1px dashed rgba(239,230,210,0.3);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px; letter-spacing: 0.04em;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 8px 24px; color: #C9D1C8;
+    }
+    .fn-card-table strong { color: #EFE6D2; font-weight: 500; }
+
+    /* ============================================================ */
+    /*  D3 — OPERATOR                                                 */
+    /* ============================================================ */
+    .op-stage {
+      background: #FFFFFF; color: #000000;
+      padding: 56px 48px;
+      font-family: 'Inter Tight', sans-serif;
+      border: 2px solid #000;
+    }
+    .op-wordmark {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 76px; letter-spacing: -0.04em; line-height: 0.85;
+      color: #000; text-transform: uppercase;
+    }
+    .op-wordmark .dot { color: #0066AB; }
+    .op-tagline {
+      margin-top: 32px; font-family: 'Archivo Black', sans-serif;
+      font-size: 36px; letter-spacing: -0.02em; line-height: 1;
+      max-width: 14ch; text-transform: uppercase;
+    }
+    .op-tagline em { font-style: normal; color: #0066AB; }
+    .op-body {
+      margin-top: 24px; font-size: 14px; font-weight: 500;
+      color: #444; max-width: 38ch; line-height: 1.5;
+    }
+    .op-bar {
+      margin-top: 32px; display: inline-flex; gap: 0;
+      border: 2px solid #000;
+    }
+    .op-bar a {
+      padding: 12px 20px; font-family: 'Inter Tight', sans-serif;
+      font-weight: 700; font-size: 13px; text-transform: uppercase;
+      letter-spacing: 0.04em; color: #000; border-right: 2px solid #000;
+    }
+    .op-bar a:last-child { border-right: none; background: #FFD23F; }
+    .op-card {
+      background: #000; color: #fff; padding: 48px;
+      font-family: 'Inter Tight', sans-serif;
+      position: relative; overflow: hidden;
+    }
+    .op-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: repeating-linear-gradient(135deg,
+        transparent 0, transparent 11px,
+        rgba(255,210,63,0.04) 11px, rgba(255,210,63,0.04) 12px);
+      pointer-events: none;
+    }
+    .op-card-strip {
+      display: flex; justify-content: space-between;
+      font-family: 'Inter Tight', sans-serif; font-weight: 700;
+      font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+      color: #FFD23F; position: relative; z-index: 2;
+    }
+    .op-card-stat {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 168px; line-height: 0.85; letter-spacing: -0.06em;
+      color: #fff; margin: 32px 0 8px; position: relative; z-index: 2;
+    }
+    .op-card-stat sup {
+      font-size: 28px; letter-spacing: 0; vertical-align: top;
+      color: #0066AB; margin-left: 8px; font-weight: 400;
+    }
+    .op-card-unit {
+      font-family: 'Inter Tight', sans-serif; font-weight: 700;
+      font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: #fff; position: relative; z-index: 2;
+    }
+    .op-card-verdict {
+      margin-top: 40px; font-family: 'Archivo Black', sans-serif;
+      font-size: 20px; line-height: 1.05; letter-spacing: -0.01em;
+      text-transform: uppercase; max-width: 18ch;
+      color: #FFD23F; position: relative; z-index: 2;
+    }
+    .op-card-meta {
+      margin-top: 32px; padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.2);
+      display: flex; justify-content: space-between;
+      font-family: 'Inter Tight', sans-serif; font-weight: 600;
+      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.55); position: relative; z-index: 2;
+    }
+
+    /* ============================================================ */
+    /*  D4 — FRIENDLY NATIVE                                          */
+    /* ============================================================ */
+    .fn2-stage {
+      background: #FBFAF7; color: #0F0F0F;
+      padding: 56px 48px; font-family: 'Inter', sans-serif;
+    }
+    .fn2-mark {
+      width: 44px; height: 44px; background: #0F0F0F;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      color: #FFD23F; font-weight: 700; font-size: 18px;
+      letter-spacing: -0.03em; margin-bottom: 32px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08), 0 8px 16px rgba(0,0,0,0.06);
+    }
+    .fn2-headline {
+      font-family: 'Inter', sans-serif; font-weight: 700;
+      font-size: clamp(40px, 5vw, 60px); letter-spacing: -0.035em;
+      line-height: 1.02; color: #0F0F0F; max-width: 13ch;
+    }
+    .fn2-headline .highlight {
+      background: linear-gradient(180deg, transparent 60%, #FCE57A 60%);
+      padding: 0 4px; color: #5C4500;
+    }
+    .fn2-body {
+      margin-top: 24px; font-size: 16px; color: #525252;
+      max-width: 36ch; line-height: 1.55;
+    }
+    .fn2-cta-row {
+      margin-top: 32px; display: flex; gap: 12px; align-items: center;
+    }
+    .fn2-cta-primary {
+      padding: 12px 22px; background: #2A78F0; color: #fff;
+      border: none; border-radius: 999px; font-weight: 600; font-size: 14px;
+      box-shadow: 0 1px 2px rgba(42,120,240,0.3), inset 0 1px 0 rgba(255,255,255,0.3);
+    }
+    .fn2-cta-secondary {
+      padding: 12px 22px; background: #fff; color: #0F0F0F;
+      border: 1px solid #E5E5E5; border-radius: 999px;
+      font-weight: 500; font-size: 14px;
+      display: inline-flex; align-items: center; gap: 8px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+    .fn2-cta-icon {
+      width: 18px; height: 18px;
+      background: linear-gradient(135deg, #FCE57A, #F0B040);
+      border-radius: 6px; display: inline-block;
+    }
+    .fn2-card {
+      background: #fff; padding: 32px;
+      font-family: 'Inter', sans-serif;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .fn2-card-top {
+      display: flex; justify-content: space-between;
+      align-items: flex-start; margin-bottom: 28px;
+    }
+    .fn2-card-title { font-weight: 600; font-size: 16px; color: #0F0F0F; letter-spacing: -0.01em; }
+    .fn2-card-subtitle { font-size: 13px; color: #888; margin-top: 2px; }
+    .fn2-card-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 10px; border-radius: 999px;
+      background: #ECF7E8; color: #2D7A2D; font-size: 12px; font-weight: 500;
+    }
+    .fn2-card-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: #4CB04C; }
+    .fn2-card-stat {
+      font-family: 'Inter', sans-serif; font-weight: 700;
+      font-size: 96px; line-height: 1; letter-spacing: -0.05em; color: #0F0F0F;
+    }
+    .fn2-card-stat .unit {
+      font-size: 14px; font-weight: 500; color: #888;
+      margin-left: 12px; letter-spacing: 0;
+    }
+    .fn2-card-verdict {
+      margin-top: 12px; font-size: 16px; color: #525252;
+      line-height: 1.5; max-width: 32ch;
+    }
+    .fn2-card-verdict .marker {
+      background: linear-gradient(180deg, transparent 65%, #FCE57A 65%);
+      padding: 0 3px;
+    }
+    .fn2-card-grid {
+      margin-top: 32px; display: grid;
+      grid-template-columns: repeat(4, 1fr); gap: 12px;
+      padding-top: 24px; border-top: 1px solid #F0F0F0;
+    }
+    .fn2-mini { background: #FBFAF7; border-radius: 10px; padding: 12px; }
+    .fn2-mini-name {
+      font-size: 11px; color: #888; font-weight: 500;
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .fn2-mini-value {
+      font-weight: 600; font-size: 18px; color: #0F0F0F;
+      margin-top: 4px; letter-spacing: -0.02em;
+    }
+
+    /* ============================================================ */
+    /*  D5 — ARCHITECTURAL                                            */
+    /* ============================================================ */
+    .arc-stage {
+      background: #fff; color: #000; padding: 0;
+      font-family: 'Inter Tight', sans-serif;
+      display: flex; flex-direction: column;
+    }
+    .arc-stage-band {
+      background: #000; color: #fff; padding: 18px 32px;
+      font-family: 'Inter Tight', sans-serif; font-weight: 500; font-size: 13px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .arc-stage-band .design {
+      background: #2A78F0; color: #fff;
+      padding: 8px 16px; border-radius: 999px;
+      font-size: 13px; font-weight: 500;
+    }
+    .arc-stage-body {
+      flex: 1; padding: 48px;
+      background: linear-gradient(180deg, #F4EFE8 0%, #E8DFD1 100%);
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .arc-monumental {
+      font-family: 'Inter Tight', sans-serif; font-weight: 400;
+      font-size: clamp(80px, 14vw, 200px); line-height: 0.9;
+      letter-spacing: -0.04em; color: #0A0A0A;
+    }
+    .arc-meta {
+      display: flex; justify-content: space-between;
+      align-items: flex-end; margin-top: 32px; gap: 32px;
+    }
+    .arc-headline {
+      font-family: 'Inter Tight', sans-serif; font-weight: 500;
+      font-size: 22px; letter-spacing: -0.02em; line-height: 1.2;
+      color: #0A0A0A; max-width: 18ch;
+    }
+    .arc-body { font-size: 14px; color: #555; max-width: 28ch; line-height: 1.5; }
+    .arc-body strong { color: #0A0A0A; font-weight: 500; }
+    .arc-cta {
+      align-self: flex-end; padding: 12px 22px; background: #fff;
+      color: #0A0A0A; border: 1px solid #0A0A0A; border-radius: 999px;
+      font-family: 'Inter Tight', sans-serif; font-weight: 500;
+      font-size: 13px;
+    }
+    .arc-card {
+      background: #0A0A0A; color: #fff; padding: 0;
+      font-family: 'Inter Tight', sans-serif;
+      display: flex; flex-direction: column;
+    }
+    .arc-card-strip {
+      padding: 18px 32px; border-bottom: 1px solid rgba(255,255,255,0.12);
+      font-size: 13px; font-weight: 500;
+      display: flex; justify-content: space-between;
+      color: rgba(255,255,255,0.7);
+    }
+    .arc-card-strip .live {
+      color: #E04E1B;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .arc-card-strip .live .dot {
+      width: 6px; height: 6px; border-radius: 50%; background: #E04E1B;
+    }
+    .arc-card-body {
+      flex: 1; padding: 48px;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .arc-card-stat {
+      font-family: 'Inter Tight', sans-serif; font-weight: 400;
+      font-size: 200px; line-height: 0.85; letter-spacing: -0.06em; color: #fff;
+    }
+    .arc-card-name {
+      margin-top: 8px; font-size: 14px; letter-spacing: 0.04em;
+      color: rgba(255,255,255,0.6);
+    }
+    .arc-card-verdict {
+      margin-top: 32px; font-family: 'Inter Tight', sans-serif;
+      font-weight: 500; font-size: 22px; letter-spacing: -0.015em;
+      line-height: 1.2; max-width: 22ch;
+    }
+    .arc-card-foot {
+      padding: 18px 48px; border-top: 1px solid rgba(255,255,255,0.12);
+      display: flex; justify-content: space-between;
+      font-size: 12px; color: rgba(255,255,255,0.55); letter-spacing: 0.04em;
+    }
+    .arc-card-foot strong { color: #fff; font-weight: 500; }
+
+    /* ============================================================ */
+    /*  D6 — CINEMATIC MOOD                                           */
+    /* ============================================================ */
+    .cm-stage {
+      background: #0F0E0C; color: #F0E5D0; padding: 0;
+      font-family: 'Inter', sans-serif;
+      position: relative; overflow: hidden;
+    }
+    .cm-stage::before {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 700px 500px at 70% 80%, rgba(232,144,50,0.55) 0%, transparent 60%),
+        radial-gradient(ellipse 600px 400px at 30% 30%, rgba(160,60,40,0.35) 0%, transparent 65%),
+        radial-gradient(ellipse 400px 300px at 90% 10%, rgba(100,30,20,0.4) 0%, transparent 60%),
+        linear-gradient(180deg, #0F0E0C 0%, #1F1812 100%);
+    }
+    .cm-stage::after {
+      content: ''; position: absolute; inset: 0;
+      background-image: radial-gradient(circle at 50% 50%, rgba(0,0,0,0.4) 0%, transparent 70%);
+      mix-blend-mode: multiply;
+    }
+    .cm-stage-inner {
+      position: relative; z-index: 2; padding: 56px 48px;
+      display: flex; flex-direction: column; justify-content: space-between; height: 100%;
+    }
+    .cm-mark {
+      font-family: 'Instrument Serif', serif; font-size: 22px;
+      letter-spacing: -0.005em; color: #F0E5D0; font-style: italic;
+    }
+    .cm-mark .dot {
+      display: inline-block; width: 4px; height: 4px;
+      border-radius: 50%; background: #E89032;
+      margin: 0 4px 4px; vertical-align: middle;
+    }
+    .cm-headline {
+      font-family: 'Instrument Serif', serif; font-weight: 400;
+      font-size: clamp(48px, 6vw, 76px); line-height: 1;
+      letter-spacing: -0.025em; color: #F0E5D0;
+      max-width: 14ch; margin-top: 80px;
+      text-shadow: 0 2px 24px rgba(0,0,0,0.4);
+    }
+    .cm-headline em { font-style: italic; color: #E89032; }
+    .cm-body {
+      margin-top: 28px; font-size: 15px; line-height: 1.55;
+      color: rgba(240,229,208,0.78); max-width: 38ch;
+      text-shadow: 0 1px 12px rgba(0,0,0,0.4);
+    }
+    .cm-cta-row { margin-top: 36px; display: flex; gap: 16px; align-items: center; }
+    .cm-cta {
+      padding: 14px 24px; background: #F0E5D0; color: #0F0E0C;
+      border: none; border-radius: 999px;
+      font-weight: 500; font-size: 14px; letter-spacing: 0.02em;
+    }
+    .cm-cta-tertiary {
+      color: #E89032; font-size: 14px; font-weight: 500; letter-spacing: 0.02em;
+    }
+    .cm-card {
+      background: #0F0E0C; color: #F0E5D0; padding: 0;
+      font-family: 'Inter', sans-serif;
+      position: relative; overflow: hidden;
+    }
+    .cm-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 80% 100%, rgba(232,144,50,0.25) 0%, transparent 55%);
+    }
+    .cm-card-inner {
+      position: relative; z-index: 2; padding: 48px;
+      display: flex; flex-direction: column; justify-content: space-between; height: 100%;
+    }
+    .cm-card-eyebrow {
+      font-family: 'Inter', sans-serif; font-size: 11px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: #E89032; font-weight: 500;
+    }
+    .cm-card-stat {
+      font-family: 'Instrument Serif', serif; font-weight: 400;
+      font-size: 168px; line-height: 0.9; letter-spacing: -0.04em;
+      color: #F0E5D0; margin-top: 16px; font-style: italic;
+    }
+    .cm-card-name {
+      margin-top: 8px; font-size: 13px; letter-spacing: 0.04em;
+      color: rgba(240,229,208,0.55);
+    }
+    .cm-card-verdict {
+      margin-top: 36px; font-family: 'Instrument Serif', serif;
+      font-style: italic; font-weight: 400; font-size: 22px;
+      line-height: 1.3; color: #F0E5D0; max-width: 24ch;
+    }
+    .cm-card-divider {
+      margin-top: 32px; padding-top: 20px;
+      border-top: 1px solid rgba(240,229,208,0.12);
+      display: flex; justify-content: space-between;
+      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(240,229,208,0.55);
+    }
+
+    /* Footer */
+    .compare-footer {
+      max-width: 1200px;
+      margin: 64px auto 0;
+      padding: 64px 32px 96px;
+      border-top: 1px solid #e5e5e5;
+    }
+    .compare-footer h3 {
+      font-size: 24px; font-weight: 600; letter-spacing: -0.015em;
+      margin: 0 0 12px;
+    }
+    .compare-footer p { color: #555; font-size: 15px; max-width: 60ch; margin: 0 0 24px; }
+    .compare-footer ul { list-style: none; padding: 0; margin: 0; color: #555; font-size: 14px; }
+    .compare-footer ul li { padding: 8px 0; border-top: 1px solid #eee; }
+    .compare-footer ul li:first-child { border-top: none; }
+    .compare-footer ul li strong { color: #1a1a1a; font-weight: 500; }
+  </style>
+</head>
+<body>
+
+  <!-- Sticky chip nav -->
+  <nav class="sticky-nav">
+    <span class="sticky-nav-label">Jump to</span>
+    <a href="#d1" class="sticky-chip"><span class="num">01</span>Pool Club</a>
+    <a href="#d2" class="sticky-chip"><span class="num">02</span>Field Notebook</a>
+    <a href="#d3" class="sticky-chip"><span class="num">03</span>Operator</a>
+    <a href="#d4" class="sticky-chip"><span class="num">04</span>Friendly Native</a>
+    <a href="#d5" class="sticky-chip"><span class="num">05</span>Architectural</a>
+    <a href="#d6" class="sticky-chip"><span class="num">06</span>Cinematic Mood</a>
+  </nav>
+
+  <!-- Header -->
+  <header class="compare-header">
+    <span class="compare-eyebrow">PoolGo brand exercise · 6 directions · 2026-05-05</span>
+    <h1 class="compare-title">All six directions on one page.</h1>
+    <p class="compare-sub">The first three (1–3) were proposed cold, anchored against the Fraunces-italic AI-startup default. The next three (4–6) were pulled from references on Awwwards, Godly, and Mobbin (Amie, Samara, Superpower). Each direction shows the same content (PoolGo wordmark + free-chlorine-2.4 dashboard card) so the comparison stays apples-to-apples. Click a chip above to jump.</p>
+  </header>
+
+  <!-- Overview grid: 6 at a glance -->
+  <section class="overview">
+    <div class="overview-label">All six at a glance</div>
+    <div class="overview-grid">
+      <a href="#d1" class="overview-card ov-pc">
+        <div class="overview-card-inner">
+          <div class="overview-card-meta">
+            <span class="overview-card-num">01</span>
+            <span class="overview-card-name">Pool Club</span>
+          </div>
+          <div class="overview-card-name-display">Pool•Go</div>
+          <div class="overview-card-stat">
+            <span class="overview-card-stat-num">2.4</span>
+            <span class="overview-card-stat-unit">PPM · LOOKING LOVELY</span>
+          </div>
+        </div>
+      </a>
+      <a href="#d2" class="overview-card ov-fn">
+        <div class="overview-card-inner">
+          <div class="overview-card-meta">
+            <span class="overview-card-num">02</span>
+            <span class="overview-card-name">Field Notebook</span>
+          </div>
+          <div class="overview-card-name-display">poolgo</div>
+          <div class="overview-card-stat">
+            <span class="overview-card-stat-num">2.4</span>
+            <span class="overview-card-stat-unit">PPM · IN RANGE</span>
+          </div>
+        </div>
+      </a>
+      <a href="#d3" class="overview-card ov-op">
+        <div class="overview-card-inner">
+          <div class="overview-card-meta">
+            <span class="overview-card-num">03</span>
+            <span class="overview-card-name">Operator</span>
+          </div>
+          <div class="overview-card-name-display">POOL<span class="dot">.</span>GO</div>
+          <div class="overview-card-stat">
+            <span class="overview-card-stat-num">2.4</span>
+            <span class="overview-card-stat-unit">PPM · NOTHING TO DO</span>
+          </div>
+        </div>
+      </a>
+      <a href="#d4" class="overview-card ov-fn2">
+        <div class="overview-card-inner">
+          <div class="overview-card-meta">
+            <span class="overview-card-num">04</span>
+            <span class="overview-card-name">Friendly Native</span>
+          </div>
+          <div class="overview-card-mark">P</div>
+          <div class="overview-card-stat">
+            <span class="overview-card-stat-num">2.4</span>
+            <span class="overview-card-stat-unit">ppm · looking good</span>
+          </div>
+        </div>
+      </a>
+      <a href="#d5" class="overview-card ov-arc">
+        <div class="overview-card-inner">
+          <div class="overview-card-meta">
+            <span class="overview-card-num">05</span>
+            <span class="overview-card-name">Architectural</span>
+          </div>
+          <div class="overview-card-name-display">PoolGo</div>
+          <div class="overview-card-stat">
+            <span class="overview-card-stat-num">2.4</span>
+            <span class="overview-card-stat-unit">PPM · LOOKING GOOD</span>
+          </div>
+        </div>
+      </a>
+      <a href="#d6" class="overview-card ov-cm">
+        <div class="overview-card-inner">
+          <div class="overview-card-meta">
+            <span class="overview-card-num">06</span>
+            <span class="overview-card-name">Cinematic Mood</span>
+          </div>
+          <div class="overview-card-name-display">pool<span class="dot"></span>go</div>
+          <div class="overview-card-stat">
+            <span class="overview-card-stat-num">2.4</span>
+            <span class="overview-card-stat-unit">PPM · LOOKING LOVELY</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============== D1 POOL CLUB ============== -->
+  <section class="direction-section" id="d1">
+    <div class="direction-header">
+      <div class="direction-meta">
+        <span class="direction-num">Direction 01 · Original</span>
+        <h2 class="direction-name">Pool Club</h2>
+        <p class="direction-tagline">Mid-century, optimistic, grown-up. The pool isn't a utility, it's a place. Slim Aarons crashed into a Hockney painting wearing Acqua di Parma.</p>
+      </div>
+      <div class="direction-references">
+        <strong>References:</strong> Slim Aarons · David Hockney pool series · Capri Beach Club · 1960s Palm Springs · Aesop's editorial side
+      </div>
+    </div>
+    <div class="stage">
+      <div class="stage-cell pc-stage">
+        <div class="pc-wordmark">Pool<span class="dot"></span>Go</div>
+        <div class="pc-tagline">Take care of your pool the way you take care of your evening.</div>
+        <p class="pc-body">A homeowner's app for pool people who think of their pool less as a chore and more as a Tuesday evening.</p>
+      </div>
+      <div class="stage-cell pc-card">
+        <div>
+          <div class="pc-card-eyebrow">Free chlorine, today</div>
+          <div class="pc-card-stat">2.4</div>
+          <div class="pc-card-unit">ppm, within ideal range</div>
+        </div>
+        <div>
+          <div class="pc-card-verdict">"Looking lovely. The pool is in better shape than it was last May."</div>
+          <div class="pc-card-meta">
+            <span>SUN COUNTRY POOLS · 9:14 AM</span>
+            <span>MAY 5</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="palette-row">
+      <div class="swatch" style="background: #F4EBDD; color: #0E2B47;"><span class="swatch-name">Cream</span><span class="swatch-hex">#F4EBDD</span></div>
+      <div class="swatch" style="background: #3A8AC1; color: #F4EBDD;"><span class="swatch-name">Hockney</span><span class="swatch-hex">#3A8AC1</span></div>
+      <div class="swatch" style="background: #0E2B47; color: #F4EBDD;"><span class="swatch-name">Ink</span><span class="swatch-hex">#0E2B47</span></div>
+      <div class="swatch" style="background: #C24E2E; color: #F4EBDD;"><span class="swatch-name">Terracotta</span><span class="swatch-hex">#C24E2E</span></div>
+      <div class="swatch" style="background: #F0CB35; color: #0E2B47;"><span class="swatch-name">Sun</span><span class="swatch-hex">#F0CB35</span></div>
+    </div>
+    <div class="type-spec">
+      <span><strong>Display:</strong> DM Serif Display, italic by default</span>
+      <span><strong>Body:</strong> DM Sans</span>
+      <span><strong>Mark:</strong> diamond lozenge between Pool & Go</span>
+    </div>
+    <div class="vibe-grid">
+      <div>
+        <h4>What's distinctive</h4>
+        <p>Italic serif at display sizes, calm cream surfaces, terracotta diamond as the only proprietary mark. Editorial pacing, generous space.</p>
+      </div>
+      <div>
+        <h4>Risk</h4>
+        <p>Reads boutique-coastal. Has to work for a $35-a-week service customer in Roseville, not just a Beverly Hills second home.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== D2 FIELD NOTEBOOK ============== -->
+  <section class="direction-section" id="d2">
+    <div class="direction-header">
+      <div class="direction-meta">
+        <span class="direction-num">Direction 02 · Original</span>
+        <h2 class="direction-name">Field Notebook</h2>
+        <p class="direction-tagline">A logbook for your pool. Hand-built, slightly nerdy, anti-techy. You're the careful kind of homeowner who reads the side of the bottle.</p>
+      </div>
+      <div class="direction-references">
+        <strong>References:</strong> Patagonia Field Manual · Kinfolk · Filson catalog · National Park signage · scientific lab notebooks
+      </div>
+    </div>
+    <div class="stage">
+      <div class="stage-cell fn-stage">
+        <div class="fn-wordmark">poolgo</div>
+        <div class="fn-meta-row">
+          <span>Vol. 12 · No. 8</span>
+          <span>Roseville, CA</span>
+          <span>Est. 2026</span>
+        </div>
+        <div class="fn-tagline">A careful logbook for the part of your home that you can't fix at Home Depot.</div>
+        <p class="fn-body">Every test, every device, every routine, kept the way a good chemist would keep them. Not in a folder somewhere. Here, in order, where you can find them.</p>
+      </div>
+      <div class="stage-cell fn-card">
+        <div class="fn-card-label">Entry · 2026-05-05 · 09:14</div>
+        <div class="fn-card-title">Free chlorine</div>
+        <div class="fn-card-stat">2.4</div>
+        <div class="fn-card-unit">ppm</div>
+        <div class="fn-card-verdict">In range (1.0–3.0). Trend stable across the last four tests. No action this week.</div>
+        <div class="fn-card-table">
+          <span>pH</span><strong>7.4</strong>
+          <span>Total alk.</span><strong>90 ppm</strong>
+          <span>Stabilizer</span><strong>42 ppm</strong>
+          <span>Salt</span><strong>3,200 ppm</strong>
+          <span>Tested at</span><strong>Sun Country Pools</strong>
+          <span>Method</span><strong>K-2006 / drop</strong>
+        </div>
+      </div>
+    </div>
+    <div class="palette-row">
+      <div class="swatch" style="background: #EFE6D2; color: #1A1A1A;"><span class="swatch-name">Manila</span><span class="swatch-hex">#EFE6D2</span></div>
+      <div class="swatch" style="background: #1F5051; color: #EFE6D2;"><span class="swatch-name">Forest pool</span><span class="swatch-hex">#1F5051</span></div>
+      <div class="swatch" style="background: #C99A38; color: #1A1A1A;"><span class="swatch-name">Ochre</span><span class="swatch-hex">#C99A38</span></div>
+      <div class="swatch" style="background: #A03E2C; color: #EFE6D2;"><span class="swatch-name">Brick</span><span class="swatch-hex">#A03E2C</span></div>
+      <div class="swatch" style="background: #1A1A1A; color: #EFE6D2;"><span class="swatch-name">Ink</span><span class="swatch-hex">#1A1A1A</span></div>
+    </div>
+    <div class="type-spec">
+      <span><strong>Display:</strong> Bricolage Grotesque (variable, slight imperfection)</span>
+      <span><strong>Body:</strong> IBM Plex Sans</span>
+      <span><strong>Numbers:</strong> IBM Plex Mono</span>
+    </div>
+    <div class="vibe-grid">
+      <div>
+        <h4>What's distinctive</h4>
+        <p>Lined-paper background, mono numbers, masthead with Vol/No/date. Reads as a real artifact, not a SaaS template. Most differentiated of the six in the pool category.</p>
+      </div>
+      <div>
+        <h4>Risk</h4>
+        <p>Could read niche/hobbyist. The 90% who don't think of themselves as "pool nerds" might bounce.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== D3 OPERATOR ============== -->
+  <section class="direction-section" id="d3">
+    <div class="direction-header">
+      <div class="direction-meta">
+        <span class="direction-num">Direction 03 · Original</span>
+        <h2 class="direction-name">Operator</h2>
+        <p class="direction-tagline">Anti-precious, utility-confident. The brand that reads "this gets pools done." Liquid Death's swagger, FedEx's reliability, no marketing-blob in sight.</p>
+      </div>
+      <div class="direction-references">
+        <strong>References:</strong> Liquid Death · FedEx · USPS · Original Mailchimp · Jacuzzi the actual industrial brand · vintage chemical labels
+      </div>
+    </div>
+    <div class="stage">
+      <div class="stage-cell op-stage">
+        <div class="op-wordmark">POOL<span class="dot">.</span>GO</div>
+        <div class="op-tagline">Your pool. <em>Sorted.</em></div>
+        <p class="op-body">The unfussy app for the pool you already own. Test results in. Equipment connected. Pro on call. No vibes, just the pool.</p>
+        <div class="op-bar">
+          <a href="#">CHART</a>
+          <a href="#">CONNECT</a>
+          <a href="#">ROUTINES</a>
+          <a href="#">DISCOVER</a>
+          <a href="#">GET IN</a>
+        </div>
+      </div>
+      <div class="stage-cell op-card">
+        <div class="op-card-strip">
+          <span>FREE CL · 05.05</span>
+          <span>SUN COUNTRY · 09:14</span>
+        </div>
+        <div class="op-card-stat">2.4<sup>PPM</sup></div>
+        <div class="op-card-unit">FREE CHLORINE</div>
+        <div class="op-card-verdict">In range. Nothing to do today.</div>
+        <div class="op-card-meta">
+          <span>pH 7.4 · TA 90 · CYA 42 · SALT 3.2k</span>
+          <span>NEXT TEST · 05.12</span>
+        </div>
+      </div>
+    </div>
+    <div class="palette-row">
+      <div class="swatch" style="background: #FFFFFF; color: #000; border: 1px solid #ddd;"><span class="swatch-name">White</span><span class="swatch-hex">#FFFFFF</span></div>
+      <div class="swatch" style="background: #000000; color: #fff;"><span class="swatch-name">Black</span><span class="swatch-hex">#000000</span></div>
+      <div class="swatch" style="background: #0066AB; color: #fff;"><span class="swatch-name">Pool</span><span class="swatch-hex">#0066AB</span></div>
+      <div class="swatch" style="background: #FFD23F; color: #000;"><span class="swatch-name">Sun</span><span class="swatch-hex">#FFD23F</span></div>
+    </div>
+    <div class="type-spec">
+      <span><strong>Display:</strong> Archivo Black, no italics ever</span>
+      <span><strong>Body:</strong> Inter Tight, weight 600+ for emphasis</span>
+      <span><strong>Mark:</strong> the period in POOL.GO is the only color in the wordmark</span>
+    </div>
+    <div class="vibe-grid">
+      <div>
+        <h4>What's distinctive</h4>
+        <p>Hard borders, ALL CAPS labels, oversize Archivo Black. Five words max where four will do. Period at the end of every sentence is part of the brand.</p>
+      </div>
+      <div>
+        <h4>Risk</h4>
+        <p>Could read masculine/aggressive if not handled with care. Photography needs to feature actual people, not just objects.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== D4 FRIENDLY NATIVE ============== -->
+  <section class="direction-section" id="d4">
+    <div class="direction-header">
+      <div class="direction-meta">
+        <span class="direction-num">Direction 04 · From references</span>
+        <h2 class="direction-name">Friendly Native</h2>
+        <p class="direction-tagline">The Amie/Family/Notion zone. Soft white surfaces, generous shadows, highlighter-marker emphasis, friendly squircle iconography. Warmth and precision in the same room. Not a serif in sight.</p>
+      </div>
+      <div class="direction-references">
+        <strong>References:</strong> Amie · Family · Notion · Linear's marketing site · Vercel's product UI
+      </div>
+    </div>
+    <div class="stage">
+      <div class="stage-cell fn2-stage">
+        <div class="fn2-mark">P</div>
+        <div class="fn2-headline">Pool care, <span class="highlight">without the panic</span></div>
+        <p class="fn2-body">Track your water, connect your equipment, find a pro you trust. PoolGo handles the rest.</p>
+        <div class="fn2-cta-row">
+          <button class="fn2-cta-primary">Get started</button>
+          <button class="fn2-cta-secondary"><span class="fn2-cta-icon"></span>Take the tour</button>
+        </div>
+      </div>
+      <div class="stage-cell fn2-card">
+        <div>
+          <div class="fn2-card-top">
+            <div>
+              <div class="fn2-card-title">The Big Blue</div>
+              <div class="fn2-card-subtitle">Tested today · 9:14 am</div>
+            </div>
+            <span class="fn2-card-pill"><span class="dot"></span>Looking good</span>
+          </div>
+          <div class="fn2-card-stat">2.4<span class="unit">ppm free chlorine</span></div>
+          <p class="fn2-card-verdict">Your chlorine is right where it should be. <span class="marker">No action needed today</span>.</p>
+        </div>
+        <div class="fn2-card-grid">
+          <div class="fn2-mini"><div class="fn2-mini-name">pH</div><div class="fn2-mini-value">7.4</div></div>
+          <div class="fn2-mini"><div class="fn2-mini-name">TA</div><div class="fn2-mini-value">90</div></div>
+          <div class="fn2-mini"><div class="fn2-mini-name">CYA</div><div class="fn2-mini-value">42</div></div>
+          <div class="fn2-mini"><div class="fn2-mini-name">Salt</div><div class="fn2-mini-value">3.2k</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="palette-row">
+      <div class="swatch" style="background: #FBFAF7; color: #0F0F0F;"><span class="swatch-name">Off-white</span><span class="swatch-hex">#FBFAF7</span></div>
+      <div class="swatch" style="background: #0F0F0F; color: #FBFAF7;"><span class="swatch-name">Ink</span><span class="swatch-hex">#0F0F0F</span></div>
+      <div class="swatch" style="background: #2A78F0; color: #fff;"><span class="swatch-name">Cobalt</span><span class="swatch-hex">#2A78F0</span></div>
+      <div class="swatch" style="background: #FCE57A; color: #0F0F0F;"><span class="swatch-name">Marker</span><span class="swatch-hex">#FCE57A</span></div>
+      <div class="swatch" style="background: #ECF7E8; color: #2D7A2D;"><span class="swatch-name">Mint</span><span class="swatch-hex">#ECF7E8</span></div>
+    </div>
+    <div class="type-spec">
+      <span><strong>Display & body:</strong> Inter (700 for display, 400/500 for body)</span>
+      <span><strong>Numbers:</strong> Inter at 700, no mono</span>
+      <span><strong>Mark:</strong> dark squircle "P" with sun-yellow letter</span>
+    </div>
+    <div class="vibe-grid">
+      <div>
+        <h4>What's distinctive</h4>
+        <p>Highlighter-marker emphasis (Amie's signature). Soft drop shadows, never hard borders. Squircle icons, cobalt CTAs that feel like Apple links.</p>
+      </div>
+      <div>
+        <h4>Risk</h4>
+        <p>Hardest of the six to differentiate from the dozen other 2026 AI startups using a similar move. Has to earn it with the highlighter doing real semantic work.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== D5 ARCHITECTURAL ============== -->
+  <section class="direction-section" id="d5">
+    <div class="direction-header">
+      <div class="direction-meta">
+        <span class="direction-num">Direction 05 · From references</span>
+        <h2 class="direction-name">Architectural</h2>
+        <p class="direction-tagline">The Samara zone. Massive monumental sans, real photography, black hero band, orange and cobalt as accents. Confident grown-up, not boutique. Treats the pool like the part of your home it actually is.</p>
+      </div>
+      <div class="direction-references">
+        <strong>References:</strong> Samara · Aesop's app · MUJI · Cooper Hewitt · Watershed
+      </div>
+    </div>
+    <div class="stage">
+      <div class="stage-cell arc-stage">
+        <div class="arc-stage-band">
+          <span style="font-weight: 600; letter-spacing: -0.02em;">PoolGo</span>
+          <span class="design">Set up your pool</span>
+        </div>
+        <div class="arc-stage-body">
+          <div>
+            <div class="arc-monumental">XL10</div>
+            <div class="arc-meta">
+              <h3 class="arc-headline">Big pool, simple care.</h3>
+              <p class="arc-body">Introducing PoolGo for owners of the new XL10 backyard. <strong>Two pumps, one heater, all in one app.</strong></p>
+            </div>
+          </div>
+          <button class="arc-cta">Learn more →</button>
+        </div>
+      </div>
+      <div class="stage-cell arc-card">
+        <div class="arc-card-strip">
+          <span>Free chlorine · today</span>
+          <span class="live"><span class="dot"></span>Live</span>
+        </div>
+        <div class="arc-card-body">
+          <div>
+            <div class="arc-card-stat">2.4</div>
+            <div class="arc-card-name">PARTS PER MILLION · IDEAL 1.0–3.0</div>
+          </div>
+          <div class="arc-card-verdict">Looking good. The pool is in better shape than it was last May.</div>
+        </div>
+        <div class="arc-card-foot">
+          <span><strong>Sun Country Pools</strong> · 9:14 am</span>
+          <span>NEXT TEST · MAY 12</span>
+        </div>
+      </div>
+    </div>
+    <div class="palette-row">
+      <div class="swatch" style="background: #fff; color: #0A0A0A; border: 1px solid #eee;"><span class="swatch-name">White</span><span class="swatch-hex">#FFFFFF</span></div>
+      <div class="swatch" style="background: #F4EFE8; color: #0A0A0A;"><span class="swatch-name">Bone</span><span class="swatch-hex">#F4EFE8</span></div>
+      <div class="swatch" style="background: #0A0A0A; color: #fff;"><span class="swatch-name">Black</span><span class="swatch-hex">#0A0A0A</span></div>
+      <div class="swatch" style="background: #E04E1B; color: #fff;"><span class="swatch-name">Hazard</span><span class="swatch-hex">#E04E1B</span></div>
+      <div class="swatch" style="background: #2A78F0; color: #fff;"><span class="swatch-name">Cobalt</span><span class="swatch-hex">#2A78F0</span></div>
+    </div>
+    <div class="type-spec">
+      <span><strong>Display & body:</strong> Inter Tight (Söhne / ABC Diatype substitute on web)</span>
+      <span><strong>Sizes:</strong> hero type at 200px+ to feel monumental</span>
+      <span><strong>Mark:</strong> wordmark only, set in body family</span>
+    </div>
+    <div class="vibe-grid">
+      <div>
+        <h4>What's distinctive</h4>
+        <p>The type IS the design. Massive numbers and headlines treated like architectural signage. Black hero bands top of every page, real California-pool photography in the body, orange and cobalt sparingly as functional accents.</p>
+      </div>
+      <div>
+        <h4>Risk</h4>
+        <p>Lives or dies on photography. Without real, well-shot California-pool photography, this brand reads as a generic Vercel template.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== D6 CINEMATIC MOOD ============== -->
+  <section class="direction-section" id="d6">
+    <div class="direction-header">
+      <div class="direction-meta">
+        <span class="direction-num">Direction 06 · From references</span>
+        <h2 class="direction-name">Cinematic Mood</h2>
+        <p class="direction-tagline">The Superpower zone. Dark cinematic surfaces, golden-hour gradients, italic display serif (Instrument Serif) over photography, almost no chrome on the homepage. The data UI lives in a separate inner-app surface that inherits the warmth without the moodiness.</p>
+      </div>
+      <div class="direction-references">
+        <strong>References:</strong> Superpower · Levels · Hims (recent rebrand) · The Fasting Method · Equinox
+      </div>
+    </div>
+    <div class="stage">
+      <div class="stage-cell cm-stage">
+        <div class="cm-stage-inner">
+          <div>
+            <div class="cm-mark">pool<span class="dot"></span>go</div>
+            <h2 class="cm-headline">A new era of <em>pool care</em>.</h2>
+            <p class="cm-body">The home for everything your pool needs to be remembered. Built for the people who live next to one.</p>
+          </div>
+          <div class="cm-cta-row">
+            <button class="cm-cta">Join waitlist</button>
+            <a class="cm-cta-tertiary">Watch the film →</a>
+          </div>
+        </div>
+      </div>
+      <div class="stage-cell cm-card">
+        <div class="cm-card-inner">
+          <div>
+            <div class="cm-card-eyebrow">Today · Sun Country</div>
+            <div class="cm-card-stat">2.4</div>
+            <div class="cm-card-name">PPM FREE CHLORINE</div>
+          </div>
+          <div>
+            <p class="cm-card-verdict">Looking lovely. The pool is in better shape than it was last May.</p>
+            <div class="cm-card-divider">
+              <span>pH 7.4 · TA 90 · CYA 42</span>
+              <span>09:14 AM</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="palette-row">
+      <div class="swatch" style="background: #0F0E0C; color: #F0E5D0;"><span class="swatch-name">Charcoal</span><span class="swatch-hex">#0F0E0C</span></div>
+      <div class="swatch" style="background: #1F1812; color: #F0E5D0;"><span class="swatch-name">Ember</span><span class="swatch-hex">#1F1812</span></div>
+      <div class="swatch" style="background: #E89032; color: #0F0E0C;"><span class="swatch-name">Golden hour</span><span class="swatch-hex">#E89032</span></div>
+      <div class="swatch" style="background: #A03C28; color: #F0E5D0;"><span class="swatch-name">Sienna</span><span class="swatch-hex">#A03C28</span></div>
+      <div class="swatch" style="background: #F0E5D0; color: #0F0E0C;"><span class="swatch-name">Bone</span><span class="swatch-hex">#F0E5D0</span></div>
+    </div>
+    <div class="type-spec">
+      <span><strong>Display:</strong> Instrument Serif, italic by default</span>
+      <span><strong>Body:</strong> Inter</span>
+      <span><strong>Photography:</strong> golden-hour, anamorphic, real pools and people, never stock</span>
+    </div>
+    <div class="vibe-grid">
+      <div>
+        <h4>What's distinctive</h4>
+        <p>Marketing leads with mood and photography, near-zero UI chrome. Italic Instrument Serif (the warmer Fraunces alternative) carries the headline. Inner-app screens inherit the dark + golden-hour palette but go quiet so data can breathe.</p>
+      </div>
+      <div>
+        <h4>Risk</h4>
+        <p>Two-mode brand: marketing site cinematic AND product UI readable. Most companies fail at one or the other. Photography requirement is even higher than Architectural.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="compare-footer">
+    <h3>Six on the table. Three good shortlists.</h3>
+    <p>Pick what's most useful as a next step.</p>
+    <ul>
+      <li><strong>Mature & data-friendly:</strong> Architectural (5) + Field Notebook (2). Both lean on real type, both can use real photography. Coherent grown-up brand.</li>
+      <li><strong>Warm & approachable:</strong> Friendly Native (4) + Operator (3). Both punchier, both more app-feeling. The 2026-startup brand.</li>
+      <li><strong>Destination-grade:</strong> Cinematic Mood (6) standalone. Highest production cost, biggest ceiling.</li>
+      <li><strong>My read:</strong> Architectural feels like the strongest single bet of the six. Field Notebook is the most distinctive in the pool category. Pool Club feels like the one to retire.</li>
+    </ul>
+  </footer>
+
+</body>
+</html>

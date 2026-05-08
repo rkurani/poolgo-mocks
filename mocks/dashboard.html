@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Pool — PoolGo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..600,30..100;1,9..144,400..600,30..100&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tokens.css">
+  <style>
+    .greeting {
+      padding: var(--space-7) var(--gutter) var(--space-5);
+      max-width: var(--max-content);
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .greeting-text {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 3vw, 2.5rem);
+      letter-spacing: -0.02em;
+      color: var(--color-deep);
+      line-height: 1.1;
+    }
+    .greeting-meta {
+      font-size: var(--fs-small);
+      color: var(--color-deep-mute);
+    }
+    .greeting-time {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--fs-small);
+      color: var(--color-deep-mute);
+    }
+    .sun-icon {
+      width: 18px;
+      height: 18px;
+      color: var(--color-sun-deep);
+    }
+
+    .dashboard {
+      max-width: var(--max-content);
+      margin: 0 auto;
+      padding: var(--space-4) var(--gutter) var(--space-9);
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: var(--space-6);
+    }
+
+    @media (max-width: 1000px) {
+      .dashboard { grid-template-columns: 1fr; }
+    }
+
+    /* Pool header card */
+    .pool-header {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, var(--color-deep) 0%, var(--color-pool-deep) 100%);
+      color: var(--color-cream);
+      border-radius: var(--radius-xl);
+      padding: var(--space-6) var(--space-7);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-5);
+      position: relative;
+      overflow: hidden;
+    }
+    .pool-header::after {
+      content: '';
+      position: absolute;
+      right: -80px;
+      top: -80px;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(232, 185, 86, 0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .pool-name {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: var(--color-cream);
+    }
+    .pool-meta {
+      display: flex;
+      gap: var(--space-5);
+      margin-top: var(--space-3);
+      font-size: var(--fs-small);
+      color: rgba(250, 246, 239, 0.7);
+    }
+    .pool-meta strong {
+      color: var(--color-cream);
+      font-weight: 500;
+    }
+    .pool-meta-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .pool-header-actions {
+      display: flex;
+      gap: var(--space-3);
+      position: relative;
+      z-index: 2;
+    }
+    .pool-header .btn-secondary {
+      background: rgba(250, 246, 239, 0.08);
+      color: var(--color-cream);
+      border-color: rgba(250, 246, 239, 0.18);
+    }
+    .pool-header .btn-secondary:hover {
+      background: rgba(250, 246, 239, 0.14);
+      border-color: rgba(250, 246, 239, 0.36);
+    }
+
+    /* Hero stat card */
+    .hero-stat {
+      padding: var(--space-7);
+    }
+    .hero-stat-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--space-4);
+      flex-wrap: wrap;
+    }
+    .hero-stat-main {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-3);
+    }
+    .hero-stat-value {
+      font-family: var(--font-display);
+      font-size: var(--fs-stat);
+      font-weight: 400;
+      line-height: 0.95;
+      color: var(--color-deep);
+      letter-spacing: -0.035em;
+      font-variation-settings: 'opsz' 144;
+    }
+    .hero-stat-unit-block {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .hero-stat-unit {
+      font-family: var(--font-mono);
+      font-size: var(--fs-body);
+      color: var(--color-deep-mute);
+      letter-spacing: 0;
+    }
+    .hero-stat-name {
+      font-family: var(--font-body);
+      font-size: var(--fs-small);
+      color: var(--color-deep-soft);
+      font-weight: 500;
+    }
+    .verdict {
+      font-family: var(--font-display);
+      font-size: 1.375rem;
+      font-style: italic;
+      font-weight: 400;
+      color: var(--color-deep);
+      line-height: 1.4;
+      max-width: 38ch;
+      margin-top: var(--space-5);
+      letter-spacing: -0.005em;
+    }
+    .verdict-meta {
+      margin-top: var(--space-3);
+      font-size: var(--fs-small);
+      color: var(--color-deep-soft);
+    }
+
+    .substat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-3);
+      margin-top: var(--space-6);
+      padding-top: var(--space-5);
+      border-top: 1px solid var(--color-mist);
+    }
+    .substat {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+    .substat-label {
+      font-size: var(--fs-tiny);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-deep-mute);
+      font-weight: 500;
+    }
+    .substat-value {
+      font-family: var(--font-mono);
+      font-size: 1.125rem;
+      color: var(--color-deep);
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+    .substat-meta {
+      font-size: var(--fs-tiny);
+      color: var(--color-deep-mute);
+    }
+
+    /* Chart card */
+    .chart-card { padding: var(--space-6); }
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: var(--space-5);
+    }
+    .chart-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+    }
+    .chart-legend {
+      display: flex;
+      gap: var(--space-4);
+      font-size: var(--fs-small);
+      color: var(--color-deep-soft);
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .legend-swatch {
+      width: 14px;
+      height: 3px;
+      border-radius: 2px;
+    }
+    .swatch-fc { background: var(--color-pool); }
+    .swatch-ph { background: var(--color-sun); }
+
+    /* Equipment cards */
+    .equipment-card {
+      padding: var(--space-5);
+      transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+    }
+    .equipment-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .equipment-row {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-4);
+    }
+    .equipment-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      background: var(--color-cream-deep);
+      color: var(--color-deep-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .equipment-name {
+      font-family: var(--font-body);
+      font-size: var(--fs-body);
+      font-weight: 500;
+      color: var(--color-deep);
+      letter-spacing: -0.005em;
+    }
+    .equipment-model {
+      font-size: var(--fs-small);
+      color: var(--color-deep-mute);
+      margin-top: 2px;
+    }
+    .equipment-meta {
+      display: flex;
+      gap: var(--space-3);
+      align-items: center;
+      margin-top: var(--space-3);
+      font-size: var(--fs-tiny);
+      color: var(--color-deep-mute);
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--color-good);
+    }
+    .status-dot.warn { background: var(--color-warn); }
+    .status-dot.off { background: var(--color-mist-deep); }
+
+    /* Sidebar */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-5);
+    }
+
+    /* Routines card */
+    .routine-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: var(--space-4) 0;
+      border-bottom: 1px solid var(--color-mist);
+    }
+    .routine-row:first-child { padding-top: 0; }
+    .routine-row:last-child { padding-bottom: 0; border-bottom: none; }
+    .routine-name {
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: var(--fs-body);
+      color: var(--color-deep);
+    }
+    .routine-trigger {
+      font-size: var(--fs-small);
+      color: var(--color-deep-soft);
+      margin-top: 2px;
+    }
+    .routine-last {
+      font-size: var(--fs-tiny);
+      color: var(--color-deep-mute);
+      margin-top: var(--space-1);
+    }
+
+    /* Toggle */
+    .toggle {
+      width: 36px;
+      height: 22px;
+      border-radius: var(--radius-pill);
+      background: var(--color-pool);
+      position: relative;
+      cursor: pointer;
+      transition: background var(--dur-fast) var(--ease-out);
+      flex-shrink: 0;
+    }
+    .toggle::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: white;
+      top: 3px;
+      right: 3px;
+      transition: transform var(--dur-fast) var(--ease-out);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+    }
+    .toggle.off { background: var(--color-mist-deep); }
+    .toggle.off::after { transform: translateX(-14px); }
+
+    /* Pool store note */
+    .store-note {
+      padding: var(--space-6);
+      background: var(--color-cream-deep);
+      border: 1px solid var(--color-mist);
+    }
+    .store-note-quote {
+      font-family: var(--font-display);
+      font-size: 1.0625rem;
+      font-style: italic;
+      line-height: 1.5;
+      color: var(--color-deep);
+      letter-spacing: -0.005em;
+    }
+    .store-note-attribution {
+      margin-top: var(--space-4);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    .store-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--color-pool) 0%, var(--color-pool-deep) 100%);
+      color: var(--color-cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-size: 0.8125rem;
+    }
+    .store-name {
+      font-size: var(--fs-small);
+      font-weight: 500;
+      color: var(--color-deep);
+    }
+    .store-when {
+      font-size: var(--fs-tiny);
+      color: var(--color-deep-mute);
+    }
+
+    /* Add card */
+    .ghost-card {
+      padding: var(--space-5);
+      border: 1.5px dashed var(--color-mist-deep);
+      background: transparent;
+      box-shadow: none;
+      color: var(--color-deep-mute);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      cursor: pointer;
+      transition: border-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+    }
+    .ghost-card:hover {
+      border-color: var(--color-pool);
+      color: var(--color-pool);
+    }
+
+    .equipment-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+    }
+    @media (max-width: 700px) {
+      .equipment-grid { grid-template-columns: 1fr; }
+      .substat-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top nav -->
+  <nav class="topnav">
+    <a href="homepage.html" class="wordmark"><span class="pool">Pool</span><span class="go">Go</span></a>
+    <div class="topnav-tabs">
+      <button class="topnav-tab active">My Pool</button>
+      <button class="topnav-tab">Chart</button>
+      <button class="topnav-tab">Connect</button>
+      <button class="topnav-tab">Routines</button>
+      <button class="topnav-tab">Discover</button>
+    </div>
+    <div class="topnav-right">
+      <a href="#" class="topnav-link">Help</a>
+      <div class="topnav-avatar">RK</div>
+    </div>
+  </nav>
+
+  <!-- Greeting -->
+  <div class="greeting">
+    <div>
+      <div class="greeting-text">Welcome back, Ravi.</div>
+      <div class="greeting-meta" style="margin-top: 6px;">Tuesday, May 5. Your pool was tested this morning.</div>
+    </div>
+    <div class="greeting-time">
+      <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="4" fill="currentColor" opacity="0.2"/>
+        <circle cx="12" cy="12" r="4"/>
+        <path d="M12 4 V2 M12 22 V20 M4 12 H2 M22 12 H20 M16.95 7.05 L18.36 5.64 M5.64 18.36 L7.05 16.95 M16.95 16.95 L18.36 18.36 M5.64 5.64 L7.05 7.05"/>
+      </svg>
+      Sunny, 78°F in Roseville
+    </div>
+  </div>
+
+  <!-- Dashboard grid -->
+  <div class="dashboard">
+
+    <!-- Pool header (full width) -->
+    <div class="pool-header">
+      <div>
+        <div class="pool-name">The Big Blue</div>
+        <div class="pool-meta">
+          <span class="pool-meta-item"><strong>18,500</strong> gallons</span>
+          <span class="pool-meta-item"><strong>Plaster</strong></span>
+          <span class="pool-meta-item"><strong>Salt water</strong></span>
+          <span class="pool-meta-item">Last serviced <strong>3 days ago</strong></span>
+        </div>
+      </div>
+      <div class="pool-header-actions">
+        <button class="btn btn-secondary btn-sm">Edit pool</button>
+      </div>
+    </div>
+
+    <!-- Hero stat (column 1) -->
+    <div class="card hero-stat">
+      <div class="card-title">Today's reading</div>
+      <div class="hero-stat-row">
+        <div class="hero-stat-main">
+          <div class="hero-stat-value">2.4</div>
+          <div class="hero-stat-unit-block">
+            <span class="hero-stat-unit">ppm</span>
+            <span class="hero-stat-name">Free chlorine</span>
+          </div>
+        </div>
+        <span class="pill pill-good"><span class="pill-dot"></span>looking good</span>
+      </div>
+      <p class="verdict">Your chlorine is right where it should be. No action needed today.</p>
+      <p class="verdict-meta">Tested at Sun Country Pools, 9:14 am. Ideal range 1.0–3.0 ppm.</p>
+
+      <div class="substat-grid">
+        <div class="substat">
+          <span class="substat-label">pH</span>
+          <span class="substat-value">7.4</span>
+          <span class="substat-meta">7.2–7.8 ideal</span>
+        </div>
+        <div class="substat">
+          <span class="substat-label">Total alk.</span>
+          <span class="substat-value">90</span>
+          <span class="substat-meta">80–120 ideal</span>
+        </div>
+        <div class="substat">
+          <span class="substat-label">CYA</span>
+          <span class="substat-value">42</span>
+          <span class="substat-meta">30–50 ideal</span>
+        </div>
+        <div class="substat">
+          <span class="substat-label">Salt</span>
+          <span class="substat-value">3,200</span>
+          <span class="substat-meta">2,700–3,400 ppm</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar (column 2) -->
+    <div class="sidebar">
+
+      <!-- Routines card -->
+      <div class="card card-tight">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
+          <div class="card-title" style="margin: 0;">Active routines</div>
+          <a href="#" style="font-size: var(--fs-small); color: var(--color-pool); font-weight: 500;">View all</a>
+        </div>
+
+        <div class="routine-row">
+          <div>
+            <div class="routine-name">Low chlorine alert</div>
+            <div class="routine-trigger">If FC drops below 1.0 ppm, text me.</div>
+            <div class="routine-last">Last triggered: 12 days ago</div>
+          </div>
+          <div class="toggle"></div>
+        </div>
+
+        <div class="routine-row">
+          <div>
+            <div class="routine-name">Weekly water check reminder</div>
+            <div class="routine-trigger">Every Sunday morning, before my pool guy comes.</div>
+            <div class="routine-last">Last triggered: 3 days ago</div>
+          </div>
+          <div class="toggle"></div>
+        </div>
+
+        <a href="#" class="btn btn-tertiary" style="margin-top: var(--space-4); padding: 0;">+ Build a new routine</a>
+      </div>
+
+      <!-- Pool store note -->
+      <div class="card store-note">
+        <div class="card-title">From your last visit</div>
+        <p class="store-note-quote">"Your CYA is creeping up. Worth a partial drain in the next month, before summer hits."</p>
+        <div class="store-note-attribution">
+          <div class="store-avatar">SC</div>
+          <div>
+            <div class="store-name">Sun Country Pools</div>
+            <div class="store-when">May 2 · Anthony T., service tech</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart card (full width) -->
+    <div class="card chart-card" style="grid-column: 1 / -1;">
+      <div class="chart-header">
+        <div>
+          <div class="chart-title">Last 30 days</div>
+          <div style="font-size: var(--fs-small); color: var(--color-deep-mute); margin-top: 4px;">8 tests recorded.</div>
+        </div>
+        <div class="chart-legend">
+          <span class="legend-item"><span class="legend-swatch swatch-fc"></span>Free chlorine</span>
+          <span class="legend-item"><span class="legend-swatch swatch-ph"></span>pH</span>
+        </div>
+      </div>
+
+      <svg viewBox="0 0 800 240" width="100%" height="240" preserveAspectRatio="none" style="display: block;">
+        <!-- Grid lines -->
+        <g stroke="var(--color-mist)" stroke-width="1" stroke-dasharray="0">
+          <line x1="30" y1="40" x2="780" y2="40"/>
+          <line x1="30" y1="90" x2="780" y2="90"/>
+          <line x1="30" y1="140" x2="780" y2="140"/>
+          <line x1="30" y1="190" x2="780" y2="190"/>
+        </g>
+        <!-- Y axis labels -->
+        <g font-family="JetBrains Mono, monospace" font-size="10" fill="var(--color-deep-mute)">
+          <text x="0" y="45">3.0</text>
+          <text x="0" y="95">2.0</text>
+          <text x="0" y="145">1.0</text>
+          <text x="0" y="195">0.0</text>
+        </g>
+        <!-- X axis dates -->
+        <g font-family="Inter, sans-serif" font-size="10" fill="var(--color-deep-mute)" text-anchor="middle">
+          <text x="80" y="225">Apr 5</text>
+          <text x="230" y="225">Apr 12</text>
+          <text x="380" y="225">Apr 19</text>
+          <text x="530" y="225">Apr 26</text>
+          <text x="680" y="225">May 3</text>
+          <text x="755" y="225">today</text>
+        </g>
+        <!-- Ideal range fill for FC (1.0 - 3.0 ppm => y 140 to 40) -->
+        <rect x="30" y="40" width="750" height="100" fill="var(--color-pool)" opacity="0.04"/>
+
+        <!-- pH line (range 7.0–7.8 mapped to upper region 60–100) -->
+        <polyline
+          fill="none"
+          stroke="var(--color-sun)"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          points="
+            55,82 130,76 205,84 280,72 355,68 430,80 505,74 580,70 655,76 730,74"/>
+        <!-- pH dots -->
+        <g fill="var(--color-sun)">
+          <circle cx="55" cy="82" r="3"/>
+          <circle cx="130" cy="76" r="3"/>
+          <circle cx="205" cy="84" r="3"/>
+          <circle cx="280" cy="72" r="3"/>
+          <circle cx="355" cy="68" r="3"/>
+          <circle cx="430" cy="80" r="3"/>
+          <circle cx="505" cy="74" r="3"/>
+          <circle cx="580" cy="70" r="3"/>
+          <circle cx="655" cy="76" r="3"/>
+          <circle cx="730" cy="74" r="3"/>
+        </g>
+
+        <!-- FC line -->
+        <polyline
+          fill="none"
+          stroke="var(--color-pool)"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          points="
+            55,108 130,118 205,96 280,88 355,124 430,142 505,130 580,116 655,104 730,98"/>
+        <!-- FC dots -->
+        <g fill="var(--color-pool)">
+          <circle cx="55" cy="108" r="3.5"/>
+          <circle cx="130" cy="118" r="3.5"/>
+          <circle cx="205" cy="96" r="3.5"/>
+          <circle cx="280" cy="88" r="3.5"/>
+          <circle cx="355" cy="124" r="3.5"/>
+          <circle cx="430" cy="142" r="3.5"/>
+          <circle cx="505" cy="130" r="3.5"/>
+          <circle cx="580" cy="116" r="3.5"/>
+          <circle cx="655" cy="104" r="3.5"/>
+          <circle cx="730" cy="98" r="3.5" stroke="var(--color-cream)" stroke-width="2"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Equipment glance (full width) -->
+    <div style="grid-column: 1 / -1;">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: var(--space-4);">
+        <h3 style="font-size: 1.25rem;">Connected equipment</h3>
+        <a href="#" style="font-size: var(--fs-small); color: var(--color-pool); font-weight: 500;">Manage all →</a>
+      </div>
+      <div class="equipment-grid">
+        <div class="card equipment-card">
+          <div class="equipment-row">
+            <div class="equipment-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="4" y="6" width="16" height="14" rx="2"/>
+                <path d="M8 10 H16 M8 13 H16 M8 16 H12"/>
+                <circle cx="6.5" cy="4" r="0.8" fill="currentColor"/>
+                <circle cx="17.5" cy="4" r="0.8" fill="currentColor"/>
+                <path d="M6.5 4 V6 M17.5 4 V6"/>
+              </svg>
+            </div>
+            <div style="flex: 1;">
+              <div class="equipment-name">IntelliCenter</div>
+              <div class="equipment-model">Pentair · Pool controller</div>
+              <div class="equipment-meta">
+                <span style="display: flex; align-items: center; gap: 6px;"><span class="status-dot"></span>Online</span>
+                <span>Polled 2 min ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card equipment-card">
+          <div class="equipment-row">
+            <div class="equipment-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 8 C5 5 8 5 8 8 V18 H4 V8 Z"/>
+                <path d="M16 8 C16 5 19 5 19 8 V18 H15 V8 Z"/>
+                <path d="M9 12 C10 11 14 11 15 12"/>
+                <path d="M9 14 C10 13 14 13 15 14"/>
+              </svg>
+            </div>
+            <div style="flex: 1;">
+              <div class="equipment-name">MasterTemp 400</div>
+              <div class="equipment-model">Pentair · Heater</div>
+              <div class="equipment-meta">
+                <span style="display: flex; align-items: center; gap: 6px;"><span class="status-dot off"></span>Off</span>
+                <span>Last ran 4 days ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card equipment-card">
+          <div class="equipment-row">
+            <div class="equipment-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="7"/>
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M12 5 V3 M12 21 V19 M5 12 H3 M21 12 H19"/>
+              </svg>
+            </div>
+            <div style="flex: 1;">
+              <div class="equipment-name">Polaris 9650iQ</div>
+              <div class="equipment-model">Robotic cleaner</div>
+              <div class="equipment-meta">
+                <span style="display: flex; align-items: center; gap: 6px;"><span class="status-dot warn"></span>Cycle running</span>
+                <span>23 min remaining</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card ghost-card">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+            <path d="M12 5 V19 M5 12 H19"/>
+          </svg>
+          <div>
+            <div style="font-weight: 500; color: inherit;">Connect equipment</div>
+            <div style="font-size: var(--fs-small); margin-top: 2px;">Pentair, Hayward, Jandy, and more.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

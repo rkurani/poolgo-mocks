@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Care · Showroom (Pure) — PoolGo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================================
+       CARE · PURE
+       The MyChart-for-pools surface. Every record has a source.
+       Same design system as the Command Center: white, Inter Tight,
+       OEM color inheritance, 4-source legend.
+       ============================================================ */
+
+    :root {
+      --bg: #FFFFFF;
+      --surface: #FAFAFA;
+      --surface-2: #F5F5F4;
+      --line: #ECECEC;
+      --line-2: #D8D8D8;
+      --ink: #0F1115;
+      --ink-soft: #45494F;
+      --ink-mute: #7A8088;
+
+      /* PoolGo cyan + OEM colors as the design system */
+      --pool: #1FA0BF;
+      --pool-soft: #E2F3F8;
+      --pentair: #1A4F8B;
+      --pentair-soft: #E5ECF4;
+      --hayward: #D8A700;
+      --hayward-soft: #FBF1D0;
+      --polaris: #00759C;
+      --polaris-soft: #DCEDF4;
+      --leslies: #0046A8;
+      --leslies-soft: #DEE8F7;
+      --suncountry: #B07B00;
+      --suncountry-soft: #F8EFD6;
+      --marina: #2C5F4A;
+      --marina-soft: #DFE8E2;
+
+      --sage: #2A8540;
+      --gold: #B07B00;
+      --coral: #C75240;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg); color: var(--ink);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      font-feature-settings: 'tnum';
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+
+    /* ----- top nav (same as Command) ----- */
+    .nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 32px; background: var(--bg);
+      border-bottom: 1px solid var(--line);
+      position: sticky; top: 0; z-index: 10;
+    }
+    .wm { font-weight: 700; font-size: 18px; letter-spacing: -0.03em; }
+    .wm .accent { color: var(--pool); font-weight: 800; }
+    .nav-tabs { display: flex; gap: 4px; }
+    .nav-tab {
+      padding: 8px 14px; border-radius: 8px;
+      font-size: 14px; font-weight: 500; color: var(--ink-mute);
+      letter-spacing: -0.005em;
+    }
+    .nav-tab:hover { color: var(--ink); background: var(--surface); }
+    .nav-tab.active { background: var(--ink); color: white; }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .nav-bell {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: var(--surface); position: relative;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--ink);
+    }
+    .nav-bell::after {
+      content: ''; position: absolute;
+      top: 8px; right: 9px; width: 7px; height: 7px;
+      background: var(--coral); border-radius: 50%;
+      border: 1.5px solid var(--surface);
+    }
+    .nav-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, #2A6098, #0E2F55);
+      color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 13px;
+    }
+
+    /* ----- page header ----- */
+    .header {
+      max-width: 1280px; margin: 32px auto 0;
+      padding: 0 32px;
+      display: grid; grid-template-columns: 1fr auto;
+      gap: 28px; align-items: end;
+    }
+    .header h1 {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: clamp(32px, 4vw, 44px);
+      font-weight: 800;
+      letter-spacing: -0.04em; line-height: 1.02;
+      color: var(--ink);
+      margin: 0;
+    }
+    .header .lede {
+      margin-top: 10px;
+      font-size: 15px; color: var(--ink-soft);
+      max-width: 60ch;
+    }
+    .header-stat-row {
+      display: flex; gap: 28px;
+    }
+    .header-stat .num {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 32px; font-weight: 800;
+      letter-spacing: -0.04em; line-height: 1;
+      color: var(--ink);
+    }
+    .header-stat .label {
+      margin-top: 6px;
+      font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase;
+      color: var(--ink-mute); font-weight: 600;
+    }
+
+    /* ----- filter row ----- */
+    .filter-bar {
+      max-width: 1280px; margin: 28px auto 0;
+      padding: 0 32px;
+      display: flex; gap: 8px; align-items: center;
+      flex-wrap: wrap;
+    }
+    .chip {
+      padding: 8px 14px; border-radius: 999px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      font-size: 13px; font-weight: 500;
+      color: var(--ink-soft);
+      cursor: pointer;
+      letter-spacing: -0.005em;
+    }
+    .chip:hover { background: var(--surface); }
+    .chip.active {
+      background: var(--ink); color: white;
+      border-color: var(--ink);
+    }
+    .chip .count {
+      margin-left: 6px; font-weight: 700;
+      color: var(--ink-mute); font-size: 12px;
+    }
+    .chip.active .count { color: rgba(255,255,255,0.6); }
+
+    /* ----- section ----- */
+    .section {
+      max-width: 1280px; margin: 56px auto 0;
+      padding: 0 32px;
+    }
+    .section-head {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-bottom: 20px;
+    }
+    .section-title {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 22px; font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+    .section-meta {
+      font-size: 13px; color: var(--ink-mute); font-weight: 500;
+    }
+    .section-meta strong { color: var(--ink); font-weight: 600; }
+
+    /* ----- featured row (latest of each type) ----- */
+    .latest-grid {
+      display: grid; grid-template-columns: 2fr 1.5fr 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 980px) { .latest-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 600px) { .latest-grid { grid-template-columns: 1fr; } }
+
+    .latest-card {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 22px;
+      display: flex; flex-direction: column;
+      position: relative;
+      transition: border-color 200ms ease, transform 200ms ease;
+    }
+    .latest-card:hover {
+      border-color: var(--line-2);
+      transform: translateY(-2px);
+    }
+    .latest-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--src-color, var(--ink));
+      border-radius: 16px 16px 0 0;
+    }
+    .latest-card[data-src="suncountry"] { --src-color: var(--suncountry); }
+    .latest-card[data-src="leslies"]    { --src-color: var(--leslies); }
+    .latest-card[data-src="marina"]     { --src-color: var(--marina); }
+    .latest-card[data-src="pentair"]    { --src-color: var(--pentair); }
+    .latest-card[data-src="hayward"]    { --src-color: var(--hayward); }
+    .latest-card[data-src="polaris"]    { --src-color: var(--polaris); }
+    .latest-card[data-src="poolgo"]     { --src-color: var(--pool); }
+
+    .latest-source-row {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 14px;
+    }
+    .latest-logo {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: white;
+      border: 1px solid var(--line);
+      padding: 4px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .latest-logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
+    .latest-logo.dark {
+      background: var(--ink); color: white; border-color: var(--ink);
+      font-weight: 800; font-size: 12px; letter-spacing: -0.04em;
+    }
+    .latest-source-name {
+      font-size: 13px; font-weight: 600;
+      color: var(--ink); letter-spacing: -0.01em;
+    }
+    .latest-source-meta {
+      font-size: 11px; color: var(--ink-mute);
+      letter-spacing: 0.04em;
+    }
+    .latest-card-tag {
+      font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--src-color, var(--ink-mute));
+      font-weight: 700; margin-bottom: 6px;
+    }
+    .latest-card-headline {
+      display: flex; align-items: baseline; gap: 8px;
+    }
+    .latest-card-headline .num {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 38px; font-weight: 800;
+      letter-spacing: -0.045em; line-height: 0.95;
+      color: var(--ink);
+    }
+    .latest-card-headline .lbl {
+      font-size: 13px; color: var(--ink-soft);
+    }
+    .latest-card-body {
+      margin-top: 8px;
+      font-size: 13px; color: var(--ink-soft);
+      line-height: 1.45;
+    }
+    .latest-card-body strong { color: var(--ink); font-weight: 600; }
+    .latest-card-cta {
+      margin-top: auto; padding-top: 14px;
+      font-size: 12px; font-weight: 600;
+      color: var(--src-color, var(--ink));
+      letter-spacing: -0.005em;
+    }
+    /* small mini-grid inside the water-card */
+    .latest-mini-grid {
+      margin-top: 12px;
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .lmg-cell {
+      background: var(--surface);
+      border-radius: 6px;
+      padding: 7px 8px;
+      text-align: center;
+    }
+    .lmg-name {
+      font-size: 9px; letter-spacing: 0.04em; text-transform: uppercase;
+      color: var(--ink-mute); font-weight: 600;
+    }
+    .lmg-val {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 14px; font-weight: 700;
+      color: var(--ink); letter-spacing: -0.025em;
+      margin-top: 2px;
+    }
+    .lmg-val.warn { color: var(--gold); }
+
+    /* ----- timeline feed ----- */
+    .timeline {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .timeline-day {
+      padding: 12px 22px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+      font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--ink-mute); font-weight: 700;
+      position: sticky;
+      top: 68px;
+      z-index: 5;
+    }
+    .timeline-row {
+      display: grid; grid-template-columns: 96px 36px 1fr auto;
+      gap: 16px; padding: 16px 22px;
+      border-bottom: 1px solid var(--line);
+      align-items: center;
+      position: relative;
+    }
+    .timeline-row:last-child { border-bottom: none; }
+    .timeline-row:hover { background: var(--surface); }
+    .timeline-row::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 16px; bottom: 16px;
+      width: 3px;
+      background: var(--row-accent, transparent);
+      border-radius: 0 2px 2px 0;
+    }
+    .timeline-row[data-src="suncountry"] { --row-accent: var(--suncountry); }
+    .timeline-row[data-src="leslies"]    { --row-accent: var(--leslies); }
+    .timeline-row[data-src="marina"]     { --row-accent: var(--marina); }
+    .timeline-row[data-src="pentair"]    { --row-accent: var(--pentair); }
+    .timeline-row[data-src="hayward"]    { --row-accent: var(--hayward); }
+    .timeline-row[data-src="polaris"]    { --row-accent: var(--polaris); }
+    .timeline-row[data-src="poolgo"]     { --row-accent: var(--pool); }
+    .timeline-row[data-src="you"]        { --row-accent: var(--ink-mute); }
+
+    .tl-time {
+      font-size: 12px; color: var(--ink-mute);
+      font-weight: 500;
+      letter-spacing: -0.005em;
+    }
+    .tl-time strong { display: block; color: var(--ink); font-weight: 600; }
+    .tl-logo {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: white;
+      border: 1px solid var(--line);
+      display: flex; align-items: center; justify-content: center;
+      padding: 4px;
+    }
+    .tl-logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
+    .tl-logo.dark {
+      background: var(--ink); color: white; border-color: var(--ink);
+      font-weight: 800; font-size: 12px; letter-spacing: -0.04em;
+    }
+    .tl-text {
+      font-size: 14px; color: var(--ink);
+      letter-spacing: -0.005em;
+    }
+    .tl-text strong { font-weight: 600; }
+    .tl-text .from {
+      font-size: 12px; color: var(--ink-mute);
+      margin-top: 2px;
+    }
+    .tl-meta {
+      font-size: 11px; letter-spacing: 0.04em;
+      color: var(--row-accent, var(--ink-mute));
+      text-transform: uppercase; font-weight: 700;
+    }
+    /* Inline data preview (for water tests in feed) */
+    .tl-inline {
+      display: inline-flex; gap: 8px;
+      margin-top: 6px;
+      font-size: 11px;
+    }
+    .tl-inline-pill {
+      padding: 2px 7px;
+      background: var(--surface);
+      border-radius: 4px;
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: -0.005em;
+    }
+    .tl-inline-pill.warn {
+      background: rgba(176,123,0,0.14); color: var(--gold);
+    }
+
+    /* ----- chart card ----- */
+    .chart-card {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 24px;
+    }
+    .chart-row {
+      display: grid; grid-template-columns: 280px 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 880px) { .chart-row { grid-template-columns: 1fr; } }
+    .chart-stat-block {
+      display: flex; flex-direction: column;
+    }
+    .chart-stat-label {
+      font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--ink-mute); font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .chart-stat-num {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 56px; font-weight: 800;
+      letter-spacing: -0.045em; line-height: 0.95;
+      color: var(--ink);
+    }
+    .chart-stat-num .unit {
+      font-size: 18px; color: var(--ink-mute);
+      font-weight: 600; margin-left: 4px;
+    }
+    .chart-stat-meta {
+      margin-top: 6px;
+      font-size: 13px; color: var(--ink-soft);
+    }
+    .chart-stat-source {
+      margin-top: 14px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .chart-svg {
+      width: 100%; height: 160px;
+    }
+    .chart-legend {
+      margin-top: 12px;
+      display: flex; gap: 14px;
+      font-size: 12px;
+    }
+    .chart-leg-item {
+      display: flex; align-items: center; gap: 6px;
+      color: var(--ink-soft);
+    }
+    .chart-leg-swatch {
+      width: 14px; height: 3px; border-radius: 2px;
+    }
+
+    /* ----- photos grid ----- */
+    .photos-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 880px) { .photos-grid { grid-template-columns: repeat(2, 1fr); } }
+    .photo {
+      aspect-ratio: 1;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      background: var(--surface-2);
+      cursor: pointer;
+    }
+    .photo-bg {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+    }
+    .photo-bg.b1 { background-image: linear-gradient(135deg, #4D9BAE 0%, #1F5C8B 100%); }
+    .photo-bg.b2 { background-image: linear-gradient(135deg, #2C5F4A 0%, #1A4332 100%); }
+    .photo-bg.b3 { background-image: linear-gradient(135deg, #B07B00 0%, #7A5418 100%); }
+    .photo-bg.b4 { background-image: linear-gradient(135deg, #2A6098 0%, #0E2F55 100%); }
+    .photo-bg.b5 { background-image: linear-gradient(135deg, #5E6B5A 0%, #3F4B3D 100%); }
+    .photo-bg.b6 { background-image: linear-gradient(135deg, #B07B00 0%, #7A5418 100%); }
+    .photo-bg.b7 { background-image: linear-gradient(135deg, #00759C 0%, #003C52 100%); }
+    .photo-bg.b8 { background-image: linear-gradient(135deg, #1A4F8B 0%, #0E2F55 100%); }
+    .photo-bg.real {
+      background-image: url('assets/pool-hero.jpg');
+    }
+    .photo::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.55) 100%);
+    }
+    .photo-overlay {
+      position: absolute; bottom: 10px; left: 10px; right: 10px;
+      color: white; z-index: 2;
+      display: flex; justify-content: space-between; align-items: flex-end;
+    }
+    .photo-caption {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: -0.005em;
+      max-width: 80%;
+    }
+    .photo-caption .from {
+      display: block;
+      font-size: 10px; font-weight: 500; opacity: 0.85;
+      margin-top: 2px;
+    }
+    .photo-source {
+      width: 24px; height: 24px;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.95);
+      padding: 3px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .photo-source img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+    /* ----- ai band (same as command) ----- */
+    .ai-card {
+      background: var(--ink); color: white;
+      border-radius: 16px;
+      padding: 22px 28px;
+      display: flex; flex-direction: column; justify-content: space-between;
+      position: relative; overflow: hidden;
+    }
+    .ai-card::after {
+      content: ''; position: absolute;
+      bottom: -50px; right: -50px;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(31,160,191,0.45) 0%, transparent 70%);
+    }
+    .ai-top {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 12px;
+      position: relative; z-index: 2;
+    }
+    .ai-mark {
+      width: 32px; height: 32px;
+      background: var(--pool); color: white;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 14px; letter-spacing: -0.04em;
+    }
+    .ai-meta {
+      font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase;
+      color: rgba(255,255,255,0.6); font-weight: 600;
+    }
+    .ai-body {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 16px; font-weight: 500; line-height: 1.5;
+      color: white; max-width: 60ch;
+      letter-spacing: -0.005em;
+      position: relative; z-index: 2;
+    }
+    .ai-body strong { font-weight: 700; }
+    .ai-body mark {
+      background: rgba(255,255,255,0.15); color: white;
+      padding: 0 4px; border-radius: 3px;
+    }
+
+    /* ----- page caption ----- */
+    .page-caption {
+      position: fixed; bottom: 24px; left: 24px;
+      background: var(--ink); color: white;
+      font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase;
+      font-weight: 600;
+      padding: 8px 14px; border-radius: 999px; z-index: 100;
+    }
+    .page-caption .num { color: var(--pool); margin-right: 6px; }
+  </style>
+</head>
+<body>
+
+  <!-- nav -->
+  <nav class="nav">
+    <div class="wm">PoolGo<span class="accent">.</span></div>
+    <div class="nav-tabs">
+      <a href="screen-cmd-showroom-pure.html" class="nav-tab">My Pool</a>
+      <a href="#" class="nav-tab active">Care</a>
+      <a href="#" class="nav-tab">Equipment</a>
+      <a href="#" class="nav-tab">Routines</a>
+      <a href="#" class="nav-tab">Folks</a>
+      <a href="#" class="nav-tab">Inbox</a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-bell">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      </div>
+      <div class="nav-avatar">RK</div>
+    </div>
+  </nav>
+
+  <!-- header -->
+  <header class="header">
+    <div>
+      <h1>Care</h1>
+      <p class="lede">Every test, visit, photo, and message. Sourced from the people, stores, and equipment that have actually touched The Big Blue. Your record, never theirs.</p>
+    </div>
+    <div class="header-stat-row">
+      <div class="header-stat">
+        <div class="num">8</div>
+        <div class="label">Water tests · 30d</div>
+      </div>
+      <div class="header-stat">
+        <div class="num">4</div>
+        <div class="label">Service visits · 30d</div>
+      </div>
+      <div class="header-stat">
+        <div class="num">23</div>
+        <div class="label">Photos this year</div>
+      </div>
+      <div class="header-stat">
+        <div class="num">12</div>
+        <div class="label">Messages</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- filter chips -->
+  <div class="filter-bar">
+    <button class="chip active">All<span class="count">147</span></button>
+    <button class="chip">Water tests<span class="count">8</span></button>
+    <button class="chip">Service visits<span class="count">4</span></button>
+    <button class="chip">Telemetry<span class="count">112</span></button>
+    <button class="chip">Photos<span class="count">23</span></button>
+    <button class="chip">Messages<span class="count">12</span></button>
+    <span style="margin-left: auto; font-size: 12px; color: var(--ink-mute);">Sources · <strong style="color: var(--ink); font-weight: 600;">Sun Country, Leslie's, Marina, Pentair, Polaris</strong></span>
+  </div>
+
+  <!-- AI summary -->
+  <section class="section">
+    <div class="ai-card">
+      <div class="ai-top">
+        <div class="ai-mark">P</div>
+        <div class="ai-meta">PoolGo concierge · summary of last 30 days</div>
+      </div>
+      <p class="ai-body">Your pool's chemistry has been <strong>stable across 8 tests from 2 stores</strong>. The only drift is <mark>CYA at 42 ppm and climbing</mark>, mentioned by Anthony at Sun Country three weeks running. Carlos has visited 4 times, last on May 5 (36 min, $58). Three photos from this week show the salt cell is healthy. No equipment has thrown an alert.</p>
+    </div>
+  </section>
+
+  <!-- featured: latest of each type -->
+  <section class="section">
+    <div class="section-head">
+      <h2 class="section-title">Latest of each kind</h2>
+      <span class="section-meta">5 sources · color-coded by who reported</span>
+    </div>
+
+    <div class="latest-grid">
+
+      <!-- Latest water test -->
+      <div class="latest-card" data-src="suncountry">
+        <div class="latest-card-tag">Water test · imported</div>
+        <div class="latest-source-row">
+          <div class="latest-logo">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B07B00" stroke-width="2.4"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>
+          </div>
+          <div>
+            <div class="latest-source-name">Sun Country Pools, Roseville</div>
+            <div class="latest-source-meta">Yesterday · 9:14 am · K-2006 by Anthony T.</div>
+          </div>
+        </div>
+        <div class="latest-card-headline">
+          <span class="num">2.4</span>
+          <span class="lbl">ppm free chlorine, all 8 in range</span>
+        </div>
+        <p class="latest-card-body">Anthony noted CYA is climbing, third week running. Worth a partial drain before summer.</p>
+        <div class="latest-mini-grid">
+          <div class="lmg-cell"><div class="lmg-name">pH</div><div class="lmg-val">7.4</div></div>
+          <div class="lmg-cell"><div class="lmg-name">TA</div><div class="lmg-val">90</div></div>
+          <div class="lmg-cell"><div class="lmg-name">CYA</div><div class="lmg-val warn">42</div></div>
+          <div class="lmg-cell"><div class="lmg-name">Salt</div><div class="lmg-val">3.2k</div></div>
+        </div>
+        <div class="latest-card-cta">Open water log →</div>
+      </div>
+
+      <!-- Latest service visit -->
+      <div class="latest-card" data-src="marina">
+        <div class="latest-card-tag">Service visit · weekly</div>
+        <div class="latest-source-row">
+          <div class="latest-logo dark" style="background: linear-gradient(135deg, var(--marina), #1A4332); border-color: var(--marina);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="5" r="3"/><line x1="12" y1="22" x2="12" y2="8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/></svg>
+          </div>
+          <div>
+            <div class="latest-source-name">Carlos Torres · Marina Pool Service</div>
+            <div class="latest-source-meta">May 5, Tuesday · 36 min · $58</div>
+          </div>
+        </div>
+        <div class="latest-card-headline">
+          <span class="num">8</span>
+          <span class="lbl">tasks completed, full chemistry adjustment</span>
+        </div>
+        <p class="latest-card-body">Routine weekly. All tasks done. <strong>Filter PSI noted at 18, up from 16 a month ago.</strong> Suggested partial drain on next visit. CYA climbing.</p>
+        <div class="latest-card-cta">Open visit log →</div>
+      </div>
+
+      <!-- Latest equipment event -->
+      <div class="latest-card" data-src="pentair">
+        <div class="latest-card-tag">Telemetry · live</div>
+        <div class="latest-source-row">
+          <div class="latest-logo"><img src="assets/pentair.jpg" alt="Pentair" /></div>
+          <div>
+            <div class="latest-source-name">IntelliFlo3 pump</div>
+            <div class="latest-source-meta">5:30 am today</div>
+          </div>
+        </div>
+        <div class="latest-card-headline">
+          <span class="num">2.28</span>
+          <span class="lbl">kWh today</span>
+        </div>
+        <p class="latest-card-body">Schedule B started 5:30, 1,750 RPM, stops 11:30. <strong>Filter PSI 18.</strong></p>
+        <div class="latest-card-cta">Open telemetry →</div>
+      </div>
+
+      <!-- Latest photo -->
+      <div class="latest-card" data-src="marina">
+        <div class="latest-card-tag">Photo · from your tech</div>
+        <div class="latest-source-row">
+          <div class="latest-logo dark" style="background: linear-gradient(135deg, var(--marina), #1A4332); border-color: var(--marina);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><circle cx="12" cy="5" r="3"/><line x1="12" y1="22" x2="12" y2="8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/></svg>
+          </div>
+          <div>
+            <div class="latest-source-name">Carlos · Marina</div>
+            <div class="latest-source-meta">May 5, 8:12 am</div>
+          </div>
+        </div>
+        <div style="height: 90px; border-radius: 8px; margin-top: 4px; background: linear-gradient(135deg, #4D9BAE 0%, #1F5C8B 100%); position: relative; overflow: hidden;">
+          <div style="position: absolute; bottom: 6px; left: 8px; color: white; font-size: 10px; letter-spacing: 0.04em; font-weight: 600;">SALT CELL · NO SCALE</div>
+        </div>
+        <div class="latest-card-cta" style="margin-top: 12px;">Open photos →</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- chart -->
+  <section class="section">
+    <div class="section-head">
+      <h2 class="section-title">Free chlorine, last 30 days</h2>
+      <span class="section-meta">Aggregated · <strong>Sun Country (6) + Leslie's (1) + manual (1)</strong></span>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-row">
+        <div class="chart-stat-block">
+          <div class="chart-stat-label">Average</div>
+          <div class="chart-stat-num">2.2<span class="unit">ppm</span></div>
+          <div class="chart-stat-meta">Range 1.6 – 2.7 · always in ideal band</div>
+          <div class="chart-stat-source">
+            <div style="display: flex; gap: -6px;">
+              <div style="width: 22px; height: 22px; border-radius: 50%; background: var(--suncountry); border: 2px solid white; box-shadow: 0 0 0 1px var(--line);"></div>
+              <div style="width: 22px; height: 22px; border-radius: 50%; background: var(--leslies); border: 2px solid white; margin-left: -6px; box-shadow: 0 0 0 1px var(--line);"></div>
+              <div style="width: 22px; height: 22px; border-radius: 50%; background: var(--ink-mute); border: 2px solid white; margin-left: -6px; box-shadow: 0 0 0 1px var(--line);"></div>
+            </div>
+            <span style="font-size: 12px; color: var(--ink-mute); margin-left: 8px;">3 sources</span>
+          </div>
+        </div>
+        <svg class="chart-svg" viewBox="0 0 600 160" preserveAspectRatio="none">
+          <!-- ideal band fill -->
+          <rect x="0" y="40" width="600" height="60" fill="var(--pool-soft)" opacity="0.5"/>
+          <line x1="0" y1="40" x2="600" y2="40" stroke="var(--pool)" stroke-width="0.5" stroke-dasharray="3,3" opacity="0.4"/>
+          <line x1="0" y1="100" x2="600" y2="100" stroke="var(--pool)" stroke-width="0.5" stroke-dasharray="3,3" opacity="0.4"/>
+          <text x="6" y="38" fill="var(--pool)" font-family="Inter, sans-serif" font-size="9" font-weight="700">3.0 PPM</text>
+          <text x="6" y="115" fill="var(--pool)" font-family="Inter, sans-serif" font-size="9" font-weight="700">1.0 PPM</text>
+          <!-- main line -->
+          <polyline fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" points="0,80 60,86 120,72 180,62 240,90 300,98 360,86 420,68 480,58 540,52 600,64"/>
+          <!-- source dots -->
+          <circle cx="0"   cy="80" r="5" fill="var(--suncountry)" stroke="white" stroke-width="2"/>
+          <circle cx="60"  cy="86" r="5" fill="var(--suncountry)" stroke="white" stroke-width="2"/>
+          <circle cx="120" cy="72" r="5" fill="var(--suncountry)" stroke="white" stroke-width="2"/>
+          <circle cx="180" cy="62" r="5" fill="var(--ink-mute)" stroke="white" stroke-width="2"/>
+          <circle cx="240" cy="90" r="5" fill="var(--leslies)" stroke="white" stroke-width="2"/>
+          <circle cx="300" cy="98" r="5" fill="var(--suncountry)" stroke="white" stroke-width="2"/>
+          <circle cx="360" cy="86" r="5" fill="var(--suncountry)" stroke="white" stroke-width="2"/>
+          <circle cx="420" cy="68" r="5" fill="var(--suncountry)" stroke="white" stroke-width="2"/>
+          <circle cx="480" cy="58" r="5" fill="var(--suncountry)" stroke="white" stroke-width="2"/>
+          <circle cx="540" cy="52" r="5" fill="var(--suncountry)" stroke="white" stroke-width="2"/>
+          <circle cx="600" cy="64" r="5" fill="var(--suncountry)" stroke="white" stroke-width="2"/>
+          <!-- date axis -->
+          <text x="0"   y="155" fill="var(--ink-mute)" font-family="Inter, sans-serif" font-size="9" font-weight="500">Apr 6</text>
+          <text x="180" y="155" fill="var(--ink-mute)" font-family="Inter, sans-serif" font-size="9" font-weight="500" text-anchor="middle">Apr 16</text>
+          <text x="360" y="155" fill="var(--ink-mute)" font-family="Inter, sans-serif" font-size="9" font-weight="500" text-anchor="middle">Apr 26</text>
+          <text x="600" y="155" fill="var(--ink-mute)" font-family="Inter, sans-serif" font-size="9" font-weight="500" text-anchor="end">Today</text>
+        </svg>
+      </div>
+      <div class="chart-legend">
+        <span class="chart-leg-item"><span class="chart-leg-swatch" style="background: var(--suncountry);"></span>Sun Country (6)</span>
+        <span class="chart-leg-item"><span class="chart-leg-swatch" style="background: var(--leslies);"></span>Leslie's (1)</span>
+        <span class="chart-leg-item"><span class="chart-leg-swatch" style="background: var(--ink-mute);"></span>Manual entry (1)</span>
+        <span class="chart-leg-item" style="margin-left: auto;">Each dot is the source that ran the test.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- timeline feed -->
+  <section class="section">
+    <div class="section-head">
+      <h2 class="section-title">Timeline · last 7 days</h2>
+      <span class="section-meta">Most recent first · color-coded by source</span>
+    </div>
+
+    <div class="timeline">
+
+      <div class="timeline-day">Today · May 7</div>
+
+      <div class="timeline-row" data-src="poolgo">
+        <div class="tl-time"><strong>just now</strong>summary</div>
+        <div class="tl-logo dark">P</div>
+        <div>
+          <div class="tl-text"><strong>PoolGo concierge</strong> drafted a partial-drain plan for next Tuesday's visit.</div>
+          <div class="tl-text from">Pulled from Sun Country test, IntelliFlo3, Carlos's note, and your message log.</div>
+        </div>
+        <div class="tl-meta">Concierge</div>
+      </div>
+
+      <div class="timeline-row" data-src="suncountry">
+        <div class="tl-time"><strong>9:14 am</strong>water test</div>
+        <div class="tl-logo">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B07B00" stroke-width="2.4"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>
+        </div>
+        <div>
+          <div class="tl-text"><strong>Sun Country Pools</strong> ran a full water test · <strong>Free Cl 2.4 ppm</strong>, all 8 parameters in range.</div>
+          <div class="tl-text from">Anthony T. · K-2006 drop test · noted CYA climbing, third week.</div>
+          <div class="tl-inline">
+            <span class="tl-inline-pill">FC 2.4</span>
+            <span class="tl-inline-pill">pH 7.4</span>
+            <span class="tl-inline-pill warn">CYA 42</span>
+            <span class="tl-inline-pill">Salt 3,200</span>
+          </div>
+        </div>
+        <div class="tl-meta">Sun Country</div>
+      </div>
+
+      <div class="timeline-row" data-src="suncountry">
+        <div class="tl-time"><strong>8:42 am</strong>message</div>
+        <div class="tl-logo">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B07B00" stroke-width="2.4"><circle cx="12" cy="12" r="4"/></svg>
+        </div>
+        <div>
+          <div class="tl-text"><strong>Anthony T.</strong> sent a message about CYA, suggested a partial-drain quote.</div>
+          <div class="tl-text from">Sun Country · 1 unread.</div>
+        </div>
+        <div class="tl-meta">Message</div>
+      </div>
+
+      <div class="timeline-row" data-src="pentair">
+        <div class="tl-time"><strong>5:30 am</strong>telemetry</div>
+        <div class="tl-logo"><img src="assets/pentair.jpg" alt="Pentair" /></div>
+        <div>
+          <div class="tl-text"><strong>IntelliFlo3 pump</strong> started Schedule B · 1,750 RPM, stops 11:30 am.</div>
+          <div class="tl-text from">Pentair IntelliCenter · automated.</div>
+        </div>
+        <div class="tl-meta">Pentair</div>
+      </div>
+
+      <div class="timeline-day">Yesterday · May 6</div>
+
+      <div class="timeline-row" data-src="leslies">
+        <div class="tl-time"><strong>2:18 pm</strong>water test</div>
+        <div class="tl-logo"><img src="assets/leslies.png" alt="Leslie's" /></div>
+        <div>
+          <div class="tl-text">Backup water test from <strong>Leslie's Pool Supplies</strong> · matches Sun Country reading within tolerance.</div>
+          <div class="tl-text from">Jessica R. · Roseville location · brought in by you on the way home.</div>
+          <div class="tl-inline">
+            <span class="tl-inline-pill">FC 2.5</span>
+            <span class="tl-inline-pill">pH 7.5</span>
+            <span class="tl-inline-pill warn">CYA 41</span>
+            <span class="tl-inline-pill">Salt 3,180</span>
+          </div>
+        </div>
+        <div class="tl-meta">Leslie's</div>
+      </div>
+
+      <div class="timeline-row" data-src="you">
+        <div class="tl-time"><strong>6:42 pm</strong>action</div>
+        <div class="tl-logo">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink-soft)" stroke-width="2"><path d="M20 12H4M12 4l-8 8 8 8"/></svg>
+        </div>
+        <div>
+          <div class="tl-text">You turned off the <strong>heater</strong>, setpoint was 84°F.</div>
+          <div class="tl-text from">Manual override · via PoolGo iOS.</div>
+        </div>
+        <div class="tl-meta">You</div>
+      </div>
+
+      <div class="timeline-day">5 days ago · May 5</div>
+
+      <div class="timeline-row" data-src="marina">
+        <div class="tl-time"><strong>7:42 am</strong>service visit</div>
+        <div class="tl-logo dark" style="background: linear-gradient(135deg, var(--marina), #1A4332); border-color: var(--marina);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="5" r="3"/><line x1="12" y1="22" x2="12" y2="8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/></svg>
+        </div>
+        <div>
+          <div class="tl-text"><strong>Carlos Torres</strong> · Marina Pool Service · weekly visit, 36 minutes, $58 charged.</div>
+          <div class="tl-text from">Skim, vacuum, brush, full chemistry, salt cell inspection. Filter PSI noted at 18.</div>
+        </div>
+        <div class="tl-meta">Marina</div>
+      </div>
+
+      <div class="timeline-row" data-src="marina">
+        <div class="tl-time"><strong>8:12 am</strong>photos</div>
+        <div class="tl-logo dark" style="background: linear-gradient(135deg, var(--marina), #1A4332); border-color: var(--marina);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        </div>
+        <div>
+          <div class="tl-text"><strong>Carlos took 4 photos</strong> · salt cell, pool surface, filter PSI gauge, equipment pad.</div>
+          <div class="tl-text from">Marina Pool Service · attached to Visit 047.</div>
+        </div>
+        <div class="tl-meta">Marina</div>
+      </div>
+
+      <div class="timeline-day">2 days ago · May 5 (also)</div>
+
+      <div class="timeline-row" data-src="polaris">
+        <div class="tl-time"><strong>2:00 pm</strong>cleaning</div>
+        <div class="tl-logo"><img src="assets/polaris.png" alt="Polaris" /></div>
+        <div>
+          <div class="tl-text"><strong>Polaris cleaner</strong> ran Quick Clean for 38 minutes · battery 92% on completion.</div>
+          <div class="tl-text from">Polaris 9650iQ · scheduled, finished without faults.</div>
+        </div>
+        <div class="tl-meta">Polaris</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- photos grid -->
+  <section class="section" style="margin-bottom: 64px;">
+    <div class="section-head">
+      <h2 class="section-title">Photos · last 30 days</h2>
+      <span class="section-meta"><strong>23 photos</strong> · 4 from techs · 19 from you</span>
+    </div>
+
+    <div class="photos-grid">
+      <div class="photo">
+        <div class="photo-bg b1"></div>
+        <div class="photo-overlay">
+          <div class="photo-caption">Salt cell, no scale<span class="from">Carlos · May 5</span></div>
+          <div class="photo-source" style="background: var(--marina); padding: 2px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><circle cx="12" cy="5" r="3"/><line x1="12" y1="22" x2="12" y2="8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="photo">
+        <div class="photo-bg real"></div>
+        <div class="photo-overlay">
+          <div class="photo-caption">The Big Blue, this morning<span class="from">You · May 7</span></div>
+          <div class="photo-source" style="background: white;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--ink-soft)" stroke-width="2"><path d="M20 12H4M12 4l-8 8 8 8"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="photo">
+        <div class="photo-bg b2"></div>
+        <div class="photo-overlay">
+          <div class="photo-caption">Pool surface, post-skim<span class="from">Carlos · May 5</span></div>
+          <div class="photo-source" style="background: var(--marina); padding: 2px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><circle cx="12" cy="5" r="3"/><line x1="12" y1="22" x2="12" y2="8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="photo">
+        <div class="photo-bg b3"></div>
+        <div class="photo-overlay">
+          <div class="photo-caption">Filter PSI gauge · 18<span class="from">Carlos · May 5</span></div>
+          <div class="photo-source" style="background: var(--marina); padding: 2px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><circle cx="12" cy="5" r="3"/><line x1="12" y1="22" x2="12" y2="8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="photo">
+        <div class="photo-bg b4"></div>
+        <div class="photo-overlay">
+          <div class="photo-caption">Equipment pad<span class="from">Carlos · May 5</span></div>
+          <div class="photo-source" style="background: var(--marina); padding: 2px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><circle cx="12" cy="5" r="3"/><line x1="12" y1="22" x2="12" y2="8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="photo">
+        <div class="photo-bg b6"></div>
+        <div class="photo-overlay">
+          <div class="photo-caption">Test strip, this morning<span class="from">You · May 7</span></div>
+        </div>
+      </div>
+      <div class="photo">
+        <div class="photo-bg b5"></div>
+        <div class="photo-overlay">
+          <div class="photo-caption">Pool, evening<span class="from">You · May 4</span></div>
+        </div>
+      </div>
+      <div class="photo">
+        <div class="photo-bg b7"></div>
+        <div class="photo-overlay">
+          <div class="photo-caption">Polaris cleaning · time-lapse<span class="from">Polaris · May 5</span></div>
+          <div class="photo-source" style="background: var(--polaris); padding: 2px;">
+            <span style="color: white; font-weight: 800; font-size: 8px; letter-spacing: -0.04em;">POL</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="page-caption"><span class="num">CARE</span> Showroom · Pure brand applied to records</div>
+</body>
+</html>

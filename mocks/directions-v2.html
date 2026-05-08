@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PoolGo — Brand Directions v2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@400;500;600;700;800;900&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    /* --- Neutral compare-page chrome --- */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: #f5f5f5;
+      color: #1a1a1a;
+      line-height: 1.5;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+
+    .compare-header {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 64px 32px 32px;
+    }
+    .compare-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #999;
+      font-weight: 500;
+    }
+    .compare-title {
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin: 8px 0 12px;
+    }
+    .compare-sub {
+      max-width: 75ch;
+      color: #555;
+      font-size: 16px;
+    }
+    .compare-sub a { color: #1a1a1a; text-decoration: underline; }
+    .compare-toc {
+      display: flex;
+      gap: 8px;
+      margin-top: 32px;
+      flex-wrap: wrap;
+    }
+    .toc-chip {
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: white;
+      border: 1px solid #ddd;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .toc-chip:hover { background: #1a1a1a; color: white; border-color: #1a1a1a; }
+
+    .direction-section {
+      padding: 96px 0 64px;
+      border-top: 1px solid #e5e5e5;
+    }
+    .direction-header {
+      max-width: 1200px;
+      margin: 0 auto 48px;
+      padding: 0 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .direction-meta { max-width: 60%; }
+    .direction-num {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #999;
+      font-weight: 500;
+    }
+    .direction-name {
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      margin: 8px 0 12px;
+    }
+    .direction-tagline {
+      color: #555;
+      font-size: 16px;
+      max-width: 60ch;
+    }
+    .direction-references {
+      font-size: 13px;
+      color: #888;
+    }
+    .direction-references strong { color: #1a1a1a; font-weight: 500; }
+
+    .stage {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 32px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+    @media (max-width: 880px) { .stage { grid-template-columns: 1fr; } }
+    .stage-cell {
+      border-radius: 16px;
+      overflow: hidden;
+      min-height: 540px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);
+    }
+
+    .palette-row {
+      display: flex;
+      max-width: 1200px;
+      margin: 32px auto 0;
+      padding: 0 32px;
+    }
+    .swatch {
+      flex: 1;
+      padding: 16px 12px;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+    }
+    .swatch:first-child { border-radius: 8px 0 0 8px; }
+    .swatch:last-child { border-radius: 0 8px 8px 0; }
+    .swatch-name { display: block; font-weight: 500; margin-bottom: 4px; }
+    .swatch-hex { font-family: 'JetBrains Mono', monospace; font-size: 11px; opacity: 0.65; }
+
+    .type-spec {
+      max-width: 1200px;
+      margin: 24px auto 0;
+      padding: 0 32px;
+      font-size: 13px;
+      color: #555;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .type-spec strong { color: #1a1a1a; font-weight: 500; }
+
+    .vibe-grid {
+      max-width: 1200px;
+      margin: 24px auto 0;
+      padding: 0 32px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      font-size: 14px;
+      color: #555;
+    }
+    .vibe-grid h4 {
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #999;
+      font-weight: 500;
+      margin: 0 0 6px;
+    }
+    .vibe-grid p { margin: 0; }
+    @media (max-width: 700px) { .vibe-grid { grid-template-columns: 1fr; } }
+
+    /* ============================================================ */
+    /*  DIRECTION 4 — FRIENDLY NATIVE  (Amie / Family / Notion)      */
+    /* ============================================================ */
+    .fn2-stage {
+      background: #FBFAF7;
+      color: #0F0F0F;
+      padding: 56px 48px;
+      font-family: 'Inter', sans-serif;
+      position: relative;
+    }
+    .fn2-mark {
+      width: 44px; height: 44px;
+      background: #0F0F0F;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      color: #FFD23F;
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.03em;
+      margin-bottom: 32px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08), 0 8px 16px rgba(0,0,0,0.06);
+    }
+    .fn2-headline {
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: clamp(40px, 5vw, 60px);
+      letter-spacing: -0.035em;
+      line-height: 1.02;
+      color: #0F0F0F;
+      max-width: 13ch;
+    }
+    .fn2-headline .highlight {
+      background: linear-gradient(180deg, transparent 60%, #FCE57A 60%);
+      padding: 0 4px;
+      color: #5C4500;
+    }
+    .fn2-body {
+      margin-top: 24px;
+      font-size: 16px;
+      color: #525252;
+      max-width: 36ch;
+      line-height: 1.55;
+    }
+    .fn2-cta-row {
+      margin-top: 32px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .fn2-cta-primary {
+      padding: 12px 22px;
+      background: #2A78F0;
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 14px;
+      box-shadow: 0 1px 2px rgba(42, 120, 240, 0.3), inset 0 1px 0 rgba(255,255,255,0.3);
+    }
+    .fn2-cta-secondary {
+      padding: 12px 22px;
+      background: #fff;
+      color: #0F0F0F;
+      border: 1px solid #E5E5E5;
+      border-radius: 999px;
+      font-weight: 500;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+    .fn2-cta-icon {
+      width: 18px; height: 18px;
+      background: linear-gradient(135deg, #FCE57A, #F0B040);
+      border-radius: 6px;
+      display: inline-block;
+    }
+
+    .fn2-card {
+      background: #fff;
+      padding: 32px;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .fn2-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 28px;
+    }
+    .fn2-card-title {
+      font-weight: 600;
+      font-size: 16px;
+      color: #0F0F0F;
+      letter-spacing: -0.01em;
+    }
+    .fn2-card-subtitle {
+      font-size: 13px;
+      color: #888;
+      margin-top: 2px;
+    }
+    .fn2-card-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: #ECF7E8;
+      color: #2D7A2D;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .fn2-card-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: #4CB04C; }
+    .fn2-card-stat {
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 96px;
+      line-height: 1;
+      letter-spacing: -0.05em;
+      color: #0F0F0F;
+    }
+    .fn2-card-stat .unit {
+      font-size: 14px;
+      font-weight: 500;
+      color: #888;
+      margin-left: 12px;
+      letter-spacing: 0;
+    }
+    .fn2-card-verdict {
+      margin-top: 12px;
+      font-size: 16px;
+      color: #525252;
+      line-height: 1.5;
+      max-width: 32ch;
+    }
+    .fn2-card-verdict .marker {
+      background: linear-gradient(180deg, transparent 65%, #FCE57A 65%);
+      padding: 0 3px;
+    }
+    .fn2-card-grid {
+      margin-top: 32px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      padding-top: 24px;
+      border-top: 1px solid #F0F0F0;
+    }
+    .fn2-mini {
+      background: #FBFAF7;
+      border-radius: 10px;
+      padding: 12px;
+    }
+    .fn2-mini-name {
+      font-size: 11px;
+      color: #888;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .fn2-mini-value {
+      font-weight: 600;
+      font-size: 18px;
+      color: #0F0F0F;
+      margin-top: 4px;
+      letter-spacing: -0.02em;
+    }
+
+    /* ============================================================ */
+    /*  DIRECTION 5 — ARCHITECTURAL  (Samara / Aesop / MUJI)         */
+    /* ============================================================ */
+    .arc-stage {
+      background: #fff;
+      color: #000;
+      padding: 0;
+      font-family: 'Inter Tight', sans-serif;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    .arc-stage-band {
+      background: #000;
+      color: #fff;
+      padding: 18px 32px;
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 500;
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .arc-stage-band .pill {
+      background: #E04E1B;
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .arc-stage-band .design {
+      background: #2A78F0;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .arc-stage-body {
+      flex: 1;
+      padding: 48px;
+      background: linear-gradient(180deg, #F4EFE8 0%, #E8DFD1 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+    .arc-monumental {
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 400;
+      font-size: clamp(80px, 14vw, 200px);
+      line-height: 0.9;
+      letter-spacing: -0.04em;
+      color: #0A0A0A;
+    }
+    .arc-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 32px;
+      gap: 32px;
+    }
+    .arc-headline {
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 500;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      color: #0A0A0A;
+      max-width: 18ch;
+    }
+    .arc-body {
+      font-size: 14px;
+      color: #555;
+      max-width: 28ch;
+      line-height: 1.5;
+    }
+    .arc-body strong { color: #0A0A0A; font-weight: 500; }
+    .arc-cta {
+      align-self: flex-end;
+      padding: 12px 22px;
+      background: #fff;
+      color: #0A0A0A;
+      border: 1px solid #0A0A0A;
+      border-radius: 999px;
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 500;
+      font-size: 13px;
+      letter-spacing: 0.01em;
+    }
+
+    /* arc card */
+    .arc-card {
+      background: #0A0A0A;
+      color: #fff;
+      padding: 0;
+      font-family: 'Inter Tight', sans-serif;
+      display: flex;
+      flex-direction: column;
+    }
+    .arc-card-strip {
+      padding: 18px 32px;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      font-size: 13px;
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      color: rgba(255,255,255,0.7);
+    }
+    .arc-card-strip .live {
+      color: #E04E1B;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .arc-card-strip .live .dot {
+      width: 6px; height: 6px; border-radius: 50%; background: #E04E1B;
+    }
+    .arc-card-body {
+      flex: 1;
+      padding: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .arc-card-stat {
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 400;
+      font-size: 200px;
+      line-height: 0.85;
+      letter-spacing: -0.06em;
+      color: #fff;
+    }
+    .arc-card-name {
+      margin-top: 8px;
+      font-size: 14px;
+      letter-spacing: 0.04em;
+      color: rgba(255,255,255,0.6);
+    }
+    .arc-card-verdict {
+      margin-top: 32px;
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 500;
+      font-size: 22px;
+      letter-spacing: -0.015em;
+      line-height: 1.2;
+      max-width: 22ch;
+    }
+    .arc-card-foot {
+      padding: 18px 48px;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: rgba(255,255,255,0.55);
+      letter-spacing: 0.04em;
+    }
+    .arc-card-foot strong { color: #fff; font-weight: 500; }
+
+    /* ============================================================ */
+    /*  DIRECTION 6 — CINEMATIC MOOD  (Superpower / Hims / Levels)   */
+    /* ============================================================ */
+    .cm-stage {
+      background: #0F0E0C;
+      color: #F0E5D0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      position: relative;
+      overflow: hidden;
+    }
+    .cm-stage::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 700px 500px at 70% 80%, rgba(232, 144, 50, 0.55) 0%, transparent 60%),
+        radial-gradient(ellipse 600px 400px at 30% 30%, rgba(160, 60, 40, 0.35) 0%, transparent 65%),
+        radial-gradient(ellipse 400px 300px at 90% 10%, rgba(100, 30, 20, 0.4) 0%, transparent 60%),
+        linear-gradient(180deg, #0F0E0C 0%, #1F1812 100%);
+    }
+    .cm-stage::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 50% 50%, rgba(0,0,0,0.4) 0%, transparent 70%);
+      mix-blend-mode: multiply;
+    }
+    .cm-stage-inner {
+      position: relative;
+      z-index: 2;
+      padding: 56px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+    .cm-mark {
+      font-family: 'Instrument Serif', serif;
+      font-size: 22px;
+      letter-spacing: -0.005em;
+      color: #F0E5D0;
+      font-style: italic;
+    }
+    .cm-mark .dot {
+      display: inline-block;
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: #E89032;
+      margin: 0 4px 4px;
+      vertical-align: middle;
+    }
+    .cm-headline {
+      font-family: 'Instrument Serif', serif;
+      font-weight: 400;
+      font-size: clamp(48px, 6vw, 76px);
+      line-height: 1;
+      letter-spacing: -0.025em;
+      color: #F0E5D0;
+      max-width: 14ch;
+      margin-top: 80px;
+      text-shadow: 0 2px 24px rgba(0,0,0,0.4);
+    }
+    .cm-headline em {
+      font-style: italic;
+      color: #E89032;
+    }
+    .cm-body {
+      margin-top: 28px;
+      font-size: 15px;
+      line-height: 1.55;
+      color: rgba(240, 229, 208, 0.78);
+      max-width: 38ch;
+      text-shadow: 0 1px 12px rgba(0,0,0,0.4);
+    }
+    .cm-cta-row {
+      margin-top: 36px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    .cm-cta {
+      padding: 14px 24px;
+      background: #F0E5D0;
+      color: #0F0E0C;
+      border: none;
+      border-radius: 999px;
+      font-weight: 500;
+      font-size: 14px;
+      letter-spacing: 0.02em;
+    }
+    .cm-cta-tertiary {
+      color: #E89032;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+
+    /* cm card — quietly luminous */
+    .cm-card {
+      background: #0F0E0C;
+      color: #F0E5D0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      position: relative;
+      overflow: hidden;
+    }
+    .cm-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 80% 100%, rgba(232, 144, 50, 0.25) 0%, transparent 55%);
+    }
+    .cm-card-inner {
+      position: relative;
+      z-index: 2;
+      padding: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+    .cm-card-eyebrow {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #E89032;
+      font-weight: 500;
+    }
+    .cm-card-stat {
+      font-family: 'Instrument Serif', serif;
+      font-weight: 400;
+      font-size: 168px;
+      line-height: 0.9;
+      letter-spacing: -0.04em;
+      color: #F0E5D0;
+      margin-top: 16px;
+      font-style: italic;
+    }
+    .cm-card-name {
+      margin-top: 8px;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      color: rgba(240, 229, 208, 0.55);
+    }
+    .cm-card-verdict {
+      margin-top: 36px;
+      font-family: 'Instrument Serif', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 22px;
+      line-height: 1.3;
+      color: #F0E5D0;
+      max-width: 24ch;
+    }
+    .cm-card-divider {
+      margin-top: 32px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(240, 229, 208, 0.12);
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(240, 229, 208, 0.55);
+    }
+
+    .compare-footer {
+      max-width: 1200px;
+      margin: 64px auto 0;
+      padding: 64px 32px 96px;
+      border-top: 1px solid #e5e5e5;
+    }
+    .compare-footer h3 {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      margin: 0 0 12px;
+    }
+    .compare-footer p {
+      color: #555;
+      font-size: 15px;
+      max-width: 60ch;
+      margin: 0 0 24px;
+    }
+    .compare-footer ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      color: #555;
+      font-size: 14px;
+    }
+    .compare-footer ul li {
+      padding: 8px 0;
+      border-top: 1px solid #eee;
+    }
+    .compare-footer ul li:first-child { border-top: none; }
+    .compare-footer ul li strong { color: #1a1a1a; font-weight: 500; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="compare-header">
+    <span class="compare-eyebrow">Brand exercise v2 · 2026-05-05</span>
+    <h1 class="compare-title">Three new directions, pulled from the wild.</h1>
+    <p class="compare-sub">Reset based on what's actually winning right now on Awwwards / Godly / Mobbin. Each direction is anchored to a specific reference brand and a specific aesthetic moment, none of them the Fraunces-italic default. Same content in each (PoolGo wordmark + free chlorine 2.4 ppm card) so the comparison stays apples-to-apples.</p>
+    <div class="compare-toc">
+      <a href="#friendly-native" class="toc-chip">4 · Friendly Native</a>
+      <a href="#architectural" class="toc-chip">5 · Architectural</a>
+      <a href="#cinematic-mood" class="toc-chip">6 · Cinematic Mood</a>
+      <a href="directions.html" class="toc-chip" style="color: #999;">← Original 3 directions</a>
+    </div>
+  </header>
+
+  <!-- ============== DIRECTION 4: FRIENDLY NATIVE ============== -->
+  <section class="direction-section" id="friendly-native">
+    <div class="direction-header">
+      <div class="direction-meta">
+        <span class="direction-num">Direction 4</span>
+        <h2 class="direction-name">Friendly Native</h2>
+        <p class="direction-tagline">The Amie/Family/Notion zone. Soft white surfaces, generous shadows, highlighter-marker emphasis, friendly squircle iconography. Warmth and precision in the same room. Not a serif in sight.</p>
+      </div>
+      <div class="direction-references">
+        <strong>References:</strong> Amie · Family · Notion · Linear's marketing site · Vercel's product UI
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="stage-cell fn2-stage">
+        <div class="fn2-mark">P</div>
+        <div class="fn2-headline">Pool care, <span class="highlight">without the panic</span></div>
+        <p class="fn2-body">Track your water, connect your equipment, find a pro you trust. PoolGo handles the rest.</p>
+        <div class="fn2-cta-row">
+          <button class="fn2-cta-primary">Get started</button>
+          <button class="fn2-cta-secondary"><span class="fn2-cta-icon"></span>Take the tour</button>
+        </div>
+      </div>
+
+      <div class="stage-cell fn2-card">
+        <div>
+          <div class="fn2-card-top">
+            <div>
+              <div class="fn2-card-title">The Big Blue</div>
+              <div class="fn2-card-subtitle">Tested today · 9:14 am</div>
+            </div>
+            <span class="fn2-card-pill"><span class="dot"></span>Looking good</span>
+          </div>
+          <div class="fn2-card-stat">2.4<span class="unit">ppm free chlorine</span></div>
+          <p class="fn2-card-verdict">Your chlorine is right where it should be. <span class="marker">No action needed today</span>.</p>
+        </div>
+        <div class="fn2-card-grid">
+          <div class="fn2-mini"><div class="fn2-mini-name">pH</div><div class="fn2-mini-value">7.4</div></div>
+          <div class="fn2-mini"><div class="fn2-mini-name">TA</div><div class="fn2-mini-value">90</div></div>
+          <div class="fn2-mini"><div class="fn2-mini-name">CYA</div><div class="fn2-mini-value">42</div></div>
+          <div class="fn2-mini"><div class="fn2-mini-name">Salt</div><div class="fn2-mini-value">3.2k</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="palette-row">
+      <div class="swatch" style="background: #FBFAF7; color: #0F0F0F;"><span class="swatch-name">Off-white</span><span class="swatch-hex">#FBFAF7</span></div>
+      <div class="swatch" style="background: #0F0F0F; color: #FBFAF7;"><span class="swatch-name">Ink</span><span class="swatch-hex">#0F0F0F</span></div>
+      <div class="swatch" style="background: #2A78F0; color: #fff;"><span class="swatch-name">Cobalt</span><span class="swatch-hex">#2A78F0</span></div>
+      <div class="swatch" style="background: #FCE57A; color: #0F0F0F;"><span class="swatch-name">Marker</span><span class="swatch-hex">#FCE57A</span></div>
+      <div class="swatch" style="background: #ECF7E8; color: #2D7A2D;"><span class="swatch-name">Mint</span><span class="swatch-hex">#ECF7E8</span></div>
+    </div>
+
+    <div class="type-spec">
+      <span><strong>Display & body:</strong> Inter (700 for display, 400/500 for body)</span>
+      <span><strong>Numbers:</strong> Inter at 700 — same family, no mono</span>
+      <span><strong>Mark:</strong> dark squircle "P" with sun-yellow letter</span>
+    </div>
+
+    <div class="vibe-grid">
+      <div>
+        <h4>What's distinctive</h4>
+        <p>Highlighter-marker emphasis on a single phrase per surface (Amie's signature move). Soft drop-shadows on cards, never hard borders. Squircle icons with personality. Cobalt CTAs that feel like Apple links, not Bootstrap buttons.</p>
+      </div>
+      <div>
+        <h4>Risk</h4>
+        <p>Hardest of the three to differentiate from the dozen other AI-startup sites using a similar move. We'd need the highlighter-marker plus the squircle "P" to do real work.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== DIRECTION 5: ARCHITECTURAL ============== -->
+  <section class="direction-section" id="architectural">
+    <div class="direction-header">
+      <div class="direction-meta">
+        <span class="direction-num">Direction 5</span>
+        <h2 class="direction-name">Architectural</h2>
+        <p class="direction-tagline">The Samara zone. Massive monumental sans, real photography, black hero band, orange and cobalt as accents. Confident grown-up, not boutique. Treats the pool like the part of your home it actually is.</p>
+      </div>
+      <div class="direction-references">
+        <strong>References:</strong> Samara · Aesop's app · MUJI · Cooper Hewitt · Watershed
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="stage-cell arc-stage">
+        <div class="arc-stage-band">
+          <span style="font-weight: 600; letter-spacing: -0.02em;">PoolGo</span>
+          <span class="design">Set up your pool</span>
+        </div>
+        <div class="arc-stage-body">
+          <div>
+            <div class="arc-monumental">XL10</div>
+            <div class="arc-meta">
+              <h3 class="arc-headline">Big pool, simple care.</h3>
+              <p class="arc-body">Introducing PoolGo for owners of the new XL10 backyard. <strong>Two pumps, one heater, all in one app.</strong></p>
+            </div>
+          </div>
+          <button class="arc-cta">Learn more →</button>
+        </div>
+      </div>
+
+      <div class="stage-cell arc-card">
+        <div class="arc-card-strip">
+          <span>Free chlorine · today</span>
+          <span class="live"><span class="dot"></span>Live</span>
+        </div>
+        <div class="arc-card-body">
+          <div>
+            <div class="arc-card-stat">2.4</div>
+            <div class="arc-card-name">PARTS PER MILLION · IDEAL 1.0–3.0</div>
+          </div>
+          <div class="arc-card-verdict">Looking good. The pool is in better shape than it was last May.</div>
+        </div>
+        <div class="arc-card-foot">
+          <span><strong>Sun Country Pools</strong> · 9:14 am</span>
+          <span>NEXT TEST · MAY 12</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="palette-row">
+      <div class="swatch" style="background: #fff; color: #0A0A0A; border: 1px solid #eee;"><span class="swatch-name">White</span><span class="swatch-hex">#FFFFFF</span></div>
+      <div class="swatch" style="background: #F4EFE8; color: #0A0A0A;"><span class="swatch-name">Bone</span><span class="swatch-hex">#F4EFE8</span></div>
+      <div class="swatch" style="background: #0A0A0A; color: #fff;"><span class="swatch-name">Black</span><span class="swatch-hex">#0A0A0A</span></div>
+      <div class="swatch" style="background: #E04E1B; color: #fff;"><span class="swatch-name">Hazard</span><span class="swatch-hex">#E04E1B</span></div>
+      <div class="swatch" style="background: #2A78F0; color: #fff;"><span class="swatch-name">Cobalt</span><span class="swatch-hex">#2A78F0</span></div>
+    </div>
+
+    <div class="type-spec">
+      <span><strong>Display & body:</strong> Inter Tight (Söhne / ABC Diatype substitute on web)</span>
+      <span><strong>Sizes:</strong> hero type sets at 200px+ to feel monumental</span>
+      <span><strong>Mark:</strong> wordmark only, set in the body family</span>
+    </div>
+
+    <div class="vibe-grid">
+      <div>
+        <h4>What's distinctive</h4>
+        <p>The type IS the design. Massive numbers and headlines treated like architectural signage. Black hero bands at the top of every page (like Samara), real photography of California backyards in the body. Orange and cobalt sparingly as functional accents, never decorative.</p>
+      </div>
+      <div>
+        <h4>Risk</h4>
+        <p>Lives or dies on photography. Without real, well-shot California-pool photography, this brand reads as a generic Vercel template. Photo budget is non-negotiable.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== DIRECTION 6: CINEMATIC MOOD ============== -->
+  <section class="direction-section" id="cinematic-mood">
+    <div class="direction-header">
+      <div class="direction-meta">
+        <span class="direction-num">Direction 6</span>
+        <h2 class="direction-name">Cinematic Mood</h2>
+        <p class="direction-tagline">The Superpower zone. Dark cinematic surfaces, golden-hour gradients, italic display serif (Instrument Serif) over photography, almost no chrome on the homepage. The data UI lives in a separate inner-app surface that inherits the warmth without the moodiness.</p>
+      </div>
+      <div class="direction-references">
+        <strong>References:</strong> Superpower · Levels · Hims (recent rebrand) · The Fasting Method · Equinox
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="stage-cell cm-stage">
+        <div class="cm-stage-inner">
+          <div>
+            <div class="cm-mark">pool<span class="dot"></span>go</div>
+            <h2 class="cm-headline">A new era of <em>pool care</em>.</h2>
+            <p class="cm-body">The home for everything your pool needs to be remembered. Built for the people who live next to one.</p>
+          </div>
+          <div class="cm-cta-row">
+            <button class="cm-cta">Join waitlist</button>
+            <a class="cm-cta-tertiary">Watch the film →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage-cell cm-card">
+        <div class="cm-card-inner">
+          <div>
+            <div class="cm-card-eyebrow">Today · Sun Country</div>
+            <div class="cm-card-stat">2.4</div>
+            <div class="cm-card-name">PPM FREE CHLORINE</div>
+          </div>
+          <div>
+            <p class="cm-card-verdict">Looking lovely. The pool is in better shape than it was last May.</p>
+            <div class="cm-card-divider">
+              <span>pH 7.4 · TA 90 · CYA 42</span>
+              <span>09:14 AM</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="palette-row">
+      <div class="swatch" style="background: #0F0E0C; color: #F0E5D0;"><span class="swatch-name">Charcoal</span><span class="swatch-hex">#0F0E0C</span></div>
+      <div class="swatch" style="background: #1F1812; color: #F0E5D0;"><span class="swatch-name">Ember</span><span class="swatch-hex">#1F1812</span></div>
+      <div class="swatch" style="background: #E89032; color: #0F0E0C;"><span class="swatch-name">Golden hour</span><span class="swatch-hex">#E89032</span></div>
+      <div class="swatch" style="background: #A03C28; color: #F0E5D0;"><span class="swatch-name">Sienna</span><span class="swatch-hex">#A03C28</span></div>
+      <div class="swatch" style="background: #F0E5D0; color: #0F0E0C;"><span class="swatch-name">Bone</span><span class="swatch-hex">#F0E5D0</span></div>
+    </div>
+
+    <div class="type-spec">
+      <span><strong>Display:</strong> Instrument Serif (italic by default)</span>
+      <span><strong>Body:</strong> Inter</span>
+      <span><strong>Photography:</strong> golden-hour, anamorphic, real pools and people, never stock</span>
+    </div>
+
+    <div class="vibe-grid">
+      <div>
+        <h4>What's distinctive</h4>
+        <p>Marketing surfaces lead with mood and photography, near-zero UI chrome. The italic Instrument Serif (the warmer Fraunces alternative most of the AI startups DON'T use yet) carries the headline. Inner-app screens inherit the dark + golden-hour palette but go quiet so data can breathe.</p>
+      </div>
+      <div>
+        <h4>Risk</h4>
+        <p>Two-mode brand: marketing site needs to feel cinematic AND product UI needs to be readable. Most companies fail at one or the other. Photography requirement is even higher than Architectural.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="compare-footer">
+    <h3>Six directions on the table now</h3>
+    <p>Original three (Pool Club / Field Notebook / Operator) plus these three new ones (Friendly Native / Architectural / Cinematic Mood). Tell me which two or three to push deeper, or which one to apply to a real product screen next.</p>
+    <ul>
+      <li><strong>If you want warmth + product polish:</strong> Friendly Native is the safest path. Closest to "this app feels good to use every day." Risk: looks like every other 2026 AI startup.</li>
+      <li><strong>If you want to feel grown-up and architectural:</strong> Architectural. Closest to the Samara-aesthetic. Best fit if PoolGo positions as "the home for the pool that came with your house."</li>
+      <li><strong>If you want to feel destination-grade:</strong> Cinematic Mood. Closest to a category-defining lifestyle brand. Highest production-cost direction, biggest payoff if the photography is real.</li>
+      <li><strong>From the original three:</strong> Field Notebook still holds up as the most distinctive. Operator still holds up as the boldest. Pool Club is the one I'd retire in favor of Architectural.</li>
+    </ul>
+  </footer>
+
+</body>
+</html>

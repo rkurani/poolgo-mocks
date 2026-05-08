@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service visit — PoolGo (Field Notebook)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'IBM Plex Sans', sans-serif;
+      background: #EFE6D2;
+      color: #1A1A1A;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      background-image: repeating-linear-gradient(to bottom,
+        transparent 0, transparent 31px,
+        rgba(26,26,26,0.05) 31px, rgba(26,26,26,0.05) 32px);
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+
+    .masthead {
+      background: #1F5051; color: #EFE6D2;
+      padding: 12px 32px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+      display: flex; justify-content: space-between;
+    }
+    .masthead .right span:not(:last-child)::after {
+      content: '·'; margin: 0 12px; opacity: 0.5;
+    }
+
+    .nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 24px 32px; border-bottom: 1px solid #1A1A1A; background: #EFE6D2;
+    }
+    .wordmark {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-variation-settings: 'opsz' 96;
+      font-size: 32px; font-weight: 600;
+      letter-spacing: -0.04em; color: #1F5051;
+    }
+    .nav-tabs {
+      display: flex;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    .nav-tabs a {
+      padding: 10px 16px; color: #5A5A5A;
+      border-right: 1px solid rgba(26,26,26,0.15);
+    }
+    .nav-tabs a:first-child { border-left: 1px solid rgba(26,26,26,0.15); }
+    .nav-tabs a.active { background: #1F5051; color: #EFE6D2; border-color: #1F5051; }
+    .nav-right {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .nav-right .avatar {
+      width: 32px; height: 32px; background: #C99A38; color: #1A1A1A;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 600; font-size: 13px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .crumbs {
+      max-width: 1200px; margin: 32px auto 0; padding: 0 32px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: #5A5A5A;
+    }
+    .crumbs .sep { margin: 0 8px; opacity: 0.5; }
+
+    .entry-header {
+      max-width: 1200px; margin: 24px auto 0;
+      padding: 0 32px 32px;
+      border-bottom: 1px dashed rgba(26,26,26,0.4);
+    }
+    .entry-meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: #C99A38; margin-bottom: 16px;
+      display: flex; gap: 20px;
+    }
+    .entry-meta span:not(:last-child)::after {
+      content: '·'; margin-left: 20px; opacity: 0.5;
+    }
+    .entry-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-variation-settings: 'opsz' 96;
+      font-size: clamp(40px, 5.5vw, 72px);
+      font-weight: 500; letter-spacing: -0.035em;
+      line-height: 0.98; color: #1A1A1A; max-width: 22ch;
+    }
+    .entry-sub {
+      margin-top: 16px; font-size: 16px;
+      color: #3D3D3D; max-width: 60ch;
+    }
+    .entry-tech-row {
+      margin-top: 24px;
+      display: flex; gap: 32px; align-items: center;
+    }
+    .tech-avatar {
+      width: 48px; height: 48px;
+      background: #1F5051; color: #EFE6D2;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 600; font-size: 16px;
+    }
+    .tech-name {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 500; font-size: 17px;
+      color: #1A1A1A;
+    }
+    .tech-meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: #5A5A5A; margin-top: 2px;
+    }
+    .visit-stat {
+      margin-left: auto;
+      text-align: right;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: #5A5A5A;
+    }
+    .visit-stat strong {
+      display: block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 22px; letter-spacing: -0.02em;
+      color: #1F5051; font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .main {
+      max-width: 1200px; margin: 0 auto;
+      padding: 32px 32px 64px;
+      display: grid; grid-template-columns: 2fr 1fr;
+      gap: 48px;
+    }
+    @media (max-width: 980px) { .main { grid-template-columns: 1fr; } }
+    .section { margin-bottom: 48px; }
+    .section-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+      color: #C99A38;
+      margin-bottom: 16px; padding-bottom: 8px;
+      border-bottom: 1px dashed rgba(26,26,26,0.3);
+      display: flex; justify-content: space-between;
+    }
+    .section-label .right { color: #5A5A5A; }
+
+    /* checklist */
+    .checklist {
+      list-style: none; padding: 0; margin: 0;
+    }
+    .checklist li {
+      display: grid; grid-template-columns: auto 1fr auto;
+      gap: 16px; align-items: baseline;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(26,26,26,0.1);
+    }
+    .check-mark {
+      font-family: 'IBM Plex Mono', monospace;
+      color: #4A7A51;
+      font-weight: 500;
+    }
+    .check-task {
+      font-family: 'IBM Plex Sans', sans-serif;
+      color: #1A1A1A;
+    }
+    .check-meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.06em;
+      color: #5A5A5A;
+    }
+
+    /* chemicals added */
+    .chems {
+      background: #EFE6D2;
+      border: 1px solid rgba(26,26,26,0.2);
+      padding: 0;
+      overflow: hidden;
+    }
+    table.chems-tbl {
+      width: 100%; border-collapse: collapse;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+    }
+    table.chems-tbl th {
+      text-align: left; padding: 10px 14px;
+      font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: #5A5A5A; font-weight: 500;
+      border-bottom: 1px solid rgba(26,26,26,0.3);
+      background: rgba(26,26,26,0.04);
+    }
+    table.chems-tbl td {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(26,26,26,0.1);
+      color: #1A1A1A;
+    }
+    table.chems-tbl td.name {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-weight: 500;
+    }
+    table.chems-tbl tfoot td {
+      border-bottom: none; border-top: 2px solid rgba(26,26,26,0.3);
+      font-weight: 500; padding-top: 14px;
+    }
+
+    /* tech narrative pull-quote */
+    .tech-note {
+      background: #EFE6D2;
+      border: 1px solid rgba(26,26,26,0.15);
+      border-left: 4px solid #C99A38;
+      padding: 28px 32px;
+    }
+    .tech-note-mark {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 48px; line-height: 0.5; color: #C99A38;
+      opacity: 0.7; margin-bottom: 12px;
+    }
+    .tech-note-body {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 18px; line-height: 1.45;
+      color: #1A1A1A; max-width: 50ch;
+    }
+    .tech-note-attr {
+      margin-top: 14px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: #5A5A5A;
+    }
+
+    /* photo grid */
+    .photo-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 700px) { .photo-grid { grid-template-columns: repeat(2, 1fr); } }
+    .photo {
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, #1F5051 0%, #345f60 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .photo:nth-child(2) { background: linear-gradient(135deg, #C99A38 0%, #b88827 100%); }
+    .photo:nth-child(3) { background: linear-gradient(135deg, #A03E2C 0%, #8a3525 100%); }
+    .photo:nth-child(4) { background: linear-gradient(135deg, #5A5A5A 0%, #3a3a3a 100%); }
+    .photo-cap {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 8px 10px;
+      background: rgba(0,0,0,0.4);
+      color: #EFE6D2;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .photo-num {
+      position: absolute; top: 8px; left: 10px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; letter-spacing: 0.1em;
+      color: rgba(239,230,210,0.8);
+    }
+
+    /* equipment inspected */
+    .equip-row {
+      display: grid; grid-template-columns: 1fr auto auto;
+      gap: 16px; align-items: baseline;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(26,26,26,0.1);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 14px;
+    }
+    .equip-row:last-child { border-bottom: none; }
+    .equip-row .name { color: #1A1A1A; font-weight: 500; }
+    .equip-row .status {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 3px 8px;
+      border: 1px solid currentColor;
+    }
+    .equip-row .status.ok { color: #4A7A51; }
+    .equip-row .status.watch { color: #8A6A1D; }
+    .equip-row .duration {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; color: #5A5A5A;
+    }
+
+    /* sidebar items */
+    .side-item {
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(26,26,26,0.1);
+    }
+    .side-item:last-child { border-bottom: none; }
+    .side-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: #5A5A5A;
+      margin-bottom: 4px;
+    }
+    .side-value {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 500; font-size: 16px;
+      color: #1A1A1A;
+    }
+    .side-meta {
+      font-size: 13px; color: #3D3D3D;
+      margin-top: 2px;
+    }
+
+    /* receipt-style summary */
+    .receipt {
+      background: #EFE6D2;
+      border: 1px dashed rgba(26,26,26,0.4);
+      padding: 24px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+    }
+    .receipt-row {
+      display: flex; justify-content: space-between;
+      padding: 6px 0;
+      color: #1A1A1A;
+    }
+    .receipt-row.divider {
+      border-top: 1px dashed rgba(26,26,26,0.3);
+      margin-top: 8px; padding-top: 12px;
+      font-weight: 500; font-size: 13px;
+    }
+    .receipt-label { color: #5A5A5A; letter-spacing: 0.04em; }
+
+    .page-caption {
+      position: fixed; bottom: 24px; left: 24px;
+      background: #1F5051; color: #EFE6D2;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 8px 14px; z-index: 100;
+    }
+    .page-caption .num { color: #C99A38; margin-right: 6px; }
+  </style>
+</head>
+<body>
+
+  <div class="masthead">
+    <span>poolgo · field log</span>
+    <div class="right">
+      <span>Vol. 12</span>
+      <span>No. 8</span>
+      <span>2026-05-05</span>
+      <span>Roseville, CA</span>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <div class="wordmark">poolgo</div>
+    <div class="nav-tabs">
+      <a href="#">My Pool</a>
+      <a href="#">Chart</a>
+      <a href="#">Connect</a>
+      <a href="#">Routines</a>
+      <a href="#">Discover</a>
+    </div>
+    <div class="nav-right">
+      <span>R Kurani</span>
+      <div class="avatar">RK</div>
+    </div>
+  </nav>
+
+  <div class="crumbs">
+    <a href="#">My Pool</a>
+    <span class="sep">/</span>
+    <a href="#">Service history</a>
+    <span class="sep">/</span>
+    <span style="color: #1F5051;">Visit 047 · Marina Pool Service · 2026-05-05</span>
+  </div>
+
+  <header class="entry-header">
+    <div class="entry-meta">
+      <span>Visit log · Entry 047</span>
+      <span>Marina Pool Service</span>
+      <span>Tuesday, 2026-05-05</span>
+      <span>07:42–08:18</span>
+    </div>
+    <h1 class="entry-title">Tuesday morning service.</h1>
+    <p class="entry-sub">Routine weekly visit. Skim, vacuum, brush, full chemistry adjustment, salt cell inspection. No equipment issues. Pool ready for the weekend.</p>
+
+    <div class="entry-tech-row">
+      <div class="tech-avatar">CT</div>
+      <div>
+        <div class="tech-name">Carlos Torres</div>
+        <div class="tech-meta">Senior tech · Marina Pool Service · CPO certified</div>
+      </div>
+      <div class="visit-stat">
+        <strong>36 min</strong>
+        On site
+      </div>
+      <div class="visit-stat">
+        <strong>$58.00</strong>
+        Charged · weekly plan
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- LEFT -->
+    <div>
+
+      <!-- Tasks completed -->
+      <section class="section">
+        <div class="section-label">
+          <span>Tasks completed</span>
+          <span class="right">8 of 8 · standard weekly</span>
+        </div>
+        <ul class="checklist">
+          <li>
+            <span class="check-mark">[✓]</span>
+            <span class="check-task">Skim surface and tile line</span>
+            <span class="check-meta">07:43 · 4 min</span>
+          </li>
+          <li>
+            <span class="check-mark">[✓]</span>
+            <span class="check-task">Vacuum floor and waterline</span>
+            <span class="check-meta">07:48 · 9 min</span>
+          </li>
+          <li>
+            <span class="check-mark">[✓]</span>
+            <span class="check-task">Brush walls and steps</span>
+            <span class="check-meta">07:58 · 5 min</span>
+          </li>
+          <li>
+            <span class="check-mark">[✓]</span>
+            <span class="check-task">Empty pump and skimmer baskets</span>
+            <span class="check-meta">08:04 · 2 min</span>
+          </li>
+          <li>
+            <span class="check-mark">[✓]</span>
+            <span class="check-task">Test water (Free Cl, pH, TA, CYA, salt, ORP)</span>
+            <span class="check-meta">08:06 · 3 min</span>
+          </li>
+          <li>
+            <span class="check-mark">[✓]</span>
+            <span class="check-task">Adjust chemistry per reading</span>
+            <span class="check-meta">08:09 · 4 min</span>
+          </li>
+          <li>
+            <span class="check-mark">[✓]</span>
+            <span class="check-task">Inspect salt cell, no scaling</span>
+            <span class="check-meta">08:13 · 3 min</span>
+          </li>
+          <li>
+            <span class="check-mark">[✓]</span>
+            <span class="check-task">Visual check of pump, heater, filter</span>
+            <span class="check-meta">08:16 · 2 min</span>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Tech's note -->
+      <section class="section">
+        <div class="section-label">
+          <span>Carlos's note</span>
+          <span class="right">2026-05-05 · 08:18</span>
+        </div>
+        <div class="tech-note">
+          <div class="tech-note-mark">"</div>
+          <p class="tech-note-body">Pool looking great this week. Salt cell is healthy, no scale. Filter PSI is at 18, up from 16 a month ago. I'd plan a backwash this weekend or next, no rush. CYA is 42 and creeping. We'll want to talk about a partial drain in the next few weeks before it locks the chlorine.</p>
+          <p class="tech-note-attr">— Carlos T · Marina Pool Service</p>
+        </div>
+      </section>
+
+      <!-- Photos -->
+      <section class="section">
+        <div class="section-label">
+          <span>Photos taken on visit</span>
+          <span class="right">4 attached</span>
+        </div>
+        <div class="photo-grid">
+          <div class="photo">
+            <span class="photo-num">01</span>
+            <div class="photo-cap">Salt cell, no scale</div>
+          </div>
+          <div class="photo">
+            <span class="photo-num">02</span>
+            <div class="photo-cap">Pool surface, post-skim</div>
+          </div>
+          <div class="photo">
+            <span class="photo-num">03</span>
+            <div class="photo-cap">Filter PSI gauge · 18</div>
+          </div>
+          <div class="photo">
+            <span class="photo-num">04</span>
+            <div class="photo-cap">Equipment pad · all on</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Equipment inspected -->
+      <section class="section">
+        <div class="section-label">
+          <span>Equipment inspected</span>
+          <span class="right">5 items · all functional</span>
+        </div>
+        <div>
+          <div class="equip-row">
+            <span class="name">Pentair IntelliFlo3 VSF · pump</span>
+            <span class="status ok">OK</span>
+            <span class="duration">2 min</span>
+          </div>
+          <div class="equip-row">
+            <span class="name">Pentair MasterTemp 400 · heater</span>
+            <span class="status ok">OK</span>
+            <span class="duration">1 min</span>
+          </div>
+          <div class="equip-row">
+            <span class="name">Pentair IntelliChlor IC40 · salt cell</span>
+            <span class="status ok">OK · no scale</span>
+            <span class="duration">3 min</span>
+          </div>
+          <div class="equip-row">
+            <span class="name">Hayward sand filter · 24"</span>
+            <span class="status watch">Filter PSI +2</span>
+            <span class="duration">2 min</span>
+          </div>
+          <div class="equip-row">
+            <span class="name">Polaris 9650iQ · cleaner (in pool)</span>
+            <span class="status ok">OK</span>
+            <span class="duration">visual only</span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- RIGHT -->
+    <div>
+
+      <!-- Chemicals added -->
+      <section class="section">
+        <div class="section-label">
+          <span>Chemicals added</span>
+          <span class="right">3 items</span>
+        </div>
+        <div class="chems">
+          <table class="chems-tbl">
+            <thead>
+              <tr><th>Chemical</th><th>Amount</th><th>Cost</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="name">Muriatic acid</td>
+                <td>16 fl oz</td>
+                <td>$2.10</td>
+              </tr>
+              <tr>
+                <td class="name">Chlorine tabs (3")</td>
+                <td>3 tabs</td>
+                <td>$5.40</td>
+              </tr>
+              <tr>
+                <td class="name">Cyanuric acid</td>
+                <td>0 oz</td>
+                <td>—</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td>Total chems</td>
+                <td></td>
+                <td>$7.50</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </section>
+
+      <!-- Test reading taken on visit -->
+      <section class="section">
+        <div class="section-label">
+          <span>Test reading on visit</span>
+          <span class="right">Drop · K-2006</span>
+        </div>
+        <div class="side-item">
+          <div class="side-label">Free chlorine</div>
+          <div class="side-value">2.4 ppm</div>
+          <div class="side-meta">In range, 1.0–3.0 ideal</div>
+        </div>
+        <div class="side-item">
+          <div class="side-label">pH</div>
+          <div class="side-value">7.4</div>
+          <div class="side-meta">In range</div>
+        </div>
+        <div class="side-item">
+          <div class="side-label">Total alkalinity</div>
+          <div class="side-value">90 ppm</div>
+          <div class="side-meta">In range</div>
+        </div>
+        <div class="side-item">
+          <div class="side-label">CYA</div>
+          <div class="side-value" style="color: #8A6A1D;">42 ppm</div>
+          <div class="side-meta">Climbing, watch</div>
+        </div>
+        <div class="side-item">
+          <div class="side-label">Salt</div>
+          <div class="side-value">3,200 ppm</div>
+          <div class="side-meta">In range</div>
+        </div>
+      </section>
+
+      <!-- Receipt summary -->
+      <section class="section">
+        <div class="section-label">
+          <span>Receipt</span>
+          <span class="right">Visit 047</span>
+        </div>
+        <div class="receipt">
+          <div class="receipt-row">
+            <span class="receipt-label">Service · weekly</span>
+            <span>$50.00</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Chemicals (passthrough)</span>
+            <span>$7.50</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Trip fee</span>
+            <span>$0.00</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Tax (CA · 8.25%)</span>
+            <span>$0.50</span>
+          </div>
+          <div class="receipt-row divider">
+            <span>Total · billed weekly</span>
+            <span>$58.00</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Next visit -->
+      <section class="section">
+        <div class="section-label">
+          <span>Next visit</span>
+          <span class="right">Scheduled</span>
+        </div>
+        <div class="side-item">
+          <div class="side-label">Date</div>
+          <div class="side-value">Tuesday, 2026-05-12</div>
+          <div class="side-meta">07:30 am window</div>
+        </div>
+        <div class="side-item">
+          <div class="side-label">Tech</div>
+          <div class="side-value">Carlos Torres</div>
+          <div class="side-meta">Same tech, weekly route</div>
+        </div>
+        <div class="side-item">
+          <div class="side-label">Carry-over</div>
+          <div class="side-value" style="color: #8A6A1D;">Discuss CYA drain</div>
+          <div class="side-meta">Bring sample to retail counter</div>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <div class="page-caption"><span class="num">FN · 03</span> Field Notebook · Service visit</div>
+</body>
+</html>

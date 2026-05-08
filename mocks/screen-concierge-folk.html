@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carlos Torres — PoolGo (Concierge)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #F8F2E8;
+      --cream-deep: #EFE7D7;
+      --bone: #FFFFFF;
+      --forest: #1F3D2E;
+      --forest-soft: #3A5A48;
+      --forest-mute: #6B8074;
+      --coral: #D86A52;
+      --coral-soft: #F2D5C8;
+      --sage: #9CB89E;
+      --sage-soft: #DCE8DD;
+      --gold: #C8A35E;
+      --mist: #E5E0D6;
+      --mist-deep: #C8C2B5;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      color: var(--forest);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+
+    .nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 18px 40px; background: var(--cream);
+      border-bottom: 1px solid var(--mist);
+      position: sticky; top: 0; z-index: 10;
+    }
+    .wordmark {
+      font-family: 'Source Serif 4', serif;
+      font-size: 24px; font-weight: 500;
+      letter-spacing: -0.02em; color: var(--forest);
+      font-variation-settings: 'opsz' 60;
+    }
+    .wordmark .accent { color: var(--coral); }
+    .nav-tabs { display: flex; gap: 6px; }
+    .nav-tab {
+      padding: 8px 16px; border-radius: 999px;
+      font-size: 14px; font-weight: 500; color: var(--forest-soft);
+    }
+    .nav-tab:hover { color: var(--forest); background: var(--cream-deep); }
+    .nav-tab.active { background: var(--forest); color: var(--cream); }
+    .nav-right { display: flex; align-items: center; gap: 14px; }
+    .nav-bell {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: var(--cream-deep);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--forest); position: relative;
+    }
+    .nav-bell::after {
+      content: ''; position: absolute;
+      top: 8px; right: 9px; width: 7px; height: 7px;
+      background: var(--coral); border-radius: 50%;
+      border: 1.5px solid var(--cream-deep);
+    }
+    .nav-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--coral) 0%, #B85541 100%);
+      color: var(--cream);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Source Serif 4', serif; font-weight: 500; font-size: 14px;
+    }
+
+    .crumbs {
+      max-width: 1200px; margin: 32px auto 0; padding: 0 40px;
+      font-size: 13px; color: var(--forest-mute);
+    }
+    .crumbs a:hover { color: var(--forest); }
+    .crumbs .sep { margin: 0 8px; opacity: 0.6; }
+    .crumbs .here { color: var(--forest); }
+
+    /* Folk header */
+    .folk-header {
+      max-width: 1200px; margin: 24px auto 0; padding: 0 40px 40px;
+      border-bottom: 1px solid var(--mist);
+      display: grid; grid-template-columns: auto 1fr; gap: 32px;
+      align-items: end;
+    }
+    .folk-photo-lg {
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--forest), #2E5040);
+      color: var(--cream);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Source Serif 4', serif;
+      font-weight: 500; font-size: 44px;
+      letter-spacing: -0.02em;
+      box-shadow: 0 4px 12px rgba(31,61,46,0.15);
+    }
+    .folk-meta-eyebrow {
+      font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--forest-mute); font-weight: 500; margin-bottom: 12px;
+    }
+    .folk-name-big {
+      font-family: 'Source Serif 4', serif;
+      font-size: clamp(40px, 5vw, 56px);
+      font-weight: 400; letter-spacing: -0.02em;
+      line-height: 1; color: var(--forest);
+    }
+    .folk-employer-line {
+      margin-top: 12px;
+      font-size: 17px; color: var(--forest-soft);
+      max-width: 50ch;
+    }
+    .folk-employer-line strong { color: var(--forest); font-weight: 500; }
+    .folk-stats-row {
+      display: flex; gap: 36px;
+      margin-top: 24px;
+    }
+    .folk-stat-num {
+      font-family: 'Source Serif 4', serif;
+      font-size: 32px; font-weight: 500;
+      color: var(--forest); line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .folk-stat-label {
+      font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--forest-mute); margin-top: 4px;
+    }
+    .folk-actions-row {
+      grid-column: 1 / -1;
+      margin-top: 28px; display: flex; gap: 12px; flex-wrap: wrap;
+    }
+    .btn {
+      padding: 11px 22px; border-radius: 999px;
+      font-size: 14px; font-weight: 500;
+      border: 1px solid transparent;
+    }
+    .btn-primary { background: var(--forest); color: var(--cream); }
+    .btn-primary:hover { background: #2A5040; }
+    .btn-secondary {
+      background: var(--bone); color: var(--forest);
+      border-color: var(--mist-deep);
+    }
+    .btn-secondary:hover { background: var(--cream-deep); }
+    .btn-ghost {
+      background: transparent; color: var(--forest-soft);
+    }
+    .btn-ghost:hover { color: var(--forest); }
+
+    /* Main grid */
+    .main {
+      max-width: 1200px; margin: 0 auto;
+      padding: 40px 40px 64px;
+      display: grid; grid-template-columns: 2fr 1fr; gap: 32px;
+    }
+    @media (max-width: 980px) { .main { grid-template-columns: 1fr; } }
+
+    .section { margin-bottom: 40px; }
+    .section-title {
+      font-family: 'Source Serif 4', serif;
+      font-size: 22px; font-weight: 500;
+      letter-spacing: -0.01em; color: var(--forest);
+      margin-bottom: 8px;
+    }
+    .section-sub {
+      font-size: 14px; color: var(--forest-mute);
+      max-width: 56ch; margin-bottom: 20px;
+    }
+
+    /* Composer card (your side AI) */
+    .composer {
+      background: var(--forest); color: var(--cream);
+      border-radius: 24px; padding: 32px;
+      position: relative; overflow: hidden;
+    }
+    .composer::after {
+      content: ''; position: absolute;
+      top: -100px; right: -100px;
+      width: 240px; height: 240px;
+      background: radial-gradient(circle, rgba(216,106,82,0.30) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .composer-top {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+      position: relative; z-index: 2;
+    }
+    .composer-mark {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--coral); color: var(--cream);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Source Serif 4', serif;
+      font-weight: 500; font-size: 13px; font-style: italic;
+    }
+    .composer-title {
+      font-size: 14px; font-weight: 500; color: var(--cream);
+    }
+    .composer-byline {
+      font-size: 12px; color: rgba(248,242,232,0.6);
+    }
+    .composer-prompt {
+      font-family: 'Source Serif 4', serif;
+      font-size: 22px; font-weight: 400; line-height: 1.4;
+      color: var(--cream); max-width: 38ch;
+      letter-spacing: -0.01em;
+      position: relative; z-index: 2;
+    }
+    .composer-suggestions {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      margin-top: 20px;
+      position: relative; z-index: 2;
+    }
+    .suggest-chip {
+      padding: 7px 14px; border-radius: 999px;
+      background: rgba(248,242,232,0.1);
+      color: var(--cream);
+      border: 1px solid rgba(248,242,232,0.2);
+      font-size: 12px; font-weight: 500;
+      transition: background 120ms ease;
+    }
+    .suggest-chip:hover { background: rgba(248,242,232,0.2); }
+    .composer-draft {
+      margin-top: 24px;
+      background: rgba(248,242,232,0.06);
+      border: 1px solid rgba(248,242,232,0.12);
+      border-radius: 14px;
+      padding: 20px 22px;
+      position: relative; z-index: 2;
+    }
+    .composer-draft-label {
+      font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--coral); font-weight: 500; margin-bottom: 8px;
+    }
+    .composer-draft-body {
+      font-family: 'Source Serif 4', serif;
+      font-size: 16px; line-height: 1.5; color: var(--cream);
+      max-width: 50ch;
+    }
+    .composer-actions {
+      margin-top: 20px;
+      display: flex; gap: 8px; align-items: center;
+      position: relative; z-index: 2;
+    }
+    .composer-actions .btn-primary {
+      background: var(--cream); color: var(--forest);
+    }
+    .composer-actions .btn-primary:hover { background: white; }
+    .composer-actions .btn-ghost {
+      color: rgba(248,242,232,0.7);
+    }
+    .composer-actions .btn-ghost:hover { color: var(--cream); }
+
+    /* Visit timeline */
+    .timeline-card {
+      background: var(--bone); border-radius: 20px;
+      padding: 28px; border: 1px solid rgba(31,61,46,0.06);
+      box-shadow: 0 1px 2px rgba(31,61,46,0.04), 0 4px 12px rgba(31,61,46,0.04);
+    }
+    .visit {
+      display: grid; grid-template-columns: 100px 1fr auto;
+      gap: 20px; padding: 18px 0;
+      border-bottom: 1px solid var(--mist);
+      align-items: start;
+    }
+    .visit:last-child { border-bottom: none; padding-bottom: 0; }
+    .visit:first-child { padding-top: 0; }
+    .visit-date {
+      font-size: 12px; color: var(--forest-mute);
+      letter-spacing: 0.04em;
+    }
+    .visit-date strong {
+      display: block; color: var(--forest); font-weight: 500;
+      font-size: 14px; margin-bottom: 2px;
+    }
+    .visit-headline {
+      font-family: 'Source Serif 4', serif;
+      font-size: 17px; font-weight: 500; color: var(--forest);
+      letter-spacing: -0.005em;
+    }
+    .visit-body {
+      margin-top: 4px; font-size: 13px; color: var(--forest-soft);
+      max-width: 56ch;
+    }
+    .visit-meta {
+      font-size: 12px; color: var(--forest-mute);
+      letter-spacing: 0.04em;
+    }
+    .visit-link {
+      font-size: 12px; color: var(--coral); font-weight: 500;
+      display: inline-block; margin-top: 6px;
+    }
+
+    /* Sidebar cards */
+    .side-card {
+      background: var(--bone); border-radius: 20px;
+      padding: 24px; border: 1px solid rgba(31,61,46,0.06);
+      box-shadow: 0 1px 2px rgba(31,61,46,0.04), 0 4px 12px rgba(31,61,46,0.04);
+      margin-bottom: 20px;
+    }
+    .side-card.cream { background: var(--cream-deep); }
+    .side-card-title {
+      font-family: 'Source Serif 4', serif;
+      font-size: 17px; font-weight: 500;
+      color: var(--forest); letter-spacing: -0.005em;
+      margin-bottom: 14px;
+    }
+    .side-row {
+      padding: 10px 0; border-bottom: 1px solid var(--mist);
+      font-size: 13px;
+    }
+    .side-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .side-row .label {
+      font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--forest-mute); margin-bottom: 4px;
+    }
+    .side-row .val {
+      color: var(--forest); font-weight: 500;
+    }
+
+    /* Privacy / access */
+    .access-card {
+      background: var(--cream-deep);
+      border-radius: 20px; padding: 24px;
+      border: 1px solid rgba(31,61,46,0.06);
+    }
+    .access-row {
+      display: flex; gap: 12px; align-items: flex-start;
+      padding: 10px 0;
+    }
+    .access-row svg { flex-shrink: 0; margin-top: 2px; }
+    .access-text {
+      font-size: 13px; color: var(--forest);
+      line-height: 1.5;
+    }
+    .access-text strong { color: var(--forest); font-weight: 500; }
+    .access-tag {
+      display: inline-block;
+      padding: 2px 8px;
+      background: var(--bone);
+      border-radius: 999px;
+      font-size: 11px;
+      color: var(--forest-soft);
+      letter-spacing: 0.02em;
+      margin: 2px 4px 2px 0;
+      border: 1px solid var(--mist);
+    }
+    .access-tag.no { color: var(--forest-mute); text-decoration: line-through; }
+
+    /* Employer card */
+    .employer-card {
+      background: var(--forest); color: var(--cream);
+      border-radius: 20px; padding: 24px;
+    }
+    .employer-card .side-card-title { color: var(--cream); }
+    .employer-name {
+      font-family: 'Source Serif 4', serif;
+      font-size: 22px; font-weight: 500;
+      letter-spacing: -0.01em; margin-bottom: 4px;
+    }
+    .employer-meta {
+      font-size: 13px; color: rgba(248,242,232,0.7);
+      margin-bottom: 16px;
+    }
+    .employer-stats {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 14px 0;
+      border-top: 1px solid rgba(248,242,232,0.15);
+      border-bottom: 1px solid rgba(248,242,232,0.15);
+    }
+    .employer-stat-num {
+      font-family: 'Source Serif 4', serif;
+      font-size: 22px; font-weight: 500; color: var(--cream);
+    }
+    .employer-stat-label {
+      font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(248,242,232,0.6); margin-top: 2px;
+    }
+    .employer-link {
+      display: inline-block; margin-top: 14px;
+      color: var(--coral); font-size: 13px; font-weight: 500;
+    }
+
+    .page-caption {
+      position: fixed; bottom: 24px; left: 24px;
+      background: var(--forest); color: var(--cream);
+      font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 8px 14px; border-radius: 999px; z-index: 100;
+    }
+    .page-caption .num { color: var(--coral); margin-right: 6px; }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="screen-concierge-home.html" class="wordmark">PoolGo<span class="accent">.</span></a>
+    <div class="nav-tabs">
+      <a href="#" class="nav-tab active">My Pool</a>
+      <a href="#" class="nav-tab">Care</a>
+      <a href="#" class="nav-tab">Equipment</a>
+      <a href="#" class="nav-tab">Routines</a>
+      <a href="#" class="nav-tab">Discover</a>
+      <a href="#" class="nav-tab">Inbox</a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-bell">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+          <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+        </svg>
+      </div>
+      <div class="nav-avatar">RK</div>
+    </div>
+  </nav>
+
+  <div class="crumbs">
+    <a href="screen-concierge-home.html">My Pool</a>
+    <span class="sep">/</span>
+    <a href="#">Folks on your pool</a>
+    <span class="sep">/</span>
+    <span class="here">Carlos Torres</span>
+  </div>
+
+  <header class="folk-header">
+    <div class="folk-photo-lg">CT</div>
+    <div>
+      <div class="folk-meta-eyebrow">Independent service tech · Marina Pool Service</div>
+      <h1 class="folk-name-big">Carlos Torres</h1>
+      <p class="folk-employer-line">Senior service technician at <strong>Marina Pool Service</strong>, employed by them, not by PoolGo. Weekly route, Tuesdays. CPO certified, 11 years on the job.</p>
+      <div class="folk-stats-row">
+        <div>
+          <div class="folk-stat-num">47</div>
+          <div class="folk-stat-label">Visits since 2024</div>
+        </div>
+        <div>
+          <div class="folk-stat-num">36 min</div>
+          <div class="folk-stat-label">Average visit</div>
+        </div>
+        <div>
+          <div class="folk-stat-num">4 days</div>
+          <div class="folk-stat-label">Since last visit</div>
+        </div>
+        <div>
+          <div class="folk-stat-num">$58</div>
+          <div class="folk-stat-label">Per week, billed by Marina</div>
+        </div>
+      </div>
+    </div>
+    <div class="folk-actions-row">
+      <button class="btn btn-primary">Draft a message</button>
+      <button class="btn btn-secondary">Request something</button>
+      <button class="btn btn-secondary">Reschedule next visit</button>
+      <button class="btn btn-ghost">Visit Marina Pool Service →</button>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- LEFT -->
+    <div>
+
+      <!-- Composer (AI message draft) -->
+      <section class="section">
+        <div class="composer">
+          <div class="composer-top">
+            <div class="composer-mark">P</div>
+            <div>
+              <div class="composer-title">PoolGo can draft a message to Carlos for you</div>
+              <div class="composer-byline">It pulls from your pool log so you don't have to retype anything</div>
+            </div>
+          </div>
+          <p class="composer-prompt">What do you want Carlos to know, ask, or do?</p>
+          <div class="composer-suggestions">
+            <button class="suggest-chip">Ask about the partial drain</button>
+            <button class="suggest-chip">Confirm next Tuesday</button>
+            <button class="suggest-chip">Filter PSI follow-up</button>
+            <button class="suggest-chip">Request a heater inspection</button>
+            <button class="suggest-chip">Skip a week</button>
+          </div>
+          <div class="composer-draft">
+            <div class="composer-draft-label">Draft · pulled from your pool log</div>
+            <p class="composer-draft-body">"Hi Carlos, the CYA reading from Sun Country yesterday was 42, third week climbing. Do you want to plan the partial drain for next Tuesday's visit, or have me bring a sample to Sun Country first? Filter PSI is at 18, was 16 a month ago. Thanks. — Ravi"</p>
+          </div>
+          <div class="composer-actions">
+            <button class="btn btn-primary">Send via SMS</button>
+            <button class="btn btn-ghost">Edit draft</button>
+            <button class="btn btn-ghost">Save for later</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recent visits -->
+      <section class="section">
+        <h2 class="section-title">Visits with Carlos</h2>
+        <p class="section-sub">Every visit Carlos has logged for your pool. He sees the visit-day data, you see the full record.</p>
+
+        <div class="timeline-card">
+
+          <div class="visit">
+            <div class="visit-date">
+              <strong>2026-05-05</strong>
+              Tuesday · 36 min
+            </div>
+            <div>
+              <div class="visit-headline">Tuesday morning service.</div>
+              <p class="visit-body">Routine weekly visit. All tasks completed. Note: filter PSI at 18 (up from 16). CYA at 42 and climbing. Suggested partial drain.</p>
+              <a href="screen-fn-visit.html" class="visit-link">Open visit log →</a>
+            </div>
+            <div class="visit-meta">
+              $58<br/>
+              <span style="color: var(--forest-mute);">paid</span>
+            </div>
+          </div>
+
+          <div class="visit">
+            <div class="visit-date">
+              <strong>2026-04-28</strong>
+              Tuesday · 38 min
+            </div>
+            <div>
+              <div class="visit-headline">Backwash and routine.</div>
+              <p class="visit-body">Filter PSI dropped 16 → 13 after backwash. Pool surface fine, no anomalies. Notes left for next week.</p>
+              <a href="#" class="visit-link">Open visit log →</a>
+            </div>
+            <div class="visit-meta">
+              $58<br/>
+              <span style="color: var(--forest-mute);">paid</span>
+            </div>
+          </div>
+
+          <div class="visit">
+            <div class="visit-date">
+              <strong>2026-04-21</strong>
+              Tuesday · 35 min
+            </div>
+            <div>
+              <div class="visit-headline">Tuesday morning service.</div>
+              <p class="visit-body">Routine. Salt cell amperage normal. No equipment issues. Phosphate noted as climbing.</p>
+              <a href="#" class="visit-link">Open visit log →</a>
+            </div>
+            <div class="visit-meta">
+              $58<br/>
+              <span style="color: var(--forest-mute);">paid</span>
+            </div>
+          </div>
+
+          <div class="visit">
+            <div class="visit-date">
+              <strong>2026-04-14</strong>
+              Tuesday · 41 min
+            </div>
+            <div>
+              <div class="visit-headline">Schedule B update.</div>
+              <p class="visit-body">Reduced pump runtime from 8h to 6h based on lower bather load. Estimated $8/mo saving. Customer agreed.</p>
+              <a href="#" class="visit-link">Open visit log →</a>
+            </div>
+            <div class="visit-meta">
+              $58<br/>
+              <span style="color: var(--forest-mute);">paid</span>
+            </div>
+          </div>
+
+          <div class="visit">
+            <div class="visit-date">
+              <strong>2026-04-07</strong>
+              Tuesday · 33 min
+            </div>
+            <div>
+              <div class="visit-headline">Spring open follow-up.</div>
+              <p class="visit-body">First weekly after winter cover removal. Skim, vacuum, full chemistry. Pool ready for the season.</p>
+              <a href="#" class="visit-link">Open visit log →</a>
+            </div>
+            <div class="visit-meta">
+              $58<br/>
+              <span style="color: var(--forest-mute);">paid</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+
+    <!-- RIGHT sidebar -->
+    <div>
+
+      <!-- What Carlos can see -->
+      <section class="section">
+        <h2 class="section-title" style="margin-bottom: 12px;">What Carlos sees of your pool</h2>
+        <p class="section-sub" style="margin-bottom: 16px;">Each folk on your pool sees a different slice of your data. You decide.</p>
+        <div class="access-card">
+          <div class="access-row">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4D6B50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <div class="access-text">
+              <strong>Carlos can see</strong>
+              <div style="margin-top: 6px;">
+                <span class="access-tag">Visit-day water tests</span>
+                <span class="access-tag">Equipment status during visits</span>
+                <span class="access-tag">His own visit notes</span>
+                <span class="access-tag">Your service preferences</span>
+                <span class="access-tag">Photos he took</span>
+              </div>
+            </div>
+          </div>
+          <div class="access-row">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9E3A24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            <div class="access-text">
+              <strong>Carlos doesn't see</strong>
+              <div style="margin-top: 6px;">
+                <span class="access-tag no">Sun Country tests</span>
+                <span class="access-tag no">Leslie's tests</span>
+                <span class="access-tag no">Your messages with Anthony</span>
+                <span class="access-tag no">Your purchase history</span>
+                <span class="access-tag no">Other folks on your pool</span>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--mist);">
+            <a href="#" style="font-size: 13px; color: var(--coral); font-weight: 500;">Adjust what Carlos sees →</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Employer card -->
+      <section class="section">
+        <div class="employer-card">
+          <div style="font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--coral); font-weight: 500; margin-bottom: 12px;">Carlos's employer</div>
+          <div class="employer-name">Marina Pool Service</div>
+          <div class="employer-meta">Family-owned · Roseville, CA · 4 trucks · founded 2009</div>
+          <div class="employer-stats">
+            <div>
+              <div class="employer-stat-num">$58</div>
+              <div class="employer-stat-label">Per week</div>
+            </div>
+            <div>
+              <div class="employer-stat-num">Auto-pay</div>
+              <div class="employer-stat-label">Direct to Marina</div>
+            </div>
+            <div>
+              <div class="employer-stat-num">2024</div>
+              <div class="employer-stat-label">Customer since</div>
+            </div>
+            <div>
+              <div class="employer-stat-num">2 techs</div>
+              <div class="employer-stat-label">You've met (Carlos, Lupe)</div>
+            </div>
+          </div>
+          <a href="#" class="employer-link">Open Marina Pool Service →</a>
+        </div>
+      </section>
+
+      <!-- Backup -->
+      <section class="section">
+        <div class="side-card">
+          <h3 class="side-card-title">If Carlos is out</h3>
+          <p style="font-size: 13px; color: var(--forest-soft); line-height: 1.5; margin-bottom: 16px;">Marina's backup tech is Lupe Reyes. PoolGo will route automatically if Carlos is sick or on vacation.</p>
+          <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 14px;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--coral), #B85541); color: var(--cream); display: flex; align-items: center; justify-content: center; font-family: 'Source Serif 4', serif; font-weight: 500; font-size: 14px;">LR</div>
+            <div>
+              <div style="font-weight: 500; font-size: 14px;">Lupe Reyes</div>
+              <div style="font-size: 12px; color: var(--forest-mute);">Backup tech · 1 visit so far</div>
+            </div>
+          </div>
+          <a href="#" style="font-size: 13px; color: var(--coral); font-weight: 500;">See Marina's full team →</a>
+        </div>
+      </section>
+
+      <!-- Find another -->
+      <section class="section">
+        <div class="side-card cream">
+          <h3 class="side-card-title">Looking for an alternative?</h3>
+          <p style="font-size: 13px; color: var(--forest-soft); line-height: 1.5; margin-bottom: 14px;">If you ever want a second opinion, three other vouched-for service techs work within 5 miles.</p>
+          <a href="#" style="font-size: 13px; color: var(--coral); font-weight: 500;">Browse service techs near you →</a>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <div class="page-caption"><span class="num">07b</span> Concierge · Folk detail (Carlos)</div>
+</body>
+</html>

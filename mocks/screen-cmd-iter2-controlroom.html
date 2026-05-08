@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Command Center · Iter 2 (Control Room) — PoolGo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ================================================================
+       ITER 2 — CONTROL ROOM
+       References: Linear, Grafana, Felt, Bloomberg
+       Charcoal everywhere, sage as the only accent, dense info,
+       schematic plumbing diagram as the hero. Pool-shop engineer aesthetic.
+       ================================================================ */
+
+    :root {
+      --bg: #0F1112;
+      --surface: #16191A;
+      --surface-2: #1E2223;
+      --surface-3: #2A2F31;
+      --line: #2D3234;
+      --line-2: #404648;
+      --text: #E8EBEC;
+      --text-mute: #909799;
+      --text-deep: #5C6365;
+      --sage: #6BB476;
+      --sage-soft: rgba(107,180,118,0.12);
+      --gold: #D8A746;
+      --gold-soft: rgba(216,167,70,0.12);
+      --coral: #E06A4D;
+      --coral-soft: rgba(224,106,77,0.12);
+      --water: #4FB7C9;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter Tight', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+      font-feature-settings: 'tnum';
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+
+    /* ----- top bar (Linear-style super-tight) ----- */
+    .topbar {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 24px;
+      align-items: center;
+      padding: 10px 16px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+      position: sticky; top: 0; z-index: 10;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+    }
+    .topbar-brand {
+      display: flex; align-items: center; gap: 8px;
+      font-weight: 600; color: var(--text);
+      letter-spacing: -0.02em;
+    }
+    .topbar-brand .dot { width: 8px; height: 8px; background: var(--sage); border-radius: 1px; }
+    .topbar-search {
+      display: flex; align-items: center; gap: 8px;
+      padding: 5px 10px;
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      max-width: 360px;
+      color: var(--text-mute);
+    }
+    .topbar-search .key {
+      margin-left: auto;
+      padding: 1px 5px;
+      background: var(--surface-3);
+      border-radius: 3px;
+      font-size: 10px;
+      color: var(--text-mute);
+    }
+    .topbar-right { display: flex; align-items: center; gap: 16px; color: var(--text-mute); }
+    .topbar-stat {
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .topbar-stat .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+    }
+    .topbar-stat .dot.green { background: var(--sage); }
+    .topbar-stat .dot.amber { background: var(--gold); }
+    .topbar-stat strong { color: var(--text); font-weight: 500; }
+
+    /* ----- system status strip ----- */
+    .system-strip {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .ss-cell {
+      padding: 12px 14px;
+      border-right: 1px solid var(--line);
+      cursor: pointer;
+    }
+    .ss-cell:last-child { border-right: none; }
+    .ss-cell:hover { background: var(--surface-2); }
+    .ss-cell.active { background: var(--surface-2); border-bottom: 2px solid var(--sage); }
+    .ss-name {
+      font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--text-mute); margin-bottom: 6px;
+    }
+    .ss-val {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 18px; font-weight: 600;
+      letter-spacing: -0.02em; color: var(--text);
+      line-height: 1;
+    }
+    .ss-val .u { font-size: 10px; color: var(--text-mute); margin-left: 2px; font-weight: 400; }
+    .ss-tag {
+      margin-top: 6px;
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 9px; letter-spacing: 0.06em;
+    }
+    .ss-tag .d { width: 5px; height: 5px; border-radius: 50%; }
+    .ss-tag.ok { color: var(--sage); }
+    .ss-tag.ok .d { background: var(--sage); }
+    .ss-tag.warn { color: var(--gold); }
+    .ss-tag.warn .d { background: var(--gold); }
+    .ss-tag.off { color: var(--text-deep); }
+    .ss-tag.off .d { background: var(--text-deep); }
+
+    /* ----- main grid ----- */
+    .layout {
+      display: grid;
+      grid-template-columns: 56px 1fr 320px;
+      min-height: calc(100vh - 92px);
+    }
+    @media (max-width: 1100px) { .layout { grid-template-columns: 56px 1fr; } .right-rail { display: none; } }
+
+    /* ----- side rail ----- */
+    .rail {
+      background: var(--surface);
+      border-right: 1px solid var(--line);
+      padding: 12px 0;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+    }
+    .rail-item {
+      width: 36px; height: 36px;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-mute);
+      transition: background 120ms ease;
+    }
+    .rail-item:hover { background: var(--surface-2); color: var(--text); }
+    .rail-item.active { background: var(--surface-3); color: var(--sage); }
+    .rail-divider {
+      height: 1px; width: 24px; background: var(--line); margin: 8px 0;
+    }
+    .rail-avatar {
+      margin-top: auto;
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, var(--sage), #4D8056);
+      color: var(--bg);
+      border-radius: 6px;
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 700; font-size: 11px; letter-spacing: -0.04em;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ----- main panel ----- */
+    .main {
+      padding: 20px;
+      display: grid; gap: 14px;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .panel-header {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--line);
+      display: flex; justify-content: space-between; align-items: center;
+      background: var(--surface-2);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .panel-title {
+      font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-mute); font-weight: 500;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .panel-title strong { color: var(--text); font-weight: 600; }
+    .panel-meta {
+      font-size: 10px; letter-spacing: 0.06em;
+      color: var(--text-mute);
+    }
+    .panel-meta strong { color: var(--text); font-weight: 500; }
+    .panel-body { padding: 16px; }
+    .panel-body.tight { padding: 10px 14px; }
+
+    /* ----- pool schematic ----- */
+    .pad-schematic {
+      padding: 24px;
+      background:
+        linear-gradient(0deg, transparent 24px, rgba(255,255,255,0.025) 24px, rgba(255,255,255,0.025) 25px, transparent 25px),
+        linear-gradient(90deg, transparent 24px, rgba(255,255,255,0.025) 24px, rgba(255,255,255,0.025) 25px, transparent 25px),
+        var(--surface);
+      background-size: 25px 25px;
+    }
+    .schematic-svg {
+      width: 100%; height: auto;
+      max-height: 240px;
+    }
+
+    /* ----- equipment grid ----- */
+    .eq-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    @media (max-width: 880px) { .eq-grid { grid-template-columns: 1fr 1fr; } }
+
+    .eq-panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 16px;
+      display: flex; flex-direction: column;
+      min-height: 200px;
+    }
+    .eq-head {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    .eq-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--text-mute);
+    }
+    .eq-label strong { color: var(--text); font-weight: 500; }
+    .eq-state-pill {
+      padding: 2px 7px; border-radius: 3px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; letter-spacing: 0.08em;
+    }
+    .eq-state-pill.live { background: var(--sage-soft); color: var(--sage); }
+    .eq-state-pill.warn { background: var(--gold-soft); color: var(--gold); }
+    .eq-state-pill.off { background: var(--surface-3); color: var(--text-deep); }
+    .eq-state-pill.alert { background: var(--coral-soft); color: var(--coral); }
+
+    .eq-stat {
+      display: flex; align-items: baseline; gap: 6px;
+    }
+    .eq-stat .num {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 32px; font-weight: 600;
+      letter-spacing: -0.025em; line-height: 0.95;
+      color: var(--text);
+    }
+    .eq-stat .unit {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; color: var(--text-mute);
+    }
+    .eq-rows {
+      margin-top: 10px;
+      display: grid; gap: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+    }
+    .eq-row {
+      display: grid; grid-template-columns: 1fr auto;
+      color: var(--text-mute);
+    }
+    .eq-row strong { color: var(--text); font-weight: 500; }
+    .eq-row strong.warn { color: var(--gold); }
+    .eq-spark { margin-top: 10px; height: 32px; width: 100%; }
+
+    /* equipment controls */
+    .eq-control {
+      margin-top: auto; padding-top: 12px;
+      border-top: 1px solid var(--line);
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 10px;
+    }
+    .eq-control .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.08em;
+      color: var(--text-mute); text-transform: uppercase;
+    }
+    .switch {
+      width: 36px; height: 20px; border-radius: 3px;
+      background: var(--sage); position: relative;
+      cursor: pointer; flex-shrink: 0;
+    }
+    .switch::after {
+      content: ''; position: absolute;
+      top: 2px; right: 2px;
+      width: 16px; height: 16px;
+      border-radius: 2px; background: var(--bg);
+      transition: transform 120ms ease;
+    }
+    .switch.off { background: var(--surface-3); border: 1px solid var(--line-2); }
+    .switch.off::after { background: var(--text-deep); transform: translateX(-14px); }
+    .step-row {
+      display: flex; gap: 2px;
+      width: 100%;
+    }
+    .step {
+      flex: 1; padding: 5px 4px;
+      background: var(--surface-3);
+      border: 1px solid var(--line);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; color: var(--text-mute);
+      text-align: center; cursor: pointer;
+    }
+    .step:hover { background: var(--surface-2); color: var(--text); }
+    .step.active {
+      background: var(--sage); color: var(--bg);
+      border-color: var(--sage);
+      font-weight: 600;
+    }
+
+    /* slider variant */
+    .slider {
+      width: 100%; height: 4px;
+      background: var(--surface-3);
+      position: relative; margin-top: 8px;
+    }
+    .slider-fill {
+      position: absolute; left: 0; top: 0; bottom: 0;
+      background: var(--sage);
+    }
+    .slider-thumb {
+      position: absolute; top: 50%; transform: translate(-50%, -50%);
+      width: 10px; height: 10px;
+      background: var(--text); border: 1px solid var(--sage);
+      border-radius: 1px;
+    }
+
+    /* lights */
+    .light-strip {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      margin-top: 12px;
+    }
+    .light-cell {
+      padding: 8px 6px;
+      background: var(--surface-3); border: 1px solid var(--line);
+      text-align: center;
+      cursor: pointer;
+    }
+    .light-cell.on {
+      background: var(--gold-soft); border-color: var(--gold);
+      color: var(--gold);
+    }
+    .light-cell.off { color: var(--text-deep); }
+    .light-cell .name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .light-cell .state {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8px; opacity: 0.7;
+    }
+
+    /* run-now button */
+    .run-btn {
+      margin-top: auto;
+      width: 100%;
+      padding: 8px;
+      background: var(--sage); color: var(--bg);
+      border: none; border-radius: 3px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      cursor: pointer;
+    }
+    .run-btn:hover { background: #7DCC88; }
+
+    /* ----- right rail ----- */
+    .right-rail {
+      background: var(--surface);
+      border-left: 1px solid var(--line);
+      padding: 16px;
+      display: flex; flex-direction: column; gap: 14px;
+      overflow-y: auto;
+      max-height: calc(100vh - 92px);
+    }
+    .rail-section {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .rail-section-header {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--line);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-mute);
+      background: var(--surface-2);
+      display: flex; justify-content: space-between;
+    }
+    .rail-section-header strong { color: var(--text); font-weight: 600; }
+    .rail-section-body { padding: 12px; }
+
+    /* AI in the rail */
+    .ai-box .summary {
+      font-size: 13px; color: var(--text); line-height: 1.5;
+    }
+    .ai-box mark {
+      background: var(--coral-soft); color: var(--coral);
+      padding: 0 3px; border-radius: 2px;
+    }
+    .ai-box .actions { margin-top: 12px; display: flex; gap: 6px; }
+    .ai-box .actions a {
+      padding: 5px 9px;
+      background: var(--surface-3);
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; color: var(--text);
+      letter-spacing: 0.04em;
+    }
+    .ai-box .actions a.go {
+      background: var(--sage); color: var(--bg); border-color: var(--sage);
+      font-weight: 600;
+    }
+
+    /* alerts */
+    .alert {
+      display: grid; grid-template-columns: 8px 1fr;
+      gap: 10px; padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+      align-items: start;
+    }
+    .alert:last-child { border-bottom: none; padding-bottom: 0; }
+    .alert .indicator {
+      width: 6px; height: 6px; border-radius: 50%;
+      margin-top: 4px;
+    }
+    .alert.warn .indicator { background: var(--gold); }
+    .alert.info .indicator { background: var(--water); }
+    .alert.human .indicator { background: var(--coral); }
+    .alert-text { font-size: 12px; color: var(--text); line-height: 1.45; }
+    .alert-text strong { font-weight: 600; }
+    .alert-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; color: var(--text-mute);
+      letter-spacing: 0.06em; margin-top: 3px;
+    }
+
+    /* terminal log */
+    .log {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+    }
+    .log-row {
+      display: grid; grid-template-columns: 60px 8px 1fr;
+      gap: 10px; padding: 5px 0;
+      align-items: center;
+      color: var(--text-mute);
+    }
+    .log-row .t { color: var(--text-deep); }
+    .log-row .i { width: 5px; height: 5px; border-radius: 50%; }
+    .log-row .i.live { background: var(--sage); }
+    .log-row .i.imp { background: var(--gold); }
+    .log-row .i.hum { background: var(--coral); }
+    .log-row .i.ai { background: var(--water); }
+    .log-row strong { color: var(--text); font-weight: 500; }
+
+    /* page caption */
+    .page-caption {
+      position: fixed; bottom: 16px; left: 16px;
+      background: var(--sage); color: var(--bg);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 6px 10px; border-radius: 3px; z-index: 100;
+    }
+    .page-caption .num { opacity: 0.65; margin-right: 6px; }
+  </style>
+</head>
+<body>
+
+  <!-- top bar -->
+  <header class="topbar">
+    <div class="topbar-brand">
+      <span class="dot"></span>
+      poolgo / command
+    </div>
+    <div class="topbar-search">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="6"/><path d="m20 20-3.5-3.5"/></svg>
+      <span>Search systems, equipment, folks…</span>
+      <span class="key">⌘K</span>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-stat"><span class="dot green"></span>SYSTEMS <strong>5/6</strong></div>
+      <div class="topbar-stat"><span class="dot amber"></span>NOTES <strong>2</strong></div>
+      <div class="topbar-stat">RK</div>
+    </div>
+  </header>
+
+  <!-- system status strip -->
+  <div class="system-strip">
+    <div class="ss-cell active">
+      <div class="ss-name">Pump</div>
+      <div class="ss-val">1,750<span class="u">rpm</span></div>
+      <div class="ss-tag ok"><span class="d"></span>RUNNING</div>
+    </div>
+    <div class="ss-cell">
+      <div class="ss-name">Filter</div>
+      <div class="ss-val">18<span class="u">psi</span></div>
+      <div class="ss-tag warn"><span class="d"></span>+2 SINCE INSTALL</div>
+    </div>
+    <div class="ss-cell">
+      <div class="ss-name">Heater</div>
+      <div class="ss-val">82<span class="u">°F</span></div>
+      <div class="ss-tag off"><span class="d"></span>OFF · SET 84</div>
+    </div>
+    <div class="ss-cell">
+      <div class="ss-name">Salt cell</div>
+      <div class="ss-val">60<span class="u">%</span></div>
+      <div class="ss-tag ok"><span class="d"></span>HEALTHY</div>
+    </div>
+    <div class="ss-cell">
+      <div class="ss-name">Lights</div>
+      <div class="ss-val">0<span class="u">/3</span></div>
+      <div class="ss-tag off"><span class="d"></span>ALL OFF</div>
+    </div>
+    <div class="ss-cell">
+      <div class="ss-name">Cleaner</div>
+      <div class="ss-val">14:00</div>
+      <div class="ss-tag ok"><span class="d"></span>SCHEDULED</div>
+    </div>
+    <div class="ss-cell">
+      <div class="ss-name">Free Cl</div>
+      <div class="ss-val">2.4<span class="u">ppm</span></div>
+      <div class="ss-tag ok"><span class="d"></span>IN RANGE · IMPORTED</div>
+    </div>
+    <div class="ss-cell">
+      <div class="ss-name">CYA</div>
+      <div class="ss-val">42<span class="u">ppm</span></div>
+      <div class="ss-tag warn"><span class="d"></span>CLIMBING</div>
+    </div>
+  </div>
+
+  <div class="layout">
+
+    <!-- side rail -->
+    <nav class="rail">
+      <div class="rail-item active" title="Command">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      </div>
+      <div class="rail-item" title="Care">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </div>
+      <div class="rail-item" title="Equipment">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </div>
+      <div class="rail-item" title="Routines">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <div class="rail-item" title="Discover">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m20 20-3.5-3.5"/></svg>
+      </div>
+      <div class="rail-divider"></div>
+      <div class="rail-item" title="Inbox">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+      </div>
+      <div class="rail-avatar">RK</div>
+    </nav>
+
+    <!-- main panel -->
+    <main class="main">
+
+      <!-- pad schematic -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17h18M5 12h14M7 7h10"/></svg>
+            <strong>EQUIPMENT PAD</strong> · west side · live diagram
+          </div>
+          <div class="panel-meta">FLOW · <strong>42 GPM</strong> · DIRECTION → · POLLED 2s</div>
+        </div>
+        <div class="pad-schematic">
+          <svg class="schematic-svg" viewBox="0 0 880 240" xmlns="http://www.w3.org/2000/svg">
+            <!-- flow lines (plumbing) -->
+            <g stroke="#6BB476" stroke-width="2" fill="none" stroke-linecap="round">
+              <!-- pool to skimmer -->
+              <line x1="60" y1="120" x2="130" y2="120"/>
+              <!-- skimmer to pump -->
+              <line x1="180" y1="120" x2="270" y2="120"/>
+              <!-- pump to filter -->
+              <line x1="320" y1="120" x2="410" y2="120"/>
+              <!-- filter to heater -->
+              <line x1="460" y1="120" x2="550" y2="120"/>
+              <!-- heater to salt cell -->
+              <line x1="600" y1="120" x2="690" y2="120" stroke="#5C6365" stroke-dasharray="4,4"/>
+              <!-- salt cell to return -->
+              <line x1="740" y1="120" x2="820" y2="120"/>
+              <!-- return to pool -->
+              <line x1="820" y1="120" x2="820" y2="180"/>
+              <line x1="820" y1="180" x2="60" y2="180"/>
+              <line x1="60" y1="180" x2="60" y2="120"/>
+            </g>
+
+            <!-- flow direction triangles -->
+            <g fill="#6BB476">
+              <polygon points="155,116 170,120 155,124"/>
+              <polygon points="295,116 310,120 295,124"/>
+              <polygon points="435,116 450,120 435,124"/>
+              <polygon points="525,116 540,120 525,124"/>
+              <polygon points="715,116 730,120 715,124"/>
+              <polygon points="200,184 185,180 200,176"/>
+            </g>
+
+            <!-- POOL -->
+            <ellipse cx="60" cy="120" rx="36" ry="22" fill="#1E2223" stroke="#4FB7C9" stroke-width="1.5"/>
+            <text x="60" y="124" text-anchor="middle" fill="#4FB7C9" font-family="JetBrains Mono, monospace" font-size="10" font-weight="600">POOL</text>
+
+            <!-- skimmer -->
+            <rect x="135" y="100" width="50" height="40" fill="#1E2223" stroke="#909799" stroke-width="1.5" rx="2"/>
+            <text x="160" y="116" text-anchor="middle" fill="#909799" font-family="JetBrains Mono, monospace" font-size="8" letter-spacing="1">SKIM</text>
+            <text x="160" y="130" text-anchor="middle" fill="#E8EBEC" font-family="Inter Tight, sans-serif" font-size="11" font-weight="600">42</text>
+
+            <!-- pump -->
+            <circle cx="295" cy="120" r="28" fill="#1E2223" stroke="#6BB476" stroke-width="2"/>
+            <text x="295" y="106" text-anchor="middle" fill="#6BB476" font-family="JetBrains Mono, monospace" font-size="8" letter-spacing="1">PUMP</text>
+            <text x="295" y="124" text-anchor="middle" fill="#E8EBEC" font-family="Inter Tight, sans-serif" font-size="14" font-weight="700">1750</text>
+            <text x="295" y="138" text-anchor="middle" fill="#909799" font-family="JetBrains Mono, monospace" font-size="8">RPM</text>
+
+            <!-- filter (vertical cylinder) -->
+            <rect x="415" y="80" width="40" height="80" fill="#1E2223" stroke="#D8A746" stroke-width="2" rx="4"/>
+            <line x1="415" y1="100" x2="455" y2="100" stroke="#D8A746" stroke-width="1" opacity="0.5"/>
+            <text x="435" y="76" text-anchor="middle" fill="#D8A746" font-family="JetBrains Mono, monospace" font-size="8" letter-spacing="1">FILTER</text>
+            <text x="435" y="124" text-anchor="middle" fill="#E8EBEC" font-family="Inter Tight, sans-serif" font-size="13" font-weight="700">18</text>
+            <text x="435" y="140" text-anchor="middle" fill="#D8A746" font-family="JetBrains Mono, monospace" font-size="8">PSI</text>
+
+            <!-- heater -->
+            <rect x="555" y="100" width="50" height="40" fill="#1E2223" stroke="#5C6365" stroke-width="1.5" rx="2"/>
+            <text x="580" y="98" text-anchor="middle" fill="#5C6365" font-family="JetBrains Mono, monospace" font-size="8" letter-spacing="1">HEATER</text>
+            <text x="580" y="120" text-anchor="middle" fill="#909799" font-family="Inter Tight, sans-serif" font-size="13" font-weight="700">OFF</text>
+            <text x="580" y="135" text-anchor="middle" fill="#5C6365" font-family="JetBrains Mono, monospace" font-size="8">SET 84</text>
+
+            <!-- salt cell -->
+            <rect x="695" y="100" width="50" height="40" fill="#1E2223" stroke="#6BB476" stroke-width="2" rx="2"/>
+            <text x="720" y="98" text-anchor="middle" fill="#6BB476" font-family="JetBrains Mono, monospace" font-size="8" letter-spacing="1">SALT IC40</text>
+            <text x="720" y="120" text-anchor="middle" fill="#E8EBEC" font-family="Inter Tight, sans-serif" font-size="14" font-weight="700">60%</text>
+            <text x="720" y="135" text-anchor="middle" fill="#6BB476" font-family="JetBrains Mono, monospace" font-size="7">OUTPUT</text>
+
+            <!-- return jet -->
+            <circle cx="820" cy="120" r="14" fill="#1E2223" stroke="#4FB7C9" stroke-width="1.5"/>
+            <text x="820" y="124" text-anchor="middle" fill="#4FB7C9" font-family="JetBrains Mono, monospace" font-size="7">RTN</text>
+
+            <!-- annotations -->
+            <text x="60" y="220" fill="#909799" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle">82°F · 18,500 GAL</text>
+            <text x="295" y="170" fill="#909799" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle">42 GPM · 380 W</text>
+            <text x="435" y="180" fill="#909799" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle">SAND · 24"</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- equipment grid -->
+      <div class="eq-grid">
+
+        <!-- Pump -->
+        <div class="eq-panel">
+          <div class="eq-head">
+            <div class="eq-label">PUMP · <strong>INTELLIFLO3</strong></div>
+            <span class="eq-state-pill live">RUNNING</span>
+          </div>
+          <div class="eq-stat">
+            <span class="num">1,750</span>
+            <span class="unit">RPM</span>
+          </div>
+          <div class="eq-rows">
+            <div class="eq-row"><span>FLOW</span><strong>42 GPM</strong></div>
+            <div class="eq-row"><span>WATTS</span><strong>380</strong></div>
+            <div class="eq-row"><span>SCHEDULE</span><strong>B · 5:30–11:30</strong></div>
+          </div>
+          <svg class="eq-spark" viewBox="0 0 200 32" preserveAspectRatio="none">
+            <polyline fill="none" stroke="#6BB476" stroke-width="1.5" points="0,18 25,16 50,20 75,14 100,16 125,18 150,16 175,14 200,16"/>
+          </svg>
+          <div class="eq-control">
+            <span class="label">SPEED</span>
+            <div class="step-row">
+              <span class="step">1k</span>
+              <span class="step">1.5k</span>
+              <span class="step active">1.75k</span>
+              <span class="step">2.5k</span>
+              <span class="step">3k</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter -->
+        <div class="eq-panel">
+          <div class="eq-head">
+            <div class="eq-label">FILTER · <strong>HAYWARD SAND 24"</strong></div>
+            <span class="eq-state-pill warn">WATCH</span>
+          </div>
+          <div class="eq-stat">
+            <span class="num">18</span>
+            <span class="unit">PSI</span>
+          </div>
+          <div class="eq-rows">
+            <div class="eq-row"><span>BASELINE</span><strong>14 PSI</strong></div>
+            <div class="eq-row"><span>DELTA</span><strong class="warn">+4 (29%)</strong></div>
+            <div class="eq-row"><span>LAST BACKWASH</span><strong>2026-04-22</strong></div>
+          </div>
+          <svg class="eq-spark" viewBox="0 0 200 32" preserveAspectRatio="none">
+            <polyline fill="none" stroke="#D8A746" stroke-width="1.5" points="0,24 25,22 50,20 75,18 100,16 125,14 150,12 175,10 200,8"/>
+          </svg>
+          <div class="eq-control">
+            <span class="label">ACTION</span>
+            <button class="run-btn" style="width: auto; padding: 5px 10px; background: var(--gold); color: var(--bg);">PLAN BACKWASH</button>
+          </div>
+        </div>
+
+        <!-- Heater -->
+        <div class="eq-panel">
+          <div class="eq-head">
+            <div class="eq-label">HEATER · <strong>MASTERTEMP 400</strong></div>
+            <span class="eq-state-pill off">OFF · 4D</span>
+          </div>
+          <div class="eq-stat">
+            <span class="num">82°</span>
+            <span class="unit">CURRENT</span>
+          </div>
+          <div class="eq-rows">
+            <div class="eq-row"><span>SETPOINT</span><strong>84°F</strong></div>
+            <div class="eq-row"><span>BTU/HR</span><strong>400k</strong></div>
+            <div class="eq-row"><span>LAST RUN</span><strong>2026-05-02</strong></div>
+          </div>
+          <div class="eq-control">
+            <span class="label">SETPOINT</span>
+            <div class="step-row">
+              <span class="step">78</span>
+              <span class="step">80</span>
+              <span class="step active">84</span>
+              <span class="step">88</span>
+            </div>
+          </div>
+          <div class="eq-control">
+            <span class="label">POWER</span>
+            <div class="switch off"></div>
+          </div>
+        </div>
+
+        <!-- Salt cell -->
+        <div class="eq-panel">
+          <div class="eq-head">
+            <div class="eq-label">SALT CELL · <strong>INTELLICHLOR IC40</strong></div>
+            <span class="eq-state-pill live">HEALTHY</span>
+          </div>
+          <div class="eq-stat">
+            <span class="num">60</span>
+            <span class="unit">% OUTPUT</span>
+          </div>
+          <div class="eq-rows">
+            <div class="eq-row"><span>SALT</span><strong>3,200 PPM</strong></div>
+            <div class="eq-row"><span>CELL AMPERAGE</span><strong>5.4 A</strong></div>
+            <div class="eq-row"><span>LIFETIME</span><strong>3,840 / 10,000 HR</strong></div>
+          </div>
+          <svg class="eq-spark" viewBox="0 0 200 32" preserveAspectRatio="none">
+            <polyline fill="none" stroke="#6BB476" stroke-width="1.5" points="0,16 25,18 50,14 75,12 100,18 125,16 150,12 175,10 200,12"/>
+          </svg>
+        </div>
+
+        <!-- Lights -->
+        <div class="eq-panel">
+          <div class="eq-head">
+            <div class="eq-label">LIGHTS · <strong>INTELLIBRITE × 3</strong></div>
+            <span class="eq-state-pill off">ALL OFF</span>
+          </div>
+          <div class="eq-stat">
+            <span class="num">0</span>
+            <span class="unit">/ 3 ZONES</span>
+          </div>
+          <div class="light-strip">
+            <div class="light-cell off"><div class="name">POOL</div><div class="state">OFF</div></div>
+            <div class="light-cell off"><div class="name">SPA</div><div class="state">OFF</div></div>
+            <div class="light-cell off"><div class="name">DECK</div><div class="state">OFF</div></div>
+          </div>
+          <div class="eq-control">
+            <span class="label">ALL ZONES</span>
+            <div class="switch off"></div>
+          </div>
+        </div>
+
+        <!-- Cleaner -->
+        <div class="eq-panel">
+          <div class="eq-head">
+            <div class="eq-label">CLEANER · <strong>POLARIS 9650iQ</strong></div>
+            <span class="eq-state-pill live">SCHED 14:00</span>
+          </div>
+          <div class="eq-stat">
+            <span class="num">92</span>
+            <span class="unit">% BATTERY</span>
+          </div>
+          <div class="eq-rows">
+            <div class="eq-row"><span>LAST RUN</span><strong>YDAY · 38 MIN</strong></div>
+            <div class="eq-row"><span>MODE</span><strong>QUICK</strong></div>
+            <div class="eq-row"><span>CYCLES MTD</span><strong>12</strong></div>
+          </div>
+          <button class="run-btn">▸ RUN NOW</button>
+        </div>
+
+      </div>
+
+      <!-- terminal log -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+            <strong>EVENT LOG</strong> · today
+          </div>
+          <div class="panel-meta">8 EVENTS · LIVE · <strong>FILTER → ALL</strong></div>
+        </div>
+        <div class="panel-body tight">
+          <div class="log">
+            <div class="log-row"><span class="t">JUST NOW</span><span class="i ai"></span><span><strong>concierge</strong> drafted partial-drain plan for 2026-05-12 visit · 4 sources</span></div>
+            <div class="log-row"><span class="t">09:14</span><span class="i imp"></span><span>import sun-country · <strong>Free Cl 2.4</strong> · CYA 42 (climbing 3wk)</span></div>
+            <div class="log-row"><span class="t">08:42</span><span class="i hum"></span><span>msg from <strong>anthony@sun-country</strong> · suggests partial drain quote</span></div>
+            <div class="log-row"><span class="t">05:30</span><span class="i live"></span><span>intelliflo3 → schedule_b start · 1750 RPM · stops 11:30</span></div>
+            <div class="log-row"><span class="t">YDAY 14:22</span><span class="i imp"></span><span>import leslies · backup test brought in</span></div>
+            <div class="log-row"><span class="t">YDAY 09:18</span><span class="i live"></span><span>user → heater off · was setpoint 84°</span></div>
+            <div class="log-row"><span class="t">2D 11:00</span><span class="i live"></span><span>polaris9650 → quick_clean · 38 min · battery 92%</span></div>
+            <div class="log-row"><span class="t">4D 07:42</span><span class="i hum"></span><span><strong>carlos@marina</strong> visit · 36 min · $58 · filter PSI 18</span></div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- right rail -->
+    <aside class="right-rail">
+
+      <!-- AI summary -->
+      <div class="rail-section ai-box">
+        <div class="rail-section-header">
+          <span><strong>CONCIERGE</strong></span>
+          <span>JUST NOW</span>
+        </div>
+        <div class="rail-section-body">
+          <p class="summary">Yesterday's <strong>Sun Country</strong> test and this morning's <strong>IntelliFlo3</strong> telemetry agree. Pool healthy. The only thing climbing is <mark>CYA 42</mark>. Drafted a partial-drain plan with Carlos for Tuesday.</p>
+          <div class="actions">
+            <a href="#" class="go">SEE PLAN</a>
+            <a href="#">ASK</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- alerts -->
+      <div class="rail-section">
+        <div class="rail-section-header">
+          <span><strong>NOTES</strong></span>
+          <span>2 OPEN</span>
+        </div>
+        <div class="rail-section-body">
+          <div class="alert warn">
+            <div class="indicator"></div>
+            <div>
+              <div class="alert-text"><strong>CYA climbing</strong> — 42 ppm, third week running. Plan partial drain.</div>
+              <div class="alert-meta">FROM IMPORTED · 9:14</div>
+            </div>
+          </div>
+          <div class="alert warn">
+            <div class="indicator"></div>
+            <div>
+              <div class="alert-text"><strong>Filter PSI +2</strong> since install. Backwash this Saturday.</div>
+              <div class="alert-meta">FROM EQUIPMENT · 4d</div>
+            </div>
+          </div>
+          <div class="alert human">
+            <div class="indicator"></div>
+            <div>
+              <div class="alert-text">Anthony at <strong>Sun Country</strong> sent a CYA quote.</div>
+              <div class="alert-meta">FROM HUMAN · 8:42</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- scenes -->
+      <div class="rail-section">
+        <div class="rail-section-header">
+          <span><strong>SCENES</strong></span>
+          <span>+ NEW</span>
+        </div>
+        <div class="rail-section-body" style="padding: 8px 12px;">
+          <div class="log" style="font-size: 11px;">
+            <div style="padding: 7px 0; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; cursor: pointer; color: var(--text);">
+              <span>▸ MORNING SWIM</span><span style="color: var(--text-mute);">06:30</span>
+            </div>
+            <div style="padding: 7px 0; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; cursor: pointer; color: var(--text);">
+              <span>▸ EVENING PARTY</span><span style="color: var(--text-mute);">19:00</span>
+            </div>
+            <div style="padding: 7px 0; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; cursor: pointer; color: var(--text);">
+              <span>▸ STORM MODE</span><span style="color: var(--text-mute);">MANUAL</span>
+            </div>
+            <div style="padding: 7px 0; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; cursor: pointer; color: var(--text);">
+              <span>▸ VACATION</span><span style="color: var(--text-mute);">MANUAL</span>
+            </div>
+            <div style="padding: 7px 0; display: flex; justify-content: space-between; cursor: pointer; color: var(--text);">
+              <span>▸ EVERYTHING OFF</span><span style="color: var(--text-mute);">MANUAL</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- folks -->
+      <div class="rail-section">
+        <div class="rail-section-header">
+          <span><strong>FOLKS</strong></span>
+          <span>4</span>
+        </div>
+        <div class="rail-section-body">
+          <div class="alert">
+            <div class="indicator" style="background: var(--sage);"></div>
+            <div>
+              <div class="alert-text"><strong>Carlos T.</strong> · Marina Pool</div>
+              <div class="alert-meta">SERVICE · 4D AGO · NEXT TUE</div>
+            </div>
+          </div>
+          <div class="alert">
+            <div class="indicator" style="background: var(--coral);"></div>
+            <div>
+              <div class="alert-text"><strong>Anthony T.</strong> · Sun Country</div>
+              <div class="alert-meta">RETAIL · 1 NEW MSG</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+  </div>
+
+  <div class="page-caption"><span class="num">ITER 2</span> Control Room · Linear / Grafana / Felt</div>
+</body>
+</html>

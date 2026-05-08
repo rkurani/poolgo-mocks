@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pentair IntelliFlo3 — PoolGo (Pool Club)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #F4EBDD;
+      color: #0E2B47;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+
+    /* ------- top nav ------- */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 48px;
+      border-bottom: 1px solid rgba(14, 43, 71, 0.1);
+      background: #F4EBDD;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .wordmark {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 28px;
+      letter-spacing: -0.02em;
+      color: #0E2B47;
+    }
+    .wordmark .dot {
+      display: inline-block;
+      width: 8px; height: 8px;
+      background: #C24E2E;
+      transform: rotate(45deg);
+      margin: 0 4px 4px;
+      vertical-align: middle;
+    }
+    .nav-tabs { display: flex; gap: 36px; font-size: 14px; }
+    .nav-tabs a { color: #3F5973; padding: 6px 0; }
+    .nav-tabs a.active {
+      color: #0E2B47;
+      font-weight: 500;
+      border-bottom: 1px solid #C24E2E;
+    }
+    .nav-right {
+      display: flex; align-items: center; gap: 20px; font-size: 14px;
+    }
+    .avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: #3A8AC1;
+      color: #F4EBDD;
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 14px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ------- crumbs ------- */
+    .crumbs {
+      max-width: 1200px;
+      margin: 32px auto 0;
+      padding: 0 48px;
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #3F5973;
+    }
+    .crumbs a:hover { color: #C24E2E; }
+    .crumbs .sep { margin: 0 8px; opacity: 0.5; }
+    .crumbs .here { color: #C24E2E; }
+
+    /* ------- entry header (magazine feature treatment) ------- */
+    .entry-header {
+      max-width: 1200px;
+      margin: 24px auto 0;
+      padding: 0 48px 40px;
+      border-bottom: 1px solid rgba(14, 43, 71, 0.15);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 32px;
+      align-items: end;
+    }
+    .entry-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #C24E2E;
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+    .entry-title {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: clamp(48px, 6vw, 84px);
+      line-height: 0.98;
+      letter-spacing: -0.025em;
+      color: #0E2B47;
+      max-width: 14ch;
+    }
+    .entry-sub {
+      margin-top: 20px;
+      font-size: 17px;
+      color: #3F5973;
+      max-width: 56ch;
+      line-height: 1.5;
+    }
+    .entry-status {
+      text-align: right;
+    }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: #3A8AC1;
+      color: #F4EBDD;
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 16px;
+    }
+    .status-pill .dot {
+      width: 8px; height: 8px;
+      background: #F0CB35;
+      border-radius: 50%;
+    }
+    .entry-status .last-poll {
+      margin-top: 12px;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      color: #3F5973;
+    }
+
+    /* ------- main grid ------- */
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 48px 48px 64px;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 56px;
+    }
+    @media (max-width: 980px) { .main { grid-template-columns: 1fr; gap: 40px; } }
+
+    .section { margin-bottom: 56px; }
+    .section-label {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 22px;
+      letter-spacing: -0.015em;
+      color: #0E2B47;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(14, 43, 71, 0.15);
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .section-label .sub {
+      font-family: 'DM Sans', sans-serif;
+      font-style: normal;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #3F5973;
+      font-weight: 400;
+    }
+
+    /* ------- live readings (Hockney blue feature card) ------- */
+    .live-card {
+      background: #3A8AC1;
+      color: #F4EBDD;
+      border-radius: 8px;
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .live-card::after {
+      content: '';
+      position: absolute;
+      bottom: -120px;
+      right: -120px;
+      width: 280px; height: 280px;
+      border-radius: 50%;
+      background: #F0CB35;
+      opacity: 0.18;
+      pointer-events: none;
+    }
+    .live-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 32px;
+      position: relative; z-index: 2;
+    }
+    .live-card-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #F0CB35;
+      font-weight: 500;
+    }
+    .live-pulse {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 13px;
+      color: rgba(244, 235, 221, 0.85);
+    }
+    .live-pulse .dot {
+      width: 8px; height: 8px;
+      background: #F0CB35;
+      border-radius: 50%;
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .live-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      position: relative; z-index: 2;
+    }
+    .live-stat-name {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(244, 235, 221, 0.65);
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .live-stat-value {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 56px;
+      font-weight: 400;
+      line-height: 0.9;
+      letter-spacing: -0.025em;
+      color: #F4EBDD;
+    }
+    .live-stat-value .unit {
+      font-family: 'DM Sans', sans-serif;
+      font-style: normal;
+      font-size: 14px;
+      color: rgba(244, 235, 221, 0.65);
+      margin-left: 4px;
+      letter-spacing: 0.04em;
+    }
+    .live-stat-trend {
+      margin-top: 8px;
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 13px;
+      color: rgba(244, 235, 221, 0.7);
+    }
+
+    /* ------- pull-quote note ------- */
+    .pool-note {
+      background: #F4EBDD;
+      border: 1px solid rgba(14, 43, 71, 0.15);
+      border-left: 4px solid #C24E2E;
+      border-radius: 4px;
+      padding: 32px 36px;
+    }
+    .pool-note-mark {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 56px;
+      line-height: 0.5;
+      color: #C24E2E;
+      opacity: 0.6;
+      margin-bottom: 16px;
+    }
+    .pool-note-body {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 22px;
+      line-height: 1.4;
+      letter-spacing: -0.005em;
+      color: #0E2B47;
+      max-width: 38ch;
+    }
+    .pool-note-attr {
+      margin-top: 16px;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #3F5973;
+    }
+
+    /* ------- specifications table (two-column elegant) ------- */
+    .spec-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0 56px;
+    }
+    .spec-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(14, 43, 71, 0.12);
+      align-items: baseline;
+    }
+    .spec-row .label {
+      font-size: 13px;
+      color: #3F5973;
+      letter-spacing: 0.02em;
+    }
+    .spec-row .value {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 17px;
+      color: #0E2B47;
+      letter-spacing: -0.005em;
+    }
+
+    /* ------- runs table ------- */
+    table.runs {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    table.runs th {
+      text-align: left;
+      padding: 12px 16px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #3F5973;
+      font-weight: 500;
+      border-bottom: 1px solid rgba(14, 43, 71, 0.25);
+      background: rgba(14, 43, 71, 0.04);
+    }
+    table.runs td {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(14, 43, 71, 0.1);
+      color: #0E2B47;
+      font-variant-numeric: tabular-nums;
+    }
+    table.runs td:first-child {
+      color: #3F5973;
+      font-style: italic;
+      font-family: 'DM Serif Display', serif;
+      font-size: 15px;
+    }
+    table.runs tbody tr:hover { background: rgba(58, 138, 193, 0.06); }
+
+    /* ------- log entries (right column) ------- */
+    .log-entry {
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(14, 43, 71, 0.12);
+    }
+    .log-entry:last-child { border-bottom: none; }
+    .log-date {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      color: #C24E2E;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+    .log-title {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 18px;
+      letter-spacing: -0.005em;
+      color: #0E2B47;
+    }
+    .log-body {
+      font-size: 14px;
+      color: #3F5973;
+      margin-top: 4px;
+      max-width: 38ch;
+    }
+
+    /* ------- routine card on right ------- */
+    .routine-mini {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(14, 43, 71, 0.12);
+    }
+    .routine-mini:last-child { border-bottom: none; }
+    .routine-mini-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: #3F5973;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .routine-mini-quote {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 17px;
+      line-height: 1.4;
+      color: #0E2B47;
+    }
+    .routine-mini-status {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #3F5973;
+      letter-spacing: 0.04em;
+    }
+    .routine-mini-status .active {
+      color: #2D7A2D;
+      font-weight: 500;
+    }
+
+    /* ------- caption ------- */
+    .page-caption {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      background: #0E2B47;
+      color: #F4EBDD;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 14px;
+      border-radius: 999px;
+      z-index: 100;
+    }
+    .page-caption .num { color: #F0CB35; margin-right: 6px; }
+  </style>
+</head>
+<body>
+
+  <!-- Top nav -->
+  <nav class="nav">
+    <div class="wordmark">Pool<span class="dot"></span>Go</div>
+    <div class="nav-tabs">
+      <a href="#">My Pool</a>
+      <a href="#">Chart</a>
+      <a href="#" class="active">Connect</a>
+      <a href="#">Routines</a>
+      <a href="#">Discover</a>
+    </div>
+    <div class="nav-right">
+      <a href="#">Help</a>
+      <div class="avatar">R</div>
+    </div>
+  </nav>
+
+  <!-- Crumbs -->
+  <div class="crumbs">
+    <a href="#">Connect</a>
+    <span class="sep">/</span>
+    <a href="#">Pad equipment</a>
+    <span class="sep">/</span>
+    <span class="here">Pump · Pentair IntelliFlo3 VSF</span>
+  </div>
+
+  <!-- Entry header -->
+  <header class="entry-header">
+    <div>
+      <div class="entry-eyebrow">Entry 084 · Pump</div>
+      <h1 class="entry-title">Pentair IntelliFlo3 VSF.</h1>
+      <p class="entry-sub">Variable-flow main pump, eight programmable speeds. Installed July 2024 by Marina Pool Service. Currently running on Schedule B (5:30 am to 11:30 am, 1,750 RPM).</p>
+    </div>
+    <div class="entry-status">
+      <span class="status-pill"><span class="dot"></span>Online, running</span>
+      <div class="last-poll">Polled 14 sec ago</div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- LEFT column -->
+    <div>
+
+      <!-- Live readings, Hockney-blue feature card -->
+      <section class="section">
+        <div class="live-card">
+          <div class="live-card-top">
+            <div class="live-card-eyebrow">Live readings</div>
+            <span class="live-pulse"><span class="dot"></span>Polling every 30 seconds</span>
+          </div>
+          <div class="live-grid">
+            <div>
+              <div class="live-stat-name">Speed</div>
+              <div class="live-stat-value">1,750<span class="unit">rpm</span></div>
+              <div class="live-stat-trend">on Schedule B target</div>
+            </div>
+            <div>
+              <div class="live-stat-name">Flow rate</div>
+              <div class="live-stat-value">42<span class="unit">gpm</span></div>
+              <div class="live-stat-trend">+0.4 vs an hour ago</div>
+            </div>
+            <div>
+              <div class="live-stat-name">Power draw</div>
+              <div class="live-stat-value">380<span class="unit">w</span></div>
+              <div class="live-stat-trend">8w under week average</div>
+            </div>
+            <div>
+              <div class="live-stat-name">Suction PSI</div>
+              <div class="live-stat-value">12<span class="unit">psi</span></div>
+              <div class="live-stat-trend">comfortably in range</div>
+            </div>
+            <div>
+              <div class="live-stat-name">Filter PSI</div>
+              <div class="live-stat-value">18<span class="unit">psi</span></div>
+              <div class="live-stat-trend">+2 since install</div>
+            </div>
+            <div>
+              <div class="live-stat-name">Water temp</div>
+              <div class="live-stat-value">84<span class="unit">°f</span></div>
+              <div class="live-stat-trend">ambient and sun</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Note from your pool: pull-quote treatment -->
+      <section class="section">
+        <div class="pool-note">
+          <div class="pool-note-mark">"</div>
+          <p class="pool-note-body">Filter PSI has crept from 16 to 18 over the last six weeks. Worth a quick backwash this Saturday morning. Nothing is wrong. Anything under 22 is fine.</p>
+          <p class="pool-note-attr">— A NOTE FROM YOUR POOL · MAY 5</p>
+        </div>
+      </section>
+
+      <!-- Specifications -->
+      <section class="section">
+        <div class="section-label">Specifications<span class="sub">12 attributes</span></div>
+        <div class="spec-grid">
+          <div class="spec-row"><span class="label">Make</span><span class="value">Pentair</span></div>
+          <div class="spec-row"><span class="label">Voltage</span><span class="value">230V</span></div>
+          <div class="spec-row"><span class="label">Model</span><span class="value">IntelliFlo3 VSF</span></div>
+          <div class="spec-row"><span class="label">Horsepower</span><span class="value">3.0 HP</span></div>
+          <div class="spec-row"><span class="label">Serial</span><span class="value">PE3-2024-08-7741</span></div>
+          <div class="spec-row"><span class="label">Max flow</span><span class="value">130 GPM</span></div>
+          <div class="spec-row"><span class="label">Firmware</span><span class="value">v3.4.12</span></div>
+          <div class="spec-row"><span class="label">Connection</span><span class="value">Pentair Home Cloud</span></div>
+          <div class="spec-row"><span class="label">Installed</span><span class="value">July 18, 2024</span></div>
+          <div class="spec-row"><span class="label">Warranty</span><span class="value">Until July 2027</span></div>
+          <div class="spec-row"><span class="label">Installer</span><span class="value">Marina Pool Service</span></div>
+          <div class="spec-row"><span class="label">Location</span><span class="value">West-side pad</span></div>
+        </div>
+      </section>
+
+      <!-- Run history -->
+      <section class="section">
+        <div class="section-label">Run history<span class="sub">last 7 days</span></div>
+        <table class="runs">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Start</th>
+              <th>Stop</th>
+              <th>Duration</th>
+              <th>RPM avg</th>
+              <th>kWh</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>May 5</td><td>5:30 am</td><td>11:30 am</td><td>6h 00m</td><td>1,750</td><td>2.28</td></tr>
+            <tr><td>May 4</td><td>5:30 am</td><td>11:30 am</td><td>6h 00m</td><td>1,750</td><td>2.31</td></tr>
+            <tr><td>May 3</td><td>5:30 am</td><td>1:00 pm</td><td>7h 30m</td><td>1,900</td><td>3.14</td></tr>
+            <tr><td>May 2</td><td>5:30 am</td><td>11:30 am</td><td>6h 00m</td><td>1,750</td><td>2.30</td></tr>
+            <tr><td>May 1</td><td>5:30 am</td><td>11:30 am</td><td>6h 00m</td><td>1,750</td><td>2.27</td></tr>
+            <tr><td>April 30</td><td>5:30 am</td><td>11:30 am</td><td>6h 00m</td><td>1,750</td><td>2.29</td></tr>
+            <tr><td>April 29</td><td>5:30 am</td><td>11:30 am</td><td>6h 00m</td><td>1,750</td><td>2.32</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+    </div>
+
+    <!-- RIGHT column -->
+    <div>
+
+      <!-- Maintenance log -->
+      <section class="section">
+        <div class="section-label">The pump's diary<span class="sub">since install</span></div>
+
+        <div class="log-entry">
+          <div class="log-date">April 22, 2026</div>
+          <div class="log-title">Backwash, 28 seconds.</div>
+          <p class="log-body">Filter PSI dropped 16 to 13. Sand filter, no anomalies.</p>
+        </div>
+
+        <div class="log-entry">
+          <div class="log-date">March 14, 2026</div>
+          <div class="log-title">Schedule B updated.</div>
+          <p class="log-body">Reduced runtime from 8 hours to 6, based on lower bather load. Saving about $8 a month.</p>
+        </div>
+
+        <div class="log-entry">
+          <div class="log-date">November 2, 2025</div>
+          <div class="log-title">Firmware updated to v3.4.12.</div>
+          <p class="log-body">Pushed by Pentair Home Cloud. No user action required.</p>
+        </div>
+
+        <div class="log-entry">
+          <div class="log-date">July 18, 2024</div>
+          <div class="log-title">Installed by Marina Pool Service.</div>
+          <p class="log-body">Replaced the 12-year-old WhisperFlo. Old unit recycled at retailer.</p>
+        </div>
+      </section>
+
+      <!-- Connections -->
+      <section class="section">
+        <div class="section-label">Connections<span class="sub">cloud and local</span></div>
+        <div class="spec-grid" style="grid-template-columns: 1fr;">
+          <div class="spec-row"><span class="label">Cloud</span><span class="value">Pentair Home</span></div>
+          <div class="spec-row"><span class="label">Status</span><span class="value" style="color: #2D7A2D;">Linked</span></div>
+          <div class="spec-row"><span class="label">Last sync</span><span class="value">14 sec ago</span></div>
+          <div class="spec-row"><span class="label">Local control</span><span class="value">IntelliCenter</span></div>
+        </div>
+      </section>
+
+      <!-- Linked routines -->
+      <section class="section">
+        <div class="section-label">Routines that watch this pump<span class="sub">2 active</span></div>
+
+        <div class="routine-mini">
+          <div class="routine-mini-eyebrow">Filter PSI watch</div>
+          <p class="routine-mini-quote">"Tell Ravi if the filter pressure crosses 22 PSI."</p>
+          <div class="routine-mini-status"><span class="active">● Active</span> · last fired 12 days ago</div>
+        </div>
+
+        <div class="routine-mini">
+          <div class="routine-mini-eyebrow">Power-draw drift</div>
+          <p class="routine-mini-quote">"Tell Ravi if the weekly average watts climbs more than 15% over a month."</p>
+          <div class="routine-mini-status"><span class="active">● Active</span> · never fired</div>
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+  <div class="page-caption"><span class="num">04 / 03</span> Pool Club · Pump info</div>
+</body>
+</html>

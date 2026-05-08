@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PoolGo · Architecture (end-to-end)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FFFFFF;
+      --surface: #FAFAFA;
+      --surface-2: #F5F5F4;
+      --line: #ECECEC;
+      --line-2: #D8D8D8;
+      --ink: #0F1115;
+      --ink-soft: #45494F;
+      --ink-mute: #7A8088;
+      --pool: #1FA0BF;
+      --pool-soft: #E2F3F8;
+      --pentair: #1A4F8B;
+      --pentair-soft: #E5ECF4;
+      --hayward: #D8A700;
+      --hayward-soft: #FBF1D0;
+      --polaris: #00759C;
+      --polaris-soft: #DCEDF4;
+      --leslies: #0046A8;
+      --leslies-soft: #DEE8F7;
+      --suncountry: #B07B00;
+      --suncountry-soft: #F8EFD6;
+      --marina: #2C5F4A;
+      --marina-soft: #DFE8E2;
+      --sage: #2A8540;
+      --gold: #B07B00;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter Tight', sans-serif;
+      background: var(--bg); color: var(--ink);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+
+    /* page header */
+    .page-head {
+      padding: 48px 0 32px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 56px;
+    }
+    .eyebrow {
+      font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--ink-mute); font-weight: 600;
+      margin-bottom: 12px;
+    }
+    h1 {
+      font-size: clamp(36px, 4.5vw, 56px); font-weight: 800;
+      letter-spacing: -0.04em; line-height: 1.02;
+      max-width: 22ch; margin: 0;
+    }
+    .lede {
+      margin-top: 18px;
+      font-size: 16px; color: var(--ink-soft);
+      max-width: 70ch; line-height: 1.55;
+    }
+
+    /* section */
+    .section { margin-bottom: 80px; }
+    .section-eyebrow {
+      font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--pool); font-weight: 700;
+      margin-bottom: 12px;
+    }
+    h2 {
+      font-size: 28px; font-weight: 700;
+      letter-spacing: -0.03em;
+      margin: 0 0 20px;
+      max-width: 30ch;
+    }
+    .section-lede {
+      font-size: 15px; color: var(--ink-soft);
+      max-width: 60ch; line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    /* references row (DoorDash / Google Home / Alexa) */
+    .refs {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 880px) { .refs { grid-template-columns: 1fr; } }
+    .ref-card {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 22px 24px;
+      display: flex; flex-direction: column;
+    }
+    .ref-name {
+      font-weight: 700; font-size: 17px;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .ref-mark {
+      width: 26px; height: 26px;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 12px;
+      color: white;
+    }
+    .ref-mark.dd { background: #FF3008; }
+    .ref-mark.gh { background: #4285F4; }
+    .ref-mark.alexa { background: #00CAFF; }
+    .ref-tag {
+      font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--ink-mute); font-weight: 600;
+      margin-bottom: 14px;
+    }
+    .ref-pattern {
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 600; font-size: 15px;
+      letter-spacing: -0.015em;
+      color: var(--ink); margin: 0 0 6px;
+    }
+    .ref-detail {
+      font-size: 13px; color: var(--ink-soft); line-height: 1.55;
+      margin-bottom: 14px;
+    }
+    .ref-takeaway {
+      margin-top: auto;
+      padding: 12px 14px;
+      background: var(--pool-soft);
+      border-radius: 8px;
+      font-size: 13px; color: var(--ink);
+      line-height: 1.5;
+    }
+    .ref-takeaway strong { font-weight: 600; }
+
+    /* core diagram */
+    .core {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 40px;
+      margin-bottom: 32px;
+    }
+    .core-title {
+      text-align: center; margin-bottom: 32px;
+    }
+    .core-title h3 {
+      font-size: 22px; font-weight: 700;
+      letter-spacing: -0.025em; margin: 0;
+    }
+    .core-title p {
+      margin-top: 8px;
+      font-size: 14px; color: var(--ink-soft);
+    }
+
+    /* the 4-category grid */
+    .cat-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 980px) { .cat-grid { grid-template-columns: repeat(2, 1fr); } }
+    .cat {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 20px;
+      position: relative;
+    }
+    .cat::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--cat-color, var(--ink));
+      border-radius: 12px 12px 0 0;
+    }
+    .cat-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; letter-spacing: 0.12em;
+      color: var(--cat-color, var(--ink-mute));
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .cat-name {
+      font-weight: 700; font-size: 18px;
+      letter-spacing: -0.025em;
+      margin-bottom: 10px;
+    }
+    .cat-desc {
+      font-size: 13px; color: var(--ink-soft);
+      line-height: 1.5; margin-bottom: 14px;
+    }
+    .cat-list {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px; color: var(--ink-soft);
+      list-style: none; padding: 0; margin: 0;
+    }
+    .cat-list li {
+      padding: 4px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .cat-list li:last-child { border-bottom: none; }
+    .cat-list li strong { color: var(--ink); font-weight: 600; }
+
+    .cat[data-cat="equipment"] { --cat-color: var(--pentair); }
+    .cat[data-cat="automation"] { --cat-color: var(--polaris); }
+    .cat[data-cat="services"]   { --cat-color: var(--marina); }
+    .cat[data-cat="care"]       { --cat-color: var(--suncountry); }
+
+    /* AI layer */
+    .ai-layer {
+      background: var(--ink); color: white;
+      border-radius: 14px;
+      padding: 28px 32px;
+      display: grid; grid-template-columns: auto 1fr auto;
+      gap: 20px; align-items: center;
+      position: relative; overflow: hidden;
+    }
+    .ai-layer::after {
+      content: ''; position: absolute;
+      bottom: -50px; right: -50px;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(31,160,191,0.4) 0%, transparent 70%);
+    }
+    .ai-mark {
+      width: 44px; height: 44px;
+      background: var(--pool);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 17px; letter-spacing: -0.04em;
+      color: white;
+      position: relative; z-index: 2;
+    }
+    .ai-name {
+      font-weight: 700; font-size: 18px;
+      letter-spacing: -0.025em;
+      position: relative; z-index: 2;
+    }
+    .ai-desc {
+      font-size: 13px; color: rgba(255,255,255,0.8);
+      margin-top: 4px; line-height: 1.5;
+      max-width: 60ch;
+      position: relative; z-index: 2;
+    }
+    .ai-tag {
+      padding: 7px 14px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 999px;
+      font-size: 12px; font-weight: 600;
+      letter-spacing: -0.005em;
+      position: relative; z-index: 2;
+    }
+
+    /* IA navigation tree */
+    .ia {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 32px;
+    }
+    .ia-row {
+      display: grid; grid-template-columns: 180px 1fr;
+      gap: 24px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .ia-row:last-child { border-bottom: none; }
+    .ia-row:first-child { padding-top: 0; }
+    .ia-key {
+      display: flex; flex-direction: column;
+      gap: 4px;
+    }
+    .ia-tab {
+      font-weight: 700; font-size: 16px;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+    }
+    .ia-tab-meta {
+      font-size: 11px; color: var(--ink-mute);
+      letter-spacing: 0.04em;
+      font-weight: 500;
+    }
+    .ia-detail {
+      font-size: 14px; color: var(--ink-soft);
+      line-height: 1.6;
+    }
+    .ia-detail strong { color: var(--ink); font-weight: 600; }
+    .ia-chips {
+      display: flex; gap: 6px; flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .ia-chip {
+      font-size: 11px; padding: 4px 9px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--ink-soft);
+      font-family: 'Inter', sans-serif;
+    }
+    .ia-chip strong {
+      color: var(--ink); font-weight: 600;
+    }
+
+    /* Spaces (Google Home idea applied to equipment) */
+    .spaces {
+      display: grid; grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+      margin-top: 20px;
+    }
+    @media (max-width: 880px) { .spaces { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 600px) { .spaces { grid-template-columns: repeat(2, 1fr); } }
+    .space {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+    }
+    .space-icon {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      background: var(--space-tint, var(--surface));
+      color: var(--space-color, var(--ink));
+      margin: 0 auto 10px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .space-name {
+      font-weight: 700; font-size: 13px;
+      letter-spacing: -0.015em;
+    }
+    .space-meta {
+      font-size: 11px; color: var(--ink-mute);
+      margin-top: 3px;
+      letter-spacing: -0.005em;
+    }
+    .space[data-s="water"]   { --space-tint: var(--pool-soft); --space-color: var(--pool); }
+    .space[data-s="circ"]    { --space-tint: var(--pentair-soft); --space-color: var(--pentair); }
+    .space[data-s="filter"]  { --space-tint: var(--hayward-soft); --space-color: var(--hayward); }
+    .space[data-s="heat"]    { --space-tint: rgba(199,82,64,0.12); --space-color: #C75240; }
+    .space[data-s="lights"]  { --space-tint: rgba(216,167,0,0.18); --space-color: var(--gold); }
+    .space[data-s="clean"]   { --space-tint: var(--polaris-soft); --space-color: var(--polaris); }
+
+    /* tile system examples */
+    .tiles {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 20px;
+    }
+    @media (max-width: 880px) { .tiles { grid-template-columns: repeat(2, 1fr); } }
+    .tile {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+    }
+    .tile::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--tile-color);
+    }
+    .tile-img {
+      height: 90px;
+      background: var(--surface);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 36px;
+    }
+    .tile-info { padding: 12px 14px; }
+    .tile-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--tile-color);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .tile-name {
+      font-weight: 600; font-size: 13px;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+    .tile-sub {
+      font-size: 11px; color: var(--ink-mute);
+      margin-top: 2px;
+    }
+    .tile[data-type="equipment"] { --tile-color: var(--pentair); }
+    .tile[data-type="people"]    { --tile-color: var(--marina); }
+    .tile[data-type="store"]     { --tile-color: var(--suncountry); }
+    .tile[data-type="record"]    { --tile-color: var(--polaris); }
+
+    /* mapping table */
+    .mapping {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .map-row {
+      display: grid; grid-template-columns: 200px 1fr 180px;
+      gap: 18px; padding: 14px 22px;
+      border-bottom: 1px solid var(--line);
+      align-items: center;
+      font-size: 13px;
+    }
+    .map-row:last-child { border-bottom: none; }
+    .map-row.head {
+      background: var(--surface);
+      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--ink-mute);
+      font-weight: 700;
+    }
+    .map-row .surface-name {
+      font-weight: 600; font-size: 14px;
+      letter-spacing: -0.015em;
+    }
+    .map-row .map-status {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-align: center;
+    }
+    .map-row .map-status.built {
+      background: var(--pool-soft); color: var(--pool);
+    }
+    .map-row .map-status.partial {
+      background: rgba(176,123,0,0.14); color: var(--gold);
+    }
+    .map-row .map-status.missing {
+      background: var(--surface-2); color: var(--ink-mute);
+    }
+    .map-row .map-status a { color: inherit; }
+    .map-row a:hover { text-decoration: underline; }
+
+    /* page caption */
+    .page-caption {
+      position: fixed; bottom: 24px; left: 24px;
+      background: var(--ink); color: white;
+      font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase;
+      font-weight: 600;
+      padding: 8px 14px; border-radius: 999px; z-index: 100;
+    }
+    .page-caption .num { color: var(--pool); margin-right: 6px; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <header class="page-head">
+      <div class="eyebrow">PoolGo · architecture · 2026-05-07</div>
+      <h1>How PoolGo aggregates a fragmented industry.</h1>
+      <p class="lede">Before designing more screens, we lock the architecture. PoolGo aggregates four categories of stuff that don't normally talk to each other (equipment, automation cloud bridges, independent service businesses, and care records), plus an AI concierge that sits on top of all four. This page steals patterns from DoorDash, Google Home, and Alexa, then maps them to PoolGo's actual data shape and the screens we've already built.</p>
+    </header>
+
+    <!-- references -->
+    <section class="section">
+      <div class="section-eyebrow">References</div>
+      <h2>What we steal from the three best aggregator apps.</h2>
+      <p class="section-lede">All three keep a clean white surface and let the brands of the things they aggregate carry the color. None of them try to "out-design" the merchants/devices they're aggregating — they just organize them. Each contributes a different pattern.</p>
+
+      <div class="refs">
+        <div class="ref-card">
+          <div class="ref-name">
+            <div class="ref-mark dd">DD</div>
+            DoorDash
+          </div>
+          <div class="ref-tag">~200 illustrations · merchant logos prominent</div>
+          <div class="ref-pattern">Each merchant carries its own brand presence.</div>
+          <div class="ref-detail">Logos, photos, color, and category tags from every restaurant or store appear on the home screen as themselves. DoorDash provides a consistent <strong>frame</strong> (illustration system, type scale, layout) but never the <strong>content</strong> — that comes from the merchant.</div>
+          <div class="ref-takeaway"><strong>Apply to PoolGo:</strong> Pentair, Hayward, Polaris, Leslie's, Sun Country, Marina each show as themselves. PoolGo provides the frame, not the brand.</div>
+        </div>
+
+        <div class="ref-card">
+          <div class="ref-name">
+            <div class="ref-mark gh">G</div>
+            Google Home
+          </div>
+          <div class="ref-tag">Devices grouped by Spaces · Favorites tab first</div>
+          <div class="ref-pattern">Spaces (Cameras, Lighting, Wi-Fi, Climate) group devices by function, not maker.</div>
+          <div class="ref-detail">A user looking for "the lights" sees lighting from Hue, LIFX, Lutron, Nanoleaf together — not by brand. A Favorites tab pins what you actually use. Each device is a tile that keeps its maker's identity but lives inside a functional Space.</div>
+          <div class="ref-takeaway"><strong>Apply to PoolGo:</strong> Equipment groups by <strong>function</strong> (Water, Circulation, Heat, Light, Cleaning) not by manufacturer. Today/Favorites is the entry point.</div>
+        </div>
+
+        <div class="ref-card">
+          <div class="ref-name">
+            <div class="ref-mark alexa">A</div>
+            Amazon Alexa
+          </div>
+          <div class="ref-tag">Shortcuts bar · Routines as core · single chat</div>
+          <div class="ref-pattern">Routines are first-class. Chat is everywhere as a single interface.</div>
+          <div class="ref-detail">The shortcut bar at the top of every page surfaces popular Routines. A single agent chat is reachable from any screen. Filtering happens by <strong>device type</strong> (lights/locks/thermostats), and you can flip between List and Map views.</div>
+          <div class="ref-takeaway"><strong>Apply to PoolGo:</strong> Routines as a top-level tab. Concierge chat reachable from anywhere. Filter equipment by Space + by maker.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- the 4 categories -->
+    <section class="section">
+      <div class="section-eyebrow">The core</div>
+      <h2>PoolGo aggregates 4 categories of things, plus 1 layer that connects them.</h2>
+      <p class="section-lede">Every screen in PoolGo shows mixed instances of these four categories, plus AI-generated content. The activity feed, the dashboard, the My Pool view — they're all ways of slicing across these four. Locking the categories first means every future surface composes itself.</p>
+
+      <div class="core">
+
+        <div class="cat-grid">
+
+          <div class="cat" data-cat="equipment">
+            <div class="cat-num">01</div>
+            <div class="cat-name">Equipment</div>
+            <p class="cat-desc">The physical hardware sitting on your equipment pad and around your pool. Each item has a make, model, serial, and an OEM brand.</p>
+            <ul class="cat-list">
+              <li><strong>Pumps</strong> · Pentair, Hayward, Jandy</li>
+              <li><strong>Filters</strong> · Hayward, Pentair, Jandy</li>
+              <li><strong>Heaters</strong> · Pentair, Raypak, Hayward</li>
+              <li><strong>Salt cells</strong> · IntelliChlor, AquaRite</li>
+              <li><strong>Lights</strong> · IntelliBrite, ColorLogic</li>
+              <li><strong>Cleaners</strong> · Polaris, Dolphin, Hayward</li>
+              <li><strong>Sensors</strong> · ORP, temp, leak</li>
+            </ul>
+          </div>
+
+          <div class="cat" data-cat="automation">
+            <div class="cat-num">02</div>
+            <div class="cat-name">Automation</div>
+            <p class="cat-desc">The cloud bridges that give you remote control + telemetry over equipment. Each integration is a connection PoolGo speaks to on your behalf.</p>
+            <ul class="cat-list">
+              <li><strong>Pentair Home</strong> / IntelliCenter</li>
+              <li><strong>Hayward OmniLogic</strong></li>
+              <li><strong>Jandy iAquaLink</strong></li>
+              <li><strong>Aqualink RS</strong></li>
+              <li><strong>Manual entry</strong> · always available</li>
+              <li><strong>Pool tester apps</strong> · Sutro, BlueRiiot</li>
+            </ul>
+          </div>
+
+          <div class="cat" data-cat="services">
+            <div class="cat-num">03</div>
+            <div class="cat-name">Services</div>
+            <p class="cat-desc">The independent people and businesses who actually touch your pool. PoolGo doesn't employ any of them — it just keeps your relationships straight.</p>
+            <ul class="cat-list">
+              <li><strong>Service techs</strong> · weekly route</li>
+              <li><strong>Stores</strong> · water testing + retail</li>
+              <li><strong>Builders</strong> · construction + warranty</li>
+              <li><strong>Specialists</strong> · heater, plaster, salt cell</li>
+              <li><strong>Inspectors</strong> · pre-purchase, insurance</li>
+              <li><strong>Permits</strong> · city, HOA</li>
+            </ul>
+          </div>
+
+          <div class="cat" data-cat="care">
+            <div class="cat-num">04</div>
+            <div class="cat-name">Care records</div>
+            <p class="cat-desc">The history of everything that's been done to your pool. The aggregation across the other three categories — the data layer.</p>
+            <ul class="cat-list">
+              <li><strong>Water tests</strong> · from stores or DIY</li>
+              <li><strong>Service visits</strong> · checklists + notes</li>
+              <li><strong>Equipment telemetry</strong> · live readings</li>
+              <li><strong>Photos</strong> · technician + owner</li>
+              <li><strong>Messages</strong> · with folks</li>
+              <li><strong>Routines</strong> · your rules</li>
+            </ul>
+          </div>
+
+        </div>
+
+        <div class="ai-layer">
+          <div class="ai-mark">P</div>
+          <div>
+            <div class="ai-name">PoolGo Concierge (the layer that aggregates)</div>
+            <div class="ai-desc">Reads across all four categories. Drafts messages to your folks using your equipment data. Suggests routines based on your care records. Summarizes what's happening. Always your-side, never paid by OEMs or service businesses.</div>
+          </div>
+          <div class="ai-tag">Reads · drafts · suggests · summarizes</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- IA tree -->
+    <section class="section">
+      <div class="section-eyebrow">Information architecture</div>
+      <h2>Six top-level surfaces, each a different slice through the four categories.</h2>
+      <p class="section-lede">Every tab is a different way of cutting across the same four-category data set. "Equipment" is the equipment slice. "Care" is the records slice. "Folks" is the services slice. "My Pool" is the cross-section showing today across all four. Routines and Discover are intentions.</p>
+
+      <div class="ia">
+
+        <div class="ia-row">
+          <div class="ia-key">
+            <div class="ia-tab">My Pool</div>
+            <div class="ia-tab-meta">Default · today's slice</div>
+          </div>
+          <div class="ia-detail">
+            Today across all four categories. <strong>Pool photo + state pill + AI summary at top.</strong> Then: latest water test (Care), live equipment status (Equipment + Automation), folks-with-action (Services), and recent activity. <strong>This is the showroom-style page we've been iterating on.</strong>
+            <div class="ia-chips">
+              <span class="ia-chip">Today's verdict</span>
+              <span class="ia-chip">Live equipment</span>
+              <span class="ia-chip">Folks in motion</span>
+              <span class="ia-chip">Activity</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ia-row">
+          <div class="ia-key">
+            <div class="ia-tab">Care</div>
+            <div class="ia-tab-meta">Cat. 04 · records</div>
+          </div>
+          <div class="ia-detail">
+            Every test, visit, photo, and message in chronological order. Filter by source (Sun Country, Marina, etc.) or by type (water, visit, photo, message). <strong>This is the canonical "MyChart for pools" surface.</strong>
+            <div class="ia-chips">
+              <span class="ia-chip"><strong>Water log</strong></span>
+              <span class="ia-chip"><strong>Service log</strong></span>
+              <span class="ia-chip"><strong>Telemetry log</strong></span>
+              <span class="ia-chip"><strong>Photos</strong></span>
+              <span class="ia-chip"><strong>Inbox</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ia-row">
+          <div class="ia-key">
+            <div class="ia-tab">Equipment</div>
+            <div class="ia-tab-meta">Cat. 01 + 02 · hardware + bridges</div>
+          </div>
+          <div class="ia-detail">
+            Your hardware grouped by <strong>function (Spaces)</strong> not by maker. Each Space contains tiles for the actual devices. Each tile carries OEM color. Equipment detail pages show install date, telemetry, service history, and the cloud bridge that connects it.
+            <div class="spaces">
+              <div class="space" data-s="water"><div class="space-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 c -3 5 -7 8 -7 13 a 7 7 0 0 0 14 0 c 0 -5 -4 -8 -7 -13 z"/></svg></div><div class="space-name">Water</div><div class="space-meta">salt · ORP · UV</div></div>
+              <div class="space" data-s="circ"><div class="space-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"/></svg></div><div class="space-name">Circulation</div><div class="space-meta">pump · valves</div></div>
+              <div class="space" data-s="filter"><div class="space-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46"/></svg></div><div class="space-name">Filter</div><div class="space-meta">sand · DE · cart</div></div>
+              <div class="space" data-s="heat"><div class="space-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 C 8 8 8 12 12 16 C 16 12 16 8 12 2 z"/></svg></div><div class="space-name">Heat</div><div class="space-meta">gas · solar · HP</div></div>
+              <div class="space" data-s="lights"><div class="space-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg></div><div class="space-name">Lights</div><div class="space-meta">3 zones</div></div>
+              <div class="space" data-s="clean"><div class="space-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg></div><div class="space-name">Cleaning</div><div class="space-meta">robotic · skim</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ia-row">
+          <div class="ia-key">
+            <div class="ia-tab">Routines</div>
+            <div class="ia-tab-meta">Intentions · cross-cuts all 4 categories</div>
+          </div>
+          <div class="ia-detail">
+            Your rules. "If FC drops below 1 ppm, text me." "Every Sunday at 8 am, run a check." "When CYA crosses 50, suggest a partial drain to Carlos." Routines act on equipment, listen to records, and message folks — they are the bridge between all three categories.
+            <div class="ia-chips">
+              <span class="ia-chip">Active routines</span>
+              <span class="ia-chip">Templates</span>
+              <span class="ia-chip">Build with AI</span>
+              <span class="ia-chip">Run history</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ia-row">
+          <div class="ia-key">
+            <div class="ia-tab">Folks · Discover</div>
+            <div class="ia-tab-meta">Cat. 03 · services</div>
+          </div>
+          <div class="ia-detail">
+            Folks on your pool (existing relationships) lives at the top. Below: Discover — find new techs, stores, builders within X miles. Each business shows its own brand, photo, ratings, services, OEM brands they're certified on. <strong>Ad-free, vouched-for by neighbors, no commissions.</strong>
+            <div class="ia-chips">
+              <span class="ia-chip">Your folks</span>
+              <span class="ia-chip">Service techs</span>
+              <span class="ia-chip">Pool stores</span>
+              <span class="ia-chip">Builders</span>
+              <span class="ia-chip">Specialists</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ia-row">
+          <div class="ia-key">
+            <div class="ia-tab">Inbox</div>
+            <div class="ia-tab-meta">Where folk relationships happen</div>
+          </div>
+          <div class="ia-detail">
+            Threaded conversations with each folk. Unified — Anthony at Sun Country, Carlos at Marina, Jessica at Leslie's, all in one inbox. Concierge can draft messages here. Read receipts, scheduled sends, and AI summaries of long threads.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Tile system -->
+    <section class="section">
+      <div class="section-eyebrow">Visual system</div>
+      <h2>Four tile shapes, one per category.</h2>
+      <p class="section-lede">Like DoorDash has illustrations for food/home/retail and Google Home has device tiles, PoolGo has four tile shapes — one per category. Each tile carries the OEM color of whoever it represents. The tile shape tells you what KIND of thing you're looking at; the color tells you who it BELONGS to.</p>
+
+      <div class="tiles">
+        <div class="tile" data-type="equipment">
+          <div class="tile-img">⚙</div>
+          <div class="tile-info">
+            <div class="tile-tag">Equipment tile</div>
+            <div class="tile-name">Pentair IntelliFlo3</div>
+            <div class="tile-sub">Real product photo, OEM logo, live readings, control toggle, brand-color top stripe.</div>
+          </div>
+        </div>
+
+        <div class="tile" data-type="people">
+          <div class="tile-img">🧑‍🔧</div>
+          <div class="tile-info">
+            <div class="tile-tag">Folks tile</div>
+            <div class="tile-name">Carlos Torres</div>
+            <div class="tile-sub">Avatar with employer-color tint, employer logo as small badge, cadence + last visit, "Message" CTA.</div>
+          </div>
+        </div>
+
+        <div class="tile" data-type="store">
+          <div class="tile-img">🏬</div>
+          <div class="tile-info">
+            <div class="tile-tag">Store tile</div>
+            <div class="tile-name">Sun Country Pools</div>
+            <div class="tile-sub">Storefront photo, store logo, OEM brand pills (which OEMs they carry), hours, distance.</div>
+          </div>
+        </div>
+
+        <div class="tile" data-type="record">
+          <div class="tile-img">📋</div>
+          <div class="tile-info">
+            <div class="tile-tag">Record tile</div>
+            <div class="tile-name">Water test · 2.4 ppm</div>
+            <div class="tile-sub">Source store logo, big stat, mini-grid of all parameters, status pill, source-color attribution.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mapping -->
+    <section class="section">
+      <div class="section-eyebrow">What we've already built</div>
+      <h2>How existing mocks map to this architecture.</h2>
+      <p class="section-lede">Every screen we've made so far slots into one of the IA surfaces above. Some are built, some are partial, some are gaps to fill.</p>
+
+      <div class="mapping">
+        <div class="map-row head">
+          <div>Surface</div>
+          <div>Existing mock(s)</div>
+          <div>Status</div>
+        </div>
+        <div class="map-row">
+          <div class="surface-name">My Pool</div>
+          <div><a href="screen-cmd-showroom-pure.html">screen-cmd-showroom-pure.html</a> · <a href="screen-cmd-showroom-poolclub-hires.html">poolclub-hires</a> · <a href="screen-cmd-showroom-dark.html">dark</a></div>
+          <div class="map-status built">3 variants built</div>
+        </div>
+        <div class="map-row">
+          <div class="surface-name">Care · Water log</div>
+          <div><a href="screen-fn-readings.html">screen-fn-readings.html</a> (Field Notebook brand)</div>
+          <div class="map-status partial">needs Showroom restyle</div>
+        </div>
+        <div class="map-row">
+          <div class="surface-name">Care · Service log</div>
+          <div><a href="screen-fn-visit.html">screen-fn-visit.html</a> (Field Notebook brand)</div>
+          <div class="map-status partial">needs Showroom restyle</div>
+        </div>
+        <div class="map-row">
+          <div class="surface-name">Equipment · detail</div>
+          <div><a href="screen-field-notebook.html">screen-field-notebook.html</a> (Field Notebook brand pump page)</div>
+          <div class="map-status partial">needs Showroom restyle + real photo</div>
+        </div>
+        <div class="map-row">
+          <div class="surface-name">Equipment · grid by Space</div>
+          <div>—</div>
+          <div class="map-status missing">to build</div>
+        </div>
+        <div class="map-row">
+          <div class="surface-name">Routines</div>
+          <div>—</div>
+          <div class="map-status missing">to build</div>
+        </div>
+        <div class="map-row">
+          <div class="surface-name">Folks · your existing folks</div>
+          <div><a href="screen-concierge-folk.html">screen-concierge-folk.html</a> (Carlos detail)</div>
+          <div class="map-status partial">single-folk view, needs index</div>
+        </div>
+        <div class="map-row">
+          <div class="surface-name">Folks · Discover</div>
+          <div><a href="screen-discover-showroom.html">screen-discover-showroom.html</a></div>
+          <div class="map-status built">in Showroom</div>
+        </div>
+        <div class="map-row">
+          <div class="surface-name">Inbox</div>
+          <div>—</div>
+          <div class="map-status missing">to build</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Next moves -->
+    <section class="section">
+      <div class="section-eyebrow">What this unlocks</div>
+      <h2>Three next moves, in order.</h2>
+      <p class="section-lede">Once the architecture is locked, every screen becomes a composition of the four tile types from the four categories. We don't have to invent new patterns — we just compose.</p>
+
+      <div class="ia">
+        <div class="ia-row">
+          <div class="ia-key">
+            <div class="ia-tab">1. Equipment grid</div>
+            <div class="ia-tab-meta">Google Home Spaces idea, applied</div>
+          </div>
+          <div class="ia-detail">
+            Build the Equipment top-level page that groups your hardware by <strong>Water / Circulation / Filter / Heat / Lights / Cleaning</strong>. Each Space is a section. Each device tile uses the same Showroom card we've already designed. This proves the IA without inventing anything new.
+          </div>
+        </div>
+        <div class="ia-row">
+          <div class="ia-key">
+            <div class="ia-tab">2. Folks index</div>
+            <div class="ia-tab-meta">DoorDash merchant grid, applied</div>
+          </div>
+          <div class="ia-detail">
+            Top-level "Folks on your pool" surface that shows all four contact tiles in one grid (service tech, store, builder, specialist), each in their employer color, with the same tile shape. Discover sits beneath as the "find new" surface. We have the components — just compose.
+          </div>
+        </div>
+        <div class="ia-row">
+          <div class="ia-key">
+            <div class="ia-tab">3. Inbox</div>
+            <div class="ia-tab-meta">Alexa-style single chat, applied</div>
+          </div>
+          <div class="ia-detail">
+            Unified message thread surface where conversations with Anthony (Sun Country), Carlos (Marina), Jessica (Leslie's) sit side-by-side. Concierge can draft messages here. Each thread inherits the brand color of the recipient. This is where the relationship work actually happens — and we haven't built it yet.
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="page-caption"><span class="num">ARCH</span> End-to-end · references → categories → IA → tiles</div>
+</body>
+</html>

@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pentair IntelliFlo3 — PoolGo (Field Notebook)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'IBM Plex Sans', sans-serif;
+      background: #EFE6D2;
+      color: #1A1A1A;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      background-image:
+        repeating-linear-gradient(
+          to bottom,
+          transparent 0,
+          transparent 31px,
+          rgba(26, 26, 26, 0.05) 31px,
+          rgba(26, 26, 26, 0.05) 32px
+        );
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+
+    /* ------- top bar (mono masthead) ------- */
+    .masthead {
+      background: #1F5051;
+      color: #EFE6D2;
+      padding: 12px 32px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+    }
+    .masthead .right span:not(:last-child)::after {
+      content: '·'; margin: 0 12px; opacity: 0.5;
+    }
+
+    /* ------- nav ------- */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 32px;
+      border-bottom: 1px solid #1A1A1A;
+      background: #EFE6D2;
+    }
+    .wordmark {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-variation-settings: 'opsz' 96;
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      color: #1F5051;
+    }
+    .nav-tabs {
+      display: flex;
+      gap: 0;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .nav-tabs a {
+      padding: 10px 16px;
+      color: #5A5A5A;
+      border-right: 1px solid rgba(26, 26, 26, 0.15);
+    }
+    .nav-tabs a:first-child { border-left: 1px solid rgba(26, 26, 26, 0.15); }
+    .nav-tabs a.active { background: #1F5051; color: #EFE6D2; border-color: #1F5051; }
+    .nav-right {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .nav-right .avatar {
+      width: 32px; height: 32px;
+      background: #C99A38;
+      color: #1A1A1A;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ------- breadcrumbs ------- */
+    .crumbs {
+      max-width: 1200px;
+      margin: 32px auto 0;
+      padding: 0 32px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #5A5A5A;
+    }
+    .crumbs a { color: #5A5A5A; }
+    .crumbs a:hover { color: #1F5051; }
+    .crumbs .sep { margin: 0 8px; opacity: 0.5; }
+
+    /* ------- entry header ------- */
+    .entry-header {
+      max-width: 1200px;
+      margin: 24px auto 0;
+      padding: 0 32px 32px;
+      border-bottom: 1px dashed rgba(26, 26, 26, 0.4);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 32px;
+      align-items: end;
+    }
+    .entry-meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #C99A38;
+      margin-bottom: 16px;
+    }
+    .entry-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-variation-settings: 'opsz' 96;
+      font-size: clamp(40px, 5.5vw, 72px);
+      font-weight: 500;
+      letter-spacing: -0.035em;
+      line-height: 0.98;
+      color: #1A1A1A;
+      max-width: 18ch;
+    }
+    .entry-sub {
+      margin-top: 16px;
+      font-size: 16px;
+      color: #3D3D3D;
+      max-width: 60ch;
+    }
+    .entry-status {
+      text-align: right;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .status-dot {
+      display: inline-block;
+      width: 10px; height: 10px;
+      background: #6FA178;
+      border-radius: 50%;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    /* ------- main grid ------- */
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 32px 64px;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 48px;
+    }
+    @media (max-width: 980px) { .main { grid-template-columns: 1fr; } }
+
+    /* ------- section ------- */
+    .section { margin-bottom: 48px; }
+    .section-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #C99A38;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed rgba(26, 26, 26, 0.3);
+    }
+
+    /* ------- spec table ------- */
+    .spec-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+    }
+    .spec-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(26, 26, 26, 0.12);
+    }
+    .spec-row .label {
+      color: #5A5A5A;
+      letter-spacing: 0.04em;
+    }
+    .spec-row .value {
+      color: #1A1A1A;
+      font-weight: 500;
+    }
+
+    /* ------- live readings ------- */
+    .live-readings {
+      background: #1F5051;
+      color: #EFE6D2;
+      padding: 32px;
+      margin: 0 -8px;
+    }
+    .live-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #C99A38;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .live-label .pulse {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .live-label .pulse .dot {
+      width: 8px; height: 8px; background: #6FA178; border-radius: 50%;
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
+    }
+    .live-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px 32px;
+    }
+    .live-stat-name {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(239, 230, 210, 0.55);
+      margin-bottom: 6px;
+    }
+    .live-stat-value {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 32px;
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: #EFE6D2;
+    }
+    .live-stat-value .unit {
+      font-size: 12px;
+      color: rgba(239, 230, 210, 0.55);
+      margin-left: 4px;
+      letter-spacing: 0;
+    }
+    .live-stat-trend {
+      margin-top: 8px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.04em;
+      color: rgba(239, 230, 210, 0.55);
+    }
+
+    /* ------- run history ------- */
+    table.runs {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+    }
+    table.runs th {
+      text-align: left;
+      padding: 10px 12px;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #5A5A5A;
+      font-weight: 500;
+      border-bottom: 1px solid rgba(26, 26, 26, 0.3);
+      background: rgba(26, 26, 26, 0.04);
+    }
+    table.runs td {
+      padding: 12px;
+      border-bottom: 1px solid rgba(26, 26, 26, 0.1);
+      color: #1A1A1A;
+    }
+    table.runs td:nth-child(1) { color: #5A5A5A; }
+    table.runs tbody tr:hover { background: rgba(31, 80, 81, 0.05); }
+
+    /* ------- recommendation ------- */
+    .recommendation {
+      background: #EFE6D2;
+      border: 1.5px solid #1F5051;
+      border-left: 6px solid #C99A38;
+      padding: 24px 28px;
+      font-family: 'Bricolage Grotesque', sans-serif;
+    }
+    .recommendation-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #1F5051;
+      margin-bottom: 8px;
+    }
+    .recommendation-text {
+      font-size: 18px;
+      line-height: 1.4;
+      color: #1A1A1A;
+      max-width: 50ch;
+    }
+    .recommendation-meta {
+      margin-top: 12px;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 12px;
+      color: #5A5A5A;
+    }
+
+    /* ------- log ------- */
+    .log-entry {
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(26, 26, 26, 0.12);
+    }
+    .log-entry:last-child { border-bottom: none; }
+    .log-date {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: #C99A38;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .log-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 500;
+      font-size: 15px;
+      color: #1A1A1A;
+    }
+    .log-body {
+      font-size: 13px;
+      color: #3D3D3D;
+      margin-top: 4px;
+      max-width: 50ch;
+    }
+
+    /* ------- caption ------- */
+    .page-caption {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      background: #1F5051;
+      color: #EFE6D2;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 8px 14px;
+      z-index: 100;
+    }
+    .page-caption .num { color: #C99A38; margin-right: 6px; }
+  </style>
+</head>
+<body>
+
+  <!-- Masthead -->
+  <div class="masthead">
+    <span>poolgo · field log</span>
+    <div class="right">
+      <span>Vol. 12</span>
+      <span>No. 8</span>
+      <span>2026-05-05</span>
+      <span>Roseville, CA</span>
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <nav class="nav">
+    <div class="wordmark">poolgo</div>
+    <div class="nav-tabs">
+      <a href="#">My Pool</a>
+      <a href="#">Chart</a>
+      <a href="#" class="active">Connect</a>
+      <a href="#">Routines</a>
+      <a href="#">Discover</a>
+    </div>
+    <div class="nav-right">
+      <span>R Kurani</span>
+      <div class="avatar">RK</div>
+    </div>
+  </nav>
+
+  <!-- Breadcrumbs -->
+  <div class="crumbs">
+    <a href="#">Connect</a>
+    <span class="sep">/</span>
+    <a href="#">Pad equipment</a>
+    <span class="sep">/</span>
+    <span style="color: #1F5051;">Pump · Pentair IntelliFlo3 VSF</span>
+  </div>
+
+  <!-- Entry header -->
+  <header class="entry-header">
+    <div>
+      <div class="entry-meta">Entry 084 · Pump · Polled 14 sec ago</div>
+      <h1 class="entry-title">Pentair IntelliFlo3 VSF.</h1>
+      <p class="entry-sub">Variable-flow main pump, eight programmable speeds. Installed July 2024 by Marina Pool Service. Currently running on Schedule B (5:30 am – 11:30 am, 1,750 RPM).</p>
+    </div>
+    <div class="entry-status">
+      <span class="status-dot"></span>Online · running
+    </div>
+  </header>
+
+  <!-- Main grid -->
+  <main class="main">
+
+    <!-- LEFT: live readings + spec + runs -->
+    <div>
+
+      <!-- Live readings -->
+      <section class="section">
+        <div class="live-readings">
+          <div class="live-label">
+            <span>Live readings</span>
+            <span class="pulse"><span class="dot"></span>Polling every 30s</span>
+          </div>
+          <div class="live-grid">
+            <div>
+              <div class="live-stat-name">Speed</div>
+              <div class="live-stat-value">1,750<span class="unit">rpm</span></div>
+              <div class="live-stat-trend">→ Schedule B target</div>
+            </div>
+            <div>
+              <div class="live-stat-name">Flow rate</div>
+              <div class="live-stat-value">42<span class="unit">gpm</span></div>
+              <div class="live-stat-trend">↑ +0.4 vs 1 hr ago</div>
+            </div>
+            <div>
+              <div class="live-stat-name">Power draw</div>
+              <div class="live-stat-value">380<span class="unit">w</span></div>
+              <div class="live-stat-trend">↓ -8 vs week avg</div>
+            </div>
+            <div>
+              <div class="live-stat-name">Suction PSI</div>
+              <div class="live-stat-value">12<span class="unit">psi</span></div>
+              <div class="live-stat-trend">→ within range</div>
+            </div>
+            <div>
+              <div class="live-stat-name">Filter PSI</div>
+              <div class="live-stat-value">18<span class="unit">psi</span></div>
+              <div class="live-stat-trend">↑ +2 vs install</div>
+            </div>
+            <div>
+              <div class="live-stat-name">Water temp</div>
+              <div class="live-stat-value">84<span class="unit">°f</span></div>
+              <div class="live-stat-trend">→ ambient + sun</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recommendation -->
+      <section class="section">
+        <div class="recommendation">
+          <div class="recommendation-label">Note from your pool</div>
+          <p class="recommendation-text">Filter PSI has crept from 16 to 18 over the last six weeks. Consider a backwash this weekend. Not urgent. Anything under 22 is fine.</p>
+          <div class="recommendation-meta">Generated from telemetry trend, validated by service-tech ruleset · 2026-05-05</div>
+        </div>
+      </section>
+
+      <!-- Spec sheet -->
+      <section class="section">
+        <div class="section-label">Specifications</div>
+        <div class="spec-grid">
+          <div class="spec-row"><span class="label">Make</span><span class="value">Pentair</span></div>
+          <div class="spec-row"><span class="label">Voltage</span><span class="value">230 V</span></div>
+          <div class="spec-row"><span class="label">Model</span><span class="value">IntelliFlo3 VSF</span></div>
+          <div class="spec-row"><span class="label">Horsepower</span><span class="value">3.0 HP (variable)</span></div>
+          <div class="spec-row"><span class="label">Serial</span><span class="value">PE3-2024-08-7741</span></div>
+          <div class="spec-row"><span class="label">Max flow</span><span class="value">130 GPM</span></div>
+          <div class="spec-row"><span class="label">Firmware</span><span class="value">v3.4.12</span></div>
+          <div class="spec-row"><span class="label">Connection</span><span class="value">Pentair Home Cloud</span></div>
+          <div class="spec-row"><span class="label">Installed</span><span class="value">2024-07-18</span></div>
+          <div class="spec-row"><span class="label">Warranty</span><span class="value">Until 2027-07-18</span></div>
+          <div class="spec-row"><span class="label">Installer</span><span class="value">Marina Pool Service</span></div>
+          <div class="spec-row"><span class="label">Location</span><span class="value">Equipment pad, west side</span></div>
+        </div>
+      </section>
+
+      <!-- Run history -->
+      <section class="section">
+        <div class="section-label">Run history · last 7 days</div>
+        <table class="runs">
+          <thead>
+            <tr>
+              <th>Date</th><th>Start</th><th>Stop</th><th>Duration</th><th>RPM avg</th><th>kWh</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>2026-05-05</td><td>05:30</td><td>11:30</td><td>6h 00m</td><td>1,750</td><td>2.28</td></tr>
+            <tr><td>2026-05-04</td><td>05:30</td><td>11:30</td><td>6h 00m</td><td>1,750</td><td>2.31</td></tr>
+            <tr><td>2026-05-03</td><td>05:30</td><td>13:00</td><td>7h 30m</td><td>1,900</td><td>3.14</td></tr>
+            <tr><td>2026-05-02</td><td>05:30</td><td>11:30</td><td>6h 00m</td><td>1,750</td><td>2.30</td></tr>
+            <tr><td>2026-05-01</td><td>05:30</td><td>11:30</td><td>6h 00m</td><td>1,750</td><td>2.27</td></tr>
+            <tr><td>2026-04-30</td><td>05:30</td><td>11:30</td><td>6h 00m</td><td>1,750</td><td>2.29</td></tr>
+            <tr><td>2026-04-29</td><td>05:30</td><td>11:30</td><td>6h 00m</td><td>1,750</td><td>2.32</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+    </div>
+
+    <!-- RIGHT: log + connections -->
+    <div>
+
+      <section class="section">
+        <div class="section-label">Maintenance log</div>
+
+        <div class="log-entry">
+          <div class="log-date">2026-04-22</div>
+          <div class="log-title">Backwash · 28 sec</div>
+          <p class="log-body">Filter PSI dropped 16 → 13. Sand filter, no anomalies.</p>
+        </div>
+
+        <div class="log-entry">
+          <div class="log-date">2026-03-14</div>
+          <div class="log-title">Schedule B updated</div>
+          <p class="log-body">Reduced runtime from 8h to 6h based on lower bather load. Saving ~$8/mo.</p>
+        </div>
+
+        <div class="log-entry">
+          <div class="log-date">2025-11-02</div>
+          <div class="log-title">Firmware updated to v3.4.12</div>
+          <p class="log-body">Pushed by Pentair Home Cloud. No user action required.</p>
+        </div>
+
+        <div class="log-entry">
+          <div class="log-date">2024-07-18</div>
+          <div class="log-title">Installed · Marina Pool Service</div>
+          <p class="log-body">Replaced 12-year-old WhisperFlo. Old unit recycled at retailer.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-label">Connections</div>
+        <div class="spec-grid">
+          <div class="spec-row"><span class="label">Cloud</span><span class="value">Pentair Home</span></div>
+          <div class="spec-row"><span class="label">Status</span><span class="value" style="color: #4A7A51;">Linked</span></div>
+          <div class="spec-row"><span class="label">Last sync</span><span class="value">14 sec ago</span></div>
+          <div class="spec-row"><span class="label">Local control</span><span class="value">IntelliCenter</span></div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-label">Linked routines</div>
+        <div class="log-entry">
+          <div class="log-date">Triggers off this pump</div>
+          <div class="log-title">Filter PSI watch</div>
+          <p class="log-body">Notify if filter pressure crosses 22 PSI. Active.</p>
+        </div>
+        <div class="log-entry">
+          <div class="log-date">Triggers off this pump</div>
+          <div class="log-title">Power-draw drift</div>
+          <p class="log-body">Notify if weekly avg watts climbs &gt;15% over 30 days. Active.</p>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <div class="page-caption"><span class="num">02 / 03</span> Field Notebook · Pump info</div>
+</body>
+</html>

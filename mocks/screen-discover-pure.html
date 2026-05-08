@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Folks · Showroom (Pure) — PoolGo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================================
+       FOLKS · DISCOVER · PURE
+       The Yelp-of-pool surface. Independent stores, techs, builders.
+       Same design system as Command + Care: white, Inter Tight,
+       OEM color inheritance per pro card.
+       ============================================================ */
+
+    :root {
+      --bg: #FFFFFF;
+      --surface: #FAFAFA;
+      --surface-2: #F5F5F4;
+      --line: #ECECEC;
+      --line-2: #D8D8D8;
+      --ink: #0F1115;
+      --ink-soft: #45494F;
+      --ink-mute: #7A8088;
+
+      --pool: #1FA0BF;
+      --pool-soft: #E2F3F8;
+      --pentair: #1A4F8B;
+      --pentair-soft: #E5ECF4;
+      --hayward: #D8A700;
+      --hayward-soft: #FBF1D0;
+      --polaris: #00759C;
+      --polaris-soft: #DCEDF4;
+      --leslies: #0046A8;
+      --leslies-soft: #DEE8F7;
+      --suncountry: #B07B00;
+      --suncountry-soft: #F8EFD6;
+      --marina: #2C5F4A;
+      --marina-soft: #DFE8E2;
+      --pinch: #2C5F4A;
+
+      /* additional pro brand colors (each business carries its own color) */
+      --foothill: #4D6B50;
+      --bluedrop: #1F5C8B;
+      --ridgeline: #B85541;
+      --westshore: #4D6B50;
+      --plaster: #8A6A1D;
+      --heater: #1A4F8B;
+
+      --sage: #2A8540;
+      --gold: #B07B00;
+      --coral: #C75240;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg); color: var(--ink);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      font-feature-settings: 'tnum';
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+
+    /* ----- top nav (same as Command + Care) ----- */
+    .nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 32px; background: var(--bg);
+      border-bottom: 1px solid var(--line);
+      position: sticky; top: 0; z-index: 10;
+    }
+    .wm { font-weight: 700; font-size: 18px; letter-spacing: -0.03em; }
+    .wm .accent { color: var(--pool); font-weight: 800; }
+    .nav-tabs { display: flex; gap: 4px; }
+    .nav-tab {
+      padding: 8px 14px; border-radius: 8px;
+      font-size: 14px; font-weight: 500; color: var(--ink-mute);
+      letter-spacing: -0.005em;
+    }
+    .nav-tab:hover { color: var(--ink); background: var(--surface); }
+    .nav-tab.active { background: var(--ink); color: white; }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .nav-bell {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: var(--surface); position: relative;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--ink);
+    }
+    .nav-bell::after {
+      content: ''; position: absolute;
+      top: 8px; right: 9px; width: 7px; height: 7px;
+      background: var(--coral); border-radius: 50%;
+      border: 1.5px solid var(--surface);
+    }
+    .nav-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, #2A6098, #0E2F55);
+      color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 13px;
+    }
+
+    /* ----- page header ----- */
+    .header {
+      max-width: 1280px; margin: 32px auto 0;
+      padding: 0 32px;
+      display: grid; grid-template-columns: 1fr auto;
+      gap: 28px; align-items: end;
+    }
+    .header h1 {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: clamp(32px, 4vw, 44px);
+      font-weight: 800;
+      letter-spacing: -0.04em; line-height: 1.02;
+      color: var(--ink);
+      margin: 0;
+    }
+    .header .lede {
+      margin-top: 10px;
+      font-size: 15px; color: var(--ink-soft);
+      max-width: 60ch;
+    }
+    .header .lede strong { color: var(--ink); font-weight: 600; }
+    .header-stat-row {
+      display: flex; gap: 28px;
+    }
+    .header-stat .num {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 32px; font-weight: 800;
+      letter-spacing: -0.04em; line-height: 1;
+      color: var(--ink);
+    }
+    .header-stat .label {
+      margin-top: 6px;
+      font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase;
+      color: var(--ink-mute); font-weight: 600;
+    }
+
+    /* ----- search + filter row ----- */
+    .search-bar {
+      max-width: 1280px; margin: 28px auto 0;
+      padding: 0 32px;
+      display: flex; gap: 12px; align-items: center;
+    }
+    .search-input {
+      flex: 1;
+      display: flex; align-items: center; gap: 10px;
+      padding: 0 14px; height: 44px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      color: var(--ink-mute);
+    }
+    .search-input input {
+      border: none; background: transparent; outline: none;
+      font: inherit; color: var(--ink);
+      flex: 1; min-width: 0;
+    }
+    .search-input .div {
+      width: 1px; height: 22px; background: var(--line-2);
+    }
+    .search-btn {
+      height: 44px; padding: 0 20px;
+      background: var(--ink); color: white;
+      border: none; border-radius: 10px;
+      font-size: 14px; font-weight: 600;
+      letter-spacing: -0.005em;
+    }
+    .filter-bar {
+      max-width: 1280px; margin: 16px auto 0;
+      padding: 0 32px;
+      display: flex; gap: 8px; align-items: center;
+      flex-wrap: wrap;
+    }
+    .chip {
+      padding: 8px 14px; border-radius: 999px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      font-size: 13px; font-weight: 500;
+      color: var(--ink-soft);
+      cursor: pointer;
+      letter-spacing: -0.005em;
+    }
+    .chip:hover { background: var(--surface); }
+    .chip.active {
+      background: var(--ink); color: white;
+      border-color: var(--ink);
+    }
+    .chip .count {
+      margin-left: 6px; font-weight: 700;
+      color: var(--ink-mute); font-size: 12px;
+    }
+    .chip.active .count { color: rgba(255,255,255,0.6); }
+
+    /* ----- section ----- */
+    .section {
+      max-width: 1280px; margin: 56px auto 0;
+      padding: 0 32px;
+    }
+    .section-head {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-bottom: 20px;
+    }
+    .section-title {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 22px; font-weight: 700;
+      letter-spacing: -0.03em;
+      margin: 0;
+    }
+    .section-meta {
+      font-size: 13px; color: var(--ink-mute); font-weight: 500;
+    }
+    .section-meta strong { color: var(--ink); font-weight: 600; }
+
+    /* ----- ai band (same as command, care) ----- */
+    .ai-card {
+      background: var(--ink); color: white;
+      border-radius: 16px;
+      padding: 22px 28px;
+      position: relative; overflow: hidden;
+    }
+    .ai-card::after {
+      content: ''; position: absolute;
+      bottom: -50px; right: -50px;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(31,160,191,0.45) 0%, transparent 70%);
+    }
+    .ai-top {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 12px;
+      position: relative; z-index: 2;
+    }
+    .ai-mark {
+      width: 32px; height: 32px;
+      background: var(--pool); color: white;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 14px; letter-spacing: -0.04em;
+    }
+    .ai-meta {
+      font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase;
+      color: rgba(255,255,255,0.6); font-weight: 600;
+    }
+    .ai-body {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 16px; font-weight: 500; line-height: 1.5;
+      color: white; max-width: 70ch;
+      letter-spacing: -0.005em;
+      position: relative; z-index: 2;
+    }
+    .ai-body strong { font-weight: 700; }
+    .ai-body mark {
+      background: rgba(255,255,255,0.15); color: white;
+      padding: 0 4px; border-radius: 3px;
+    }
+
+    /* ----- featured (top vouched) ----- */
+    .featured {
+      display: grid; grid-template-columns: 1.1fr 1fr;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+    }
+    .featured[data-brand="marina"]   { --brand-accent: var(--marina); }
+    .featured::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 3px; background: var(--brand-accent, var(--ink-mute));
+    }
+    .featured-photo {
+      position: relative; min-height: 320px;
+      background: linear-gradient(135deg, var(--marina) 0%, #1A4332 100%);
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .featured-photo .pool-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(circle at 20% 80%, rgba(31,160,191,0.18), transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255,255,255,0.05), transparent 50%);
+    }
+    .featured-photo .truck { width: 86%; height: auto; max-width: 460px; position: relative; z-index: 2; }
+    .featured-vouched {
+      position: absolute; top: 18px; left: 18px;
+      background: white; color: var(--ink);
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      padding: 7px 12px; border-radius: 999px; z-index: 3;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .featured-vouched .star { color: var(--gold); }
+    .featured-info { padding: 28px 30px; display: flex; flex-direction: column; }
+    .featured-brand {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 18px;
+    }
+    .featured-brand-mark {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      background: var(--marina);
+      color: white;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .featured-name {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 22px; font-weight: 700;
+      letter-spacing: -0.025em; line-height: 1.05;
+      color: var(--ink);
+    }
+    .featured-cat {
+      font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+      color: var(--marina); font-weight: 700; margin-top: 4px;
+    }
+    .featured-services {
+      display: flex; flex-wrap: wrap; gap: 6px;
+      margin-bottom: 16px;
+    }
+    .service-chip {
+      font-size: 11px; padding: 5px 10px; border-radius: 999px;
+      background: var(--surface); color: var(--ink-soft);
+      font-weight: 600; letter-spacing: 0.005em;
+    }
+    .service-chip.brand {
+      background: var(--marina-soft); color: var(--marina);
+    }
+    .featured-quote {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 17px; font-weight: 500;
+      letter-spacing: -0.015em; line-height: 1.4;
+      color: var(--ink); margin: 0 0 8px;
+    }
+    .featured-quote-attr {
+      font-size: 12px; color: var(--ink-mute);
+      margin: 0 0 18px;
+    }
+    .featured-meta-row {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; margin-top: auto;
+      padding-top: 16px; border-top: 1px solid var(--line);
+    }
+    .featured-stats {
+      display: flex; gap: 22px;
+    }
+    .stat-block .num {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 22px; font-weight: 700;
+      letter-spacing: -0.03em; line-height: 1;
+      color: var(--ink);
+    }
+    .stat-block .num.rating { color: var(--marina); }
+    .stat-block .label {
+      font-size: 11px; color: var(--ink-mute);
+      margin-top: 4px;
+    }
+    .featured-cta {
+      background: var(--marina); color: white;
+      border: none; padding: 11px 18px;
+      border-radius: 10px;
+      font-size: 13px; font-weight: 600;
+      letter-spacing: -0.005em;
+    }
+
+    /* ----- pros grid ----- */
+    .pros-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 1100px) { .pros-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 720px) { .pros-grid { grid-template-columns: 1fr; } }
+
+    .pro {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      position: relative;
+    }
+    .pro[data-brand="foothill"]  { --brand-accent: var(--foothill); --brand-soft: #E2EAE3; }
+    .pro[data-brand="bluedrop"]  { --brand-accent: var(--bluedrop); --brand-soft: var(--pentair-soft); }
+    .pro[data-brand="ridgeline"] { --brand-accent: var(--ridgeline); --brand-soft: #F4DDD4; }
+    .pro[data-brand="westshore"] { --brand-accent: var(--westshore); --brand-soft: #E2EAE3; }
+    .pro[data-brand="plaster"]   { --brand-accent: var(--plaster); --brand-soft: #F0E5C8; }
+    .pro[data-brand="heater"]    { --brand-accent: var(--heater); --brand-soft: var(--pentair-soft); }
+    .pro::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 3px; background: var(--brand-accent, var(--ink-mute));
+      z-index: 4;
+    }
+
+    .pro-photo {
+      height: 140px; position: relative;
+      background: var(--surface);
+      display: flex; align-items: center; justify-content: center;
+      border-bottom: 1px solid var(--line);
+      overflow: hidden;
+    }
+    .pro-photo::after {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(circle at 30% 70%, var(--brand-soft, transparent), transparent 55%),
+        linear-gradient(180deg, transparent 50%, rgba(15,17,21,0.04) 100%);
+      pointer-events: none;
+    }
+    .pro-distance-badge {
+      position: absolute; top: 12px; left: 12px;
+      background: rgba(255,255,255,0.95); color: var(--ink-soft);
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      padding: 5px 9px; border-radius: 6px; z-index: 3;
+      border: 1px solid var(--line);
+    }
+    .pro-rating-badge {
+      position: absolute; top: 12px; right: 12px;
+      background: var(--ink); color: white;
+      font-size: 11px; font-weight: 700;
+      padding: 5px 9px; border-radius: 6px; z-index: 3;
+      display: inline-flex; align-items: center; gap: 4px;
+    }
+    .pro-rating-badge .star { color: var(--gold); }
+    .pro-logo-overlay {
+      width: 64px; height: 64px;
+      border-radius: 14px;
+      background: white;
+      border: 1px solid var(--line);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; z-index: 2;
+      box-shadow: 0 1px 3px rgba(15,17,21,0.06);
+    }
+
+    .pro-info { padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 8px; }
+    .pro-cat {
+      font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--brand-accent, var(--ink-mute));
+      font-weight: 700;
+    }
+    .pro-name {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 17px; font-weight: 700;
+      letter-spacing: -0.02em; line-height: 1.15;
+      color: var(--ink);
+    }
+    .pro-services {
+      font-size: 13px; color: var(--ink-soft); line-height: 1.4;
+    }
+    .pro-vouches {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 10px; border-radius: 8px;
+      background: var(--brand-soft, var(--surface));
+      margin-top: 4px;
+    }
+    .vouch-avatar {
+      width: 18px; height: 18px; border-radius: 50%;
+      border: 1.5px solid white;
+      margin-left: -4px;
+      flex-shrink: 0;
+    }
+    .vouch-avatar:first-child { margin-left: 0; }
+    .vouch-text {
+      font-size: 12px; color: var(--ink-soft); margin-left: 4px;
+    }
+    .vouch-text strong { color: var(--ink); font-weight: 700; }
+    .pro-meta {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-top: 6px; padding-top: 12px;
+      border-top: 1px solid var(--line);
+    }
+    .pro-meta .price {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 16px; font-weight: 700;
+      letter-spacing: -0.02em; color: var(--ink);
+    }
+    .pro-meta .reviews {
+      font-size: 11px; color: var(--ink-mute);
+    }
+    .pro-cta {
+      background: var(--bg); color: var(--ink);
+      border: 1px solid var(--line);
+      padding: 10px 14px; border-radius: 8px;
+      font-size: 13px; font-weight: 600;
+      margin-top: 10px;
+      letter-spacing: -0.005em;
+      transition: all 0.15s ease;
+    }
+    .pro-cta:hover {
+      background: var(--brand-accent, var(--ink));
+      color: white;
+      border-color: var(--brand-accent, var(--ink));
+    }
+
+    /* ----- stores grid ----- */
+    .stores-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 1100px) { .stores-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 720px) { .stores-grid { grid-template-columns: 1fr; } }
+
+    .store {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      position: relative;
+    }
+    .store[data-brand="suncountry"] { --brand-accent: var(--suncountry); --brand-soft: var(--suncountry-soft); }
+    .store[data-brand="leslies"]    { --brand-accent: var(--leslies);    --brand-soft: var(--leslies-soft); }
+    .store[data-brand="pinch"]      { --brand-accent: var(--pinch);      --brand-soft: var(--marina-soft); }
+    .store::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 3px; background: var(--brand-accent, var(--ink-mute));
+      z-index: 4;
+    }
+
+    .store-photo {
+      height: 120px; position: relative;
+      background: var(--brand-soft);
+      display: flex; align-items: center; justify-content: center;
+      border-bottom: 1px solid var(--line);
+    }
+    .store-logo-tile {
+      width: 80px; height: 80px;
+      background: white;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 1px 3px rgba(15,17,21,0.06);
+      overflow: hidden;
+    }
+    .store-logo-tile img {
+      max-width: 80%; max-height: 80%; object-fit: contain;
+    }
+    .store-primary-badge {
+      position: absolute; top: 12px; right: 12px;
+      background: var(--ink); color: white;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      padding: 5px 9px; border-radius: 6px;
+    }
+    .store-distance {
+      position: absolute; top: 12px; left: 12px;
+      background: rgba(255,255,255,0.95); color: var(--ink-soft);
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      padding: 5px 9px; border-radius: 6px;
+      border: 1px solid var(--line);
+    }
+
+    .store-info { padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 8px; }
+    .store-cat {
+      font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--brand-accent); font-weight: 700;
+    }
+    .store-name {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 17px; font-weight: 700;
+      letter-spacing: -0.02em; line-height: 1.15;
+      color: var(--ink);
+    }
+    .store-services {
+      font-size: 13px; color: var(--ink-soft); line-height: 1.4;
+    }
+    .store-pills {
+      display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px;
+    }
+    .store-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; padding: 4px 9px; border-radius: 6px;
+      background: var(--surface); color: var(--ink-soft);
+      font-weight: 600;
+      border: 1px solid var(--line);
+    }
+    .store-pill .swatch {
+      width: 8px; height: 8px; border-radius: 50%;
+    }
+    .store-foot {
+      display: flex; justify-content: space-between; align-items: end;
+      margin-top: 8px; padding-top: 12px;
+      border-top: 1px solid var(--line);
+      gap: 12px;
+      font-size: 12px;
+    }
+    .store-foot strong { color: var(--ink); font-weight: 600; }
+    .store-foot .meta { color: var(--ink-mute); }
+    .store-foot a {
+      color: var(--brand-accent); font-weight: 600; white-space: nowrap;
+    }
+
+    /* ----- area / map snapshot ----- */
+    .map-strip {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 28px 32px;
+      overflow: hidden;
+      min-height: 200px;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .map-strip::after {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(31,160,191,0.06), transparent 30%),
+        radial-gradient(circle at 70% 70%, rgba(176,123,0,0.05), transparent 30%),
+        radial-gradient(circle at 80% 20%, rgba(0,70,168,0.05), transparent 30%);
+      pointer-events: none;
+    }
+    .map-pin {
+      position: absolute;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--ink-mute);
+      border: 2.5px solid white;
+      box-shadow: 0 1px 3px rgba(15,17,21,0.15);
+    }
+    .map-pin.you {
+      background: var(--pool);
+      width: 18px; height: 18px;
+      box-shadow: 0 0 0 6px rgba(31,160,191,0.18), 0 1px 3px rgba(15,17,21,0.2);
+    }
+    .map-pin.gold { background: var(--suncountry); }
+    .map-pin.blue { background: var(--leslies); }
+    .map-pin.green { background: var(--marina); }
+    .map-pin.coral { background: var(--coral); }
+    .map-content {
+      position: relative; z-index: 2;
+      display: flex; align-items: end; justify-content: space-between;
+      gap: 20px;
+    }
+    .map-content .num {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 48px; font-weight: 800;
+      letter-spacing: -0.04em; line-height: 1;
+      color: var(--ink);
+    }
+    .map-content .label {
+      font-size: 13px; color: var(--ink-soft);
+      margin-top: 8px; max-width: 36ch;
+    }
+    .map-content .label strong { color: var(--ink); font-weight: 600; }
+    .map-legend {
+      display: flex; gap: 14px; flex-wrap: wrap;
+      font-size: 12px; color: var(--ink-mute);
+    }
+    .legend-dot {
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .legend-dot::before {
+      content: ''; width: 10px; height: 10px; border-radius: 50%;
+      background: var(--ink-mute);
+    }
+    .legend-dot.gold::before  { background: var(--suncountry); }
+    .legend-dot.blue::before  { background: var(--leslies); }
+    .legend-dot.green::before { background: var(--marina); }
+    .legend-dot.coral::before { background: var(--coral); }
+    .legend-dot.pool::before  { background: var(--pool); }
+
+    /* ----- builders / specialists list ----- */
+    .specialists {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 900px) { .specialists { grid-template-columns: 1fr; } }
+    .spec-row {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 18px 20px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+    .spec-row[data-brand="westshore"] { --brand-accent: var(--westshore); }
+    .spec-row[data-brand="plaster"]   { --brand-accent: var(--plaster); }
+    .spec-row[data-brand="heater"]    { --brand-accent: var(--heater); }
+    .spec-row[data-brand="bluedrop"]  { --brand-accent: var(--bluedrop); }
+    .spec-row::before {
+      content: ''; position: absolute; left: 0; top: 16px; bottom: 16px;
+      width: 3px; background: var(--brand-accent, transparent);
+    }
+    .spec-mark {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      background: var(--brand-accent);
+      color: white;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .spec-body { min-width: 0; }
+    .spec-cat {
+      font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--brand-accent); font-weight: 700;
+    }
+    .spec-name {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 16px; font-weight: 700;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+      margin-top: 2px;
+    }
+    .spec-meta {
+      font-size: 12px; color: var(--ink-mute); margin-top: 4px;
+    }
+    .spec-meta strong { color: var(--ink-soft); font-weight: 600; }
+    .spec-cta {
+      background: var(--bg); color: var(--ink);
+      border: 1px solid var(--line);
+      padding: 8px 12px; border-radius: 8px;
+      font-size: 12px; font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* ----- legend / disclosure ----- */
+    .legend-row {
+      max-width: 1280px; margin: 56px auto 0;
+      padding: 18px 32px;
+      border-top: 1px solid var(--line);
+      display: flex; flex-wrap: wrap; gap: 18px;
+      align-items: center; justify-content: space-between;
+    }
+    .legend-row .left {
+      font-size: 12px; color: var(--ink-mute);
+      max-width: 60ch;
+    }
+    .legend-row .left strong { color: var(--ink); font-weight: 600; }
+    .legend-row .legend-dots {
+      display: flex; gap: 14px; flex-wrap: wrap;
+      font-size: 12px; color: var(--ink-mute);
+    }
+
+    .footer-pad { height: 80px; }
+
+    /* ----- page caption ----- */
+    .page-caption {
+      position: fixed; bottom: 24px; left: 24px;
+      background: var(--ink); color: white;
+      font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase;
+      font-weight: 600;
+      padding: 8px 14px; border-radius: 999px; z-index: 100;
+    }
+    .page-caption .num { color: var(--pool); margin-right: 6px; }
+  </style>
+</head>
+<body>
+
+  <!-- nav -->
+  <nav class="nav">
+    <div class="wm">PoolGo<span class="accent">.</span></div>
+    <div class="nav-tabs">
+      <a href="screen-cmd-showroom-pure.html" class="nav-tab">My Pool</a>
+      <a href="screen-care-pure.html" class="nav-tab">Care</a>
+      <a href="#" class="nav-tab">Equipment</a>
+      <a href="#" class="nav-tab">Routines</a>
+      <a href="#" class="nav-tab active">Folks</a>
+      <a href="#" class="nav-tab">Inbox</a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-bell">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      </div>
+      <div class="nav-avatar">RK</div>
+    </div>
+  </nav>
+
+  <!-- header -->
+  <header class="header">
+    <div>
+      <h1>Folks on your pool.</h1>
+      <p class="lede">Service techs, pool stores, builders, and repair specialists within 8 miles. Each is independent. PoolGo is the record. <strong>No paid placement, no kickbacks, no listing fees.</strong></p>
+    </div>
+    <div class="header-stat-row">
+      <div class="header-stat">
+        <div class="num">14</div>
+        <div class="label">Within 8 mi</div>
+      </div>
+      <div class="header-stat">
+        <div class="num">6</div>
+        <div class="label">Service techs</div>
+      </div>
+      <div class="header-stat">
+        <div class="num">3</div>
+        <div class="label">Pool stores</div>
+      </div>
+      <div class="header-stat">
+        <div class="num">5</div>
+        <div class="label">Specialists</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- search -->
+  <div class="search-bar">
+    <div class="search-input">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="6"/><path d="m20 20-3.5-3.5"/></svg>
+      <input value="Roseville, CA · 95661" />
+      <span class="div"></span>
+      <input value="Any service" style="flex: 0.6;" />
+    </div>
+    <button class="search-btn">Search</button>
+  </div>
+
+  <!-- filter chips -->
+  <div class="filter-bar">
+    <button class="chip active">All<span class="count">14</span></button>
+    <button class="chip">Service techs<span class="count">6</span></button>
+    <button class="chip">Pool stores<span class="count">3</span></button>
+    <button class="chip">Builders<span class="count">2</span></button>
+    <button class="chip">Equipment repair<span class="count">5</span></button>
+    <button class="chip">Plaster &amp; tile<span class="count">2</span></button>
+    <span style="margin-left: auto; font-size: 12px; color: var(--ink-mute);">Sort · <strong style="color: var(--ink); font-weight: 600;">Nearest</strong> · top-rated · most-vouched · open today</span>
+  </div>
+
+  <!-- area / map snapshot -->
+  <section class="section">
+    <div class="map-strip">
+      <!-- decorative pins -->
+      <div class="map-pin you" style="top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+      <div class="map-pin gold"  style="top: 28%; left: 22%;"></div>
+      <div class="map-pin blue"  style="top: 32%; left: 70%;"></div>
+      <div class="map-pin green" style="top: 65%; left: 28%;"></div>
+      <div class="map-pin green" style="top: 45%; left: 78%;"></div>
+      <div class="map-pin coral" style="top: 62%; left: 65%;"></div>
+      <div class="map-pin gold"  style="top: 72%; left: 48%;"></div>
+      <div class="map-pin"       style="top: 22%; left: 50%;"></div>
+      <div class="map-pin"       style="top: 78%; left: 80%;"></div>
+
+      <div class="map-content">
+        <div>
+          <div class="num">14</div>
+          <div class="label"><strong>vouched-for businesses</strong> within 8 miles. 6 service · 3 retail · 2 builders · 3 specialists.</div>
+        </div>
+        <div class="map-legend">
+          <span class="legend-dot pool">You</span>
+          <span class="legend-dot gold">Sun Country</span>
+          <span class="legend-dot blue">Leslie's</span>
+          <span class="legend-dot green">Marina &amp; Foothill</span>
+          <span class="legend-dot coral">Ridgeline</span>
+          <span class="legend-dot">Other</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI summary -->
+  <section class="section">
+    <div class="ai-card">
+      <div class="ai-top">
+        <div class="ai-mark">P</div>
+        <div class="ai-meta">PoolGo concierge · your neighborhood</div>
+      </div>
+      <p class="ai-body">Of the <strong>14 folks</strong> within 8 miles, <strong>4 of your neighbors</strong> already use Marina Pool Service. Sun Country is your primary water-test store and feeds your records automatically. <mark>Granite Bay Heater Co. is the closest gas-certified heater specialist</mark> if your Pentair MasterTemp ever needs work. None of these businesses pay PoolGo for placement.</p>
+    </div>
+  </section>
+
+  <!-- featured: top vouched -->
+  <section class="section">
+    <div class="section-head">
+      <h2 class="section-title">Top vouched-for in your area</h2>
+      <span class="section-meta"><strong>4 of your neighbors</strong> use this service</span>
+    </div>
+
+    <div class="featured" data-brand="marina">
+      <div class="featured-photo">
+        <span class="featured-vouched"><span class="star">★</span>VOUCHED 18 TIMES · 142 REVIEWS</span>
+        <div class="pool-bg"></div>
+        <svg class="truck" viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="200" cy="148" rx="180" ry="6" fill="black" opacity="0.2"/>
+          <rect x="40" y="40" width="240" height="80" rx="6" fill="#FAFAFA"/>
+          <rect x="40" y="40" width="240" height="80" rx="6" fill="url(#truckgrad)"/>
+          <defs>
+            <linearGradient id="truckgrad" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="white" stop-opacity="0.3"/>
+              <stop offset="1" stop-color="black" stop-opacity="0.15"/>
+            </linearGradient>
+          </defs>
+          <path d="M 280 50 L 320 50 L 360 80 L 360 120 L 280 120 Z" fill="#F5F5F5"/>
+          <path d="M 280 50 L 320 50 L 360 80 L 360 120 L 280 120 Z" fill="url(#truckgrad)"/>
+          <path d="M 290 58 L 318 58 L 348 80 L 290 80 Z" fill="#3A5A6E" opacity="0.85"/>
+          <line x1="160" y1="40" x2="160" y2="120" stroke="#1A4332" stroke-width="0.5" opacity="0.3"/>
+          <line x1="280" y1="40" x2="280" y2="120" stroke="#1A4332" stroke-width="0.5" opacity="0.3"/>
+          <rect x="60" y="62" width="200" height="40" fill="#2C5F4A"/>
+          <text x="160" y="80" text-anchor="middle" fill="white" font-family="Inter, sans-serif" font-weight="800" font-size="14" letter-spacing="0.05em">MARINA POOL</text>
+          <text x="160" y="95" text-anchor="middle" fill="white" font-family="Inter, sans-serif" font-weight="600" font-size="9" letter-spacing="0.1em" opacity="0.85">SERVICE · ROSEVILLE · SINCE 2009</text>
+          <g transform="translate(70,72)">
+            <circle cx="0" cy="0" r="2" fill="white"/>
+            <line x1="0" y1="0" x2="0" y2="14" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M -7 7 A 8 8 0 0 0 7 7" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          </g>
+          <circle cx="100" cy="120" r="22" fill="#1A1A1A"/>
+          <circle cx="100" cy="120" r="14" fill="#3A4248"/>
+          <circle cx="100" cy="120" r="6" fill="#1A1A1A"/>
+          <circle cx="320" cy="120" r="22" fill="#1A1A1A"/>
+          <circle cx="320" cy="120" r="14" fill="#3A4248"/>
+          <circle cx="320" cy="120" r="6" fill="#1A1A1A"/>
+          <rect x="60" y="44" width="220" height="2" fill="white" opacity="0.5"/>
+        </svg>
+      </div>
+
+      <div class="featured-info">
+        <div class="featured-brand">
+          <div class="featured-brand-mark">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round">
+              <circle cx="12" cy="5" r="3"/>
+              <line x1="12" y1="22" x2="12" y2="8"/>
+              <path d="M5 12H2a10 10 0 0 0 20 0h-3"/>
+            </svg>
+          </div>
+          <div>
+            <div class="featured-name">Marina Pool Service</div>
+            <div class="featured-cat">SERVICE · ROSEVILLE · 2.3 MI · SINCE 2009</div>
+          </div>
+        </div>
+        <div class="featured-services">
+          <span class="service-chip brand">Weekly cleaning</span>
+          <span class="service-chip">Equipment repair</span>
+          <span class="service-chip">Salt cells</span>
+          <span class="service-chip">Pentair-certified</span>
+          <span class="service-chip">Hayward-certified</span>
+        </div>
+        <p class="featured-quote">"I've used Marina for six years. They show up the same morning every week, and they actually look at the pump. Carlos is wonderful with our dog."</p>
+        <p class="featured-quote-attr">Susan K, Rocklin · vouched 2024</p>
+        <div class="featured-meta-row">
+          <div class="featured-stats">
+            <div class="stat-block">
+              <div class="num rating">4.9 ★</div>
+              <div class="label">142 reviews</div>
+            </div>
+            <div class="stat-block">
+              <div class="num">$58</div>
+              <div class="label">/ wk, weekly plan</div>
+            </div>
+            <div class="stat-block">
+              <div class="num">2 hr</div>
+              <div class="label">avg response</div>
+            </div>
+          </div>
+          <button class="featured-cta">Send a note →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- service techs grid -->
+  <section class="section">
+    <div class="section-head">
+      <h2 class="section-title">Service techs nearby</h2>
+      <span class="section-meta">Sorted by <strong>nearest</strong> · color-coded by company</span>
+    </div>
+
+    <div class="pros-grid">
+
+      <!-- Foothill Pool Care -->
+      <div class="pro" data-brand="foothill">
+        <div class="pro-photo">
+          <span class="pro-distance-badge">4.0 MI · GRANITE BAY</span>
+          <span class="pro-rating-badge"><span class="star">★</span>4.6</span>
+          <div class="pro-logo-overlay">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#4D6B50" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 18l5-7 4 5 4-3 5 5"/>
+              <path d="M3 22h18"/>
+            </svg>
+          </div>
+        </div>
+        <div class="pro-info">
+          <div class="pro-cat">SERVICE · WEEKLY ROUTE</div>
+          <div class="pro-name">Foothill Pool Care</div>
+          <div class="pro-services">Weekly cleaning · Salt cell rebuilds · Pentair-certified</div>
+          <div class="pro-vouches">
+            <span class="vouch-avatar" style="background: #B07B00;"></span>
+            <span class="vouch-avatar" style="background: #1F5C8B;"></span>
+            <span class="vouch-avatar" style="background: #B85541;"></span>
+            <span class="vouch-text"><strong>3 neighbors</strong> use them</span>
+          </div>
+          <div class="pro-meta">
+            <span class="price">$52 / wk</span>
+            <span class="reviews">67 reviews · 9 vouches</span>
+          </div>
+          <button class="pro-cta">Send a note →</button>
+        </div>
+      </div>
+
+      <!-- Blue Drop Pools -->
+      <div class="pro" data-brand="bluedrop">
+        <div class="pro-photo">
+          <span class="pro-distance-badge">5.2 MI · LINCOLN</span>
+          <span class="pro-rating-badge"><span class="star">★</span>4.9</span>
+          <div class="pro-logo-overlay">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1F5C8B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2 c -3 5 -7 8 -7 13 a 7 7 0 0 0 14 0 c 0 -5 -4 -8 -7 -13 z"/>
+            </svg>
+          </div>
+        </div>
+        <div class="pro-info">
+          <div class="pro-cat">SERVICE · EQUIPMENT REPAIR</div>
+          <div class="pro-name">Blue Drop Pools</div>
+          <div class="pro-services">Heater specialists · Pump rebuilds · Same-day calls</div>
+          <div class="pro-vouches">
+            <span class="vouch-avatar" style="background: #4A6E8A;"></span>
+            <span class="vouch-avatar" style="background: #1A4332;"></span>
+            <span class="vouch-text"><strong>2 neighbors</strong> use them</span>
+          </div>
+          <div class="pro-meta">
+            <span class="price">$140 / hr</span>
+            <span class="reviews">211 reviews · 24 vouches</span>
+          </div>
+          <button class="pro-cta">Send a note →</button>
+        </div>
+      </div>
+
+      <!-- Ridgeline Pool Pros -->
+      <div class="pro" data-brand="ridgeline">
+        <div class="pro-photo">
+          <span class="pro-distance-badge">3.8 MI · ROSEVILLE</span>
+          <span class="pro-rating-badge"><span class="star">★</span>4.7</span>
+          <div class="pro-logo-overlay">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#B85541" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 22 L 8 10 L 13 16 L 18 8 L 22 22 Z"/>
+            </svg>
+          </div>
+        </div>
+        <div class="pro-info">
+          <div class="pro-cat">SERVICE · WEEKLY ROUTE</div>
+          <div class="pro-name">Ridgeline Pool Pros</div>
+          <div class="pro-services">Weekly cleaning · Tile cleaning · Eco-friendly chems</div>
+          <div class="pro-vouches">
+            <span class="vouch-avatar" style="background: #B07B00;"></span>
+            <span class="vouch-text"><strong>1 neighbor</strong> uses them</span>
+          </div>
+          <div class="pro-meta">
+            <span class="price">$60 / wk</span>
+            <span class="reviews">88 reviews · 11 vouches</span>
+          </div>
+          <button class="pro-cta">Send a note →</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- pool stores -->
+  <section class="section">
+    <div class="section-head">
+      <h2 class="section-title">Pool stores nearby</h2>
+      <span class="section-meta"><strong>3 retail stores</strong> · all import water tests to PoolGo automatically</span>
+    </div>
+
+    <div class="stores-grid">
+
+      <!-- Sun Country Pools -->
+      <div class="store" data-brand="suncountry">
+        <div class="store-photo">
+          <span class="store-distance">3.1 MI · ROSEVILLE</span>
+          <span class="store-primary-badge">Your primary</span>
+          <div class="store-logo-tile">
+            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#B07B00" stroke-width="2" stroke-linecap="round">
+              <circle cx="12" cy="12" r="4.5"/>
+              <line x1="12" y1="2" x2="12" y2="5"/>
+              <line x1="12" y1="19" x2="12" y2="22"/>
+              <line x1="2" y1="12" x2="5" y2="12"/>
+              <line x1="19" y1="12" x2="22" y2="12"/>
+              <line x1="4.93" y1="4.93" x2="6.34" y2="6.34"/>
+              <line x1="17.66" y1="17.66" x2="19.07" y2="19.07"/>
+              <line x1="4.93" y1="19.07" x2="6.34" y2="17.66"/>
+              <line x1="17.66" y1="6.34" x2="19.07" y2="4.93"/>
+            </svg>
+          </div>
+        </div>
+        <div class="store-info">
+          <div class="store-cat">RETAIL · INDEPENDENT</div>
+          <div class="store-name">Sun Country Pools</div>
+          <div class="store-services">Free water testing · Chemicals · Service department · Equipment</div>
+          <div class="store-pills">
+            <span class="store-pill"><span class="swatch" style="background: #1A4F8B;"></span>Pentair</span>
+            <span class="store-pill"><span class="swatch" style="background: #D8A700;"></span>Hayward</span>
+            <span class="store-pill"><span class="swatch" style="background: #00759C;"></span>Polaris</span>
+          </div>
+          <div class="store-foot">
+            <div>
+              <strong>Open today</strong> · 9 AM – 6 PM<br/>
+              <span class="meta">Anthony T. at the counter</span>
+            </div>
+            <a href="#">Get directions →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Leslie's Pool Supplies -->
+      <div class="store" data-brand="leslies">
+        <div class="store-photo">
+          <span class="store-distance">4.4 MI · ROSEVILLE</span>
+          <div class="store-logo-tile">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#0046A8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 4v16h14"/>
+              <path d="M3 22 Q 7 18, 11 22 T 19 22" stroke-width="1.4"/>
+            </svg>
+          </div>
+        </div>
+        <div class="store-info">
+          <div class="store-cat">RETAIL · BIG-BOX CHAIN</div>
+          <div class="store-name">Leslie's Pool Supplies</div>
+          <div class="store-services">Water testing · Chemicals · Supplies · Loyalty program</div>
+          <div class="store-pills">
+            <span class="store-pill"><span class="swatch" style="background: #1A4F8B;"></span>Pentair</span>
+            <span class="store-pill"><span class="swatch" style="background: #D8A700;"></span>Hayward</span>
+            <span class="store-pill"><span class="swatch" style="background: #CC0033;"></span>Jandy</span>
+          </div>
+          <div class="store-foot">
+            <div>
+              <strong>Open today</strong> · 9 AM – 8 PM<br/>
+              <span class="meta">Jessica R. tests on weekends</span>
+            </div>
+            <a href="#">Get directions →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pinch a Penny -->
+      <div class="store" data-brand="pinch">
+        <div class="store-photo">
+          <span class="store-distance">5.7 MI · ROCKLIN</span>
+          <div class="store-logo-tile">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#2C5F4A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M9 12h6"/>
+              <path d="M12 9v6"/>
+            </svg>
+          </div>
+        </div>
+        <div class="store-info">
+          <div class="store-cat">RETAIL · FRANCHISE</div>
+          <div class="store-name">Pinch a Penny</div>
+          <div class="store-services">Water testing · Pool chemicals · Cleaners &amp; parts</div>
+          <div class="store-pills">
+            <span class="store-pill"><span class="swatch" style="background: #1A4F8B;"></span>Pentair</span>
+            <span class="store-pill"><span class="swatch" style="background: #D8A700;"></span>Hayward</span>
+            <span class="store-pill"><span class="swatch" style="background: #00759C;"></span>Polaris</span>
+          </div>
+          <div class="store-foot">
+            <div>
+              <strong>Open today</strong> · 9 AM – 7 PM<br/>
+              <span class="meta">Mike S. owns this location</span>
+            </div>
+            <a href="#">Get directions →</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- builders & specialists -->
+  <section class="section">
+    <div class="section-head">
+      <h2 class="section-title">Builders &amp; specialists</h2>
+      <span class="section-meta">For when something major needs work · <strong>by appointment</strong></span>
+    </div>
+
+    <div class="specialists">
+
+      <div class="spec-row" data-brand="westshore">
+        <div class="spec-mark">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 22h20L17 9l-5 6-5-3z"/>
+          </svg>
+        </div>
+        <div class="spec-body">
+          <div class="spec-cat">BUILDER · NEW + REMODEL · 6.8 MI</div>
+          <div class="spec-name">Westshore Pool Builders</div>
+          <div class="spec-meta">New construction · Remodels · Plaster &amp; tile · Lead time <strong>4–6 months</strong> · 34 reviews · 4 vouches</div>
+        </div>
+        <button class="spec-cta">Request a consult →</button>
+      </div>
+
+      <div class="spec-row" data-brand="plaster">
+        <div class="spec-mark">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <line x1="3" y1="9" x2="21" y2="9"/>
+            <line x1="3" y1="15" x2="21" y2="15"/>
+            <line x1="9" y1="3" x2="9" y2="21"/>
+            <line x1="15" y1="3" x2="15" y2="21"/>
+          </svg>
+        </div>
+        <div class="spec-body">
+          <div class="spec-cat">SPECIALIST · PLASTER &amp; TILE · 8.1 MI</div>
+          <div class="spec-name">Anthony's Pool Plastering</div>
+          <div class="spec-meta">Plaster · Tile · Coping · Quartz finishes · Quotes <strong>free</strong> · Lead time 2 mo · 56 reviews · 7 vouches</div>
+        </div>
+        <button class="spec-cta">Send a note →</button>
+      </div>
+
+      <div class="spec-row" data-brand="heater">
+        <div class="spec-mark">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2 C 8 8 8 12 12 16 C 16 12 16 8 12 2 Z"/>
+            <path d="M9 16 v 4 h 6 v -4"/>
+          </svg>
+        </div>
+        <div class="spec-body">
+          <div class="spec-cat">SPECIALIST · HEATERS &amp; GAS · 5.6 MI</div>
+          <div class="spec-name">Granite Bay Heater Co.</div>
+          <div class="spec-meta">Pentair · Hayward · Raypak repair &amp; install · <strong>2 neighbors</strong> use them · $120 / hr · 94 reviews · 12 vouches</div>
+        </div>
+        <button class="spec-cta">Send a note →</button>
+      </div>
+
+      <div class="spec-row" data-brand="bluedrop">
+        <div class="spec-mark">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round">
+            <path d="M12 2 c -3 5 -7 8 -7 13 a 7 7 0 0 0 14 0 c 0 -5 -4 -8 -7 -13 z"/>
+          </svg>
+        </div>
+        <div class="spec-body">
+          <div class="spec-cat">SPECIALIST · LEAK DETECTION · 7.2 MI</div>
+          <div class="spec-name">Capital Leak Detection</div>
+          <div class="spec-meta">Pressure testing · Pool &amp; spa · Sub-slab leaks · By appointment · $295 base · 47 reviews · 6 vouches</div>
+        </div>
+        <button class="spec-cta">Send a note →</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- legend / how it works -->
+  <div class="legend-row">
+    <div class="left">
+      <strong>How Folks works.</strong> Each business is independent. PoolGo charges them nothing to be listed. Vouches come from neighbors who already use them, never from the business itself. Every store you see also feeds your water tests into your record automatically.
+    </div>
+    <div class="legend-dots">
+      <span class="legend-dot pool"><span style="margin-left: 0;">PoolGo &amp; you</span></span>
+      <span class="legend-dot gold">Pool stores</span>
+      <span class="legend-dot green">Service techs</span>
+      <span class="legend-dot coral">Builders &amp; specialists</span>
+    </div>
+  </div>
+
+  <div class="footer-pad"></div>
+
+  <div class="page-caption"><span class="num">FOLKS</span> · SHOWROOM · PURE BRAND APPLIED TO DISCOVER</div>
+
+</body>
+</html>

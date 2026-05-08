@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Water log — PoolGo (Field Notebook)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'IBM Plex Sans', sans-serif;
+      background: #EFE6D2;
+      color: #1A1A1A;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      background-image: repeating-linear-gradient(to bottom,
+        transparent 0, transparent 31px,
+        rgba(26,26,26,0.05) 31px, rgba(26,26,26,0.05) 32px);
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+
+    /* masthead */
+    .masthead {
+      background: #1F5051; color: #EFE6D2;
+      padding: 12px 32px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+      display: flex; justify-content: space-between;
+    }
+    .masthead .right span:not(:last-child)::after {
+      content: '·'; margin: 0 12px; opacity: 0.5;
+    }
+
+    /* nav */
+    .nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 24px 32px; border-bottom: 1px solid #1A1A1A; background: #EFE6D2;
+    }
+    .wordmark {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-variation-settings: 'opsz' 96;
+      font-size: 32px; font-weight: 600;
+      letter-spacing: -0.04em; color: #1F5051;
+    }
+    .nav-tabs {
+      display: flex;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    .nav-tabs a {
+      padding: 10px 16px; color: #5A5A5A;
+      border-right: 1px solid rgba(26,26,26,0.15);
+    }
+    .nav-tabs a:first-child { border-left: 1px solid rgba(26,26,26,0.15); }
+    .nav-tabs a.active { background: #1F5051; color: #EFE6D2; border-color: #1F5051; }
+    .nav-right {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .nav-right .avatar {
+      width: 32px; height: 32px; background: #C99A38; color: #1A1A1A;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 600; font-size: 13px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* crumbs */
+    .crumbs {
+      max-width: 1200px; margin: 32px auto 0; padding: 0 32px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: #5A5A5A;
+    }
+    .crumbs .sep { margin: 0 8px; opacity: 0.5; }
+
+    /* header */
+    .entry-header {
+      max-width: 1200px; margin: 24px auto 0;
+      padding: 0 32px 32px;
+      border-bottom: 1px dashed rgba(26,26,26,0.4);
+      display: grid; grid-template-columns: 1fr auto;
+      gap: 32px; align-items: end;
+    }
+    .entry-meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: #C99A38; margin-bottom: 16px;
+    }
+    .entry-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-variation-settings: 'opsz' 96;
+      font-size: clamp(40px, 5.5vw, 72px);
+      font-weight: 500; letter-spacing: -0.035em;
+      line-height: 0.98; color: #1A1A1A; max-width: 22ch;
+    }
+    .entry-sub {
+      margin-top: 16px; font-size: 16px;
+      color: #3D3D3D; max-width: 60ch;
+    }
+    .entry-status {
+      text-align: right;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .status-num {
+      display: block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 40px; font-weight: 500;
+      color: #1F5051;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    /* main */
+    .main {
+      max-width: 1200px; margin: 0 auto;
+      padding: 32px 32px 64px;
+    }
+
+    .section { margin-bottom: 56px; }
+    .section-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+      color: #C99A38;
+      margin-bottom: 16px; padding-bottom: 8px;
+      border-bottom: 1px dashed rgba(26,26,26,0.3);
+      display: flex; justify-content: space-between;
+    }
+    .section-label .right { color: #5A5A5A; }
+
+    /* parameter cards row */
+    .param-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 880px) { .param-grid { grid-template-columns: repeat(2, 1fr); } }
+    .param-card {
+      background: #EFE6D2;
+      border: 1px solid rgba(26,26,26,0.15);
+      padding: 18px;
+    }
+    .param-name {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: #5A5A5A;
+    }
+    .param-value {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 38px; font-weight: 500;
+      letter-spacing: -0.025em; line-height: 1;
+      color: #1A1A1A; margin: 10px 0 4px;
+    }
+    .param-value .unit {
+      font-size: 11px; color: #5A5A5A; margin-left: 4px; letter-spacing: 0;
+    }
+    .param-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 3px 8px;
+      border: 1px solid currentColor;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+      margin-top: 8px;
+    }
+    .param-pill.good { color: #4A7A51; }
+    .param-pill.warn { color: #8A6A1D; }
+    .param-pill .dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+
+    /* trend chart */
+    .chart-card {
+      background: #1F5051; color: #EFE6D2;
+      padding: 32px;
+    }
+    .chart-card-top {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-bottom: 24px;
+    }
+    .chart-card-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-variation-settings: 'opsz' 24;
+      font-size: 18px; font-weight: 500; letter-spacing: -0.01em;
+      color: #EFE6D2;
+    }
+    .chart-card-meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(239,230,210,0.65);
+    }
+    .chart-legend {
+      display: flex; gap: 16px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(239,230,210,0.7);
+    }
+    .legend-swatch {
+      display: inline-block; width: 14px; height: 2px;
+      vertical-align: middle; margin-right: 6px;
+    }
+    .swatch-fc { background: #C99A38; }
+    .swatch-ph { background: #6FA178; }
+    .swatch-cya { background: #A03E2C; }
+
+    /* readings table */
+    .readings-card {
+      background: #EFE6D2;
+      border: 1px solid rgba(26,26,26,0.2);
+      padding: 0;
+      overflow: hidden;
+    }
+    table.readings {
+      width: 100%; border-collapse: collapse;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+    }
+    table.readings th {
+      text-align: left; padding: 12px 14px;
+      font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: #5A5A5A; font-weight: 500;
+      border-bottom: 1px solid rgba(26,26,26,0.3);
+      background: rgba(26,26,26,0.04);
+    }
+    table.readings td {
+      padding: 14px;
+      border-bottom: 1px solid rgba(26,26,26,0.1);
+      color: #1A1A1A;
+      vertical-align: top;
+    }
+    table.readings td.date {
+      color: #C99A38;
+      letter-spacing: 0.04em;
+    }
+    table.readings td.source {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 13px;
+      color: #1F5051;
+      font-weight: 500;
+    }
+    table.readings td.note {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 13px;
+      color: #3D3D3D;
+      font-style: italic;
+      max-width: 28ch;
+    }
+    table.readings tbody tr:hover { background: rgba(31,80,81,0.05); }
+    table.readings .out { color: #8A6A1D; font-weight: 500; }
+
+    /* observation log */
+    .obs-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 880px) { .obs-grid { grid-template-columns: 1fr; } }
+    .obs-card {
+      background: #EFE6D2;
+      border: 1px solid rgba(26,26,26,0.15);
+      border-left: 4px solid #C99A38;
+      padding: 20px 24px;
+    }
+    .obs-card.alert { border-left-color: #A03E2C; }
+    .obs-meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: #5A5A5A;
+      margin-bottom: 8px;
+    }
+    .obs-body {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 16px; line-height: 1.45;
+      color: #1A1A1A; max-width: 36ch;
+    }
+    .obs-attr {
+      margin-top: 10px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: #5A5A5A;
+    }
+
+    .page-caption {
+      position: fixed; bottom: 24px; left: 24px;
+      background: #1F5051; color: #EFE6D2;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 8px 14px; z-index: 100;
+    }
+    .page-caption .num { color: #C99A38; margin-right: 6px; }
+  </style>
+</head>
+<body>
+
+  <div class="masthead">
+    <span>poolgo · field log</span>
+    <div class="right">
+      <span>Vol. 12</span>
+      <span>No. 8</span>
+      <span>2026-05-05</span>
+      <span>Roseville, CA</span>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <div class="wordmark">poolgo</div>
+    <div class="nav-tabs">
+      <a href="#">My Pool</a>
+      <a href="#" class="active">Chart</a>
+      <a href="#">Connect</a>
+      <a href="#">Routines</a>
+      <a href="#">Discover</a>
+    </div>
+    <div class="nav-right">
+      <span>R Kurani</span>
+      <div class="avatar">RK</div>
+    </div>
+  </nav>
+
+  <div class="crumbs">
+    <a href="#">Chart</a>
+    <span class="sep">/</span>
+    <span style="color: #1F5051;">The Big Blue · Water log</span>
+  </div>
+
+  <header class="entry-header">
+    <div>
+      <div class="entry-meta">Water log · entries 077–084 · 30 days</div>
+      <h1 class="entry-title">The Big Blue, in eight tests.</h1>
+      <p class="entry-sub">Imported from Sun Country Pools (6) and Leslie's Pool Supplies (1), plus one manual entry. Trends look stable. CYA is climbing slowly.</p>
+    </div>
+    <div class="entry-status">
+      <span class="status-num">8</span>
+      <span style="margin-top: 8px; display: block;">Tests this month</span>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- Today's reading parameter cards -->
+    <section class="section">
+      <div class="section-label">
+        <span>Today's reading · 2026-05-05 · 09:14</span>
+        <span class="right">Source: Sun Country Pools · K-2006 / drop</span>
+      </div>
+      <div class="param-grid">
+        <div class="param-card">
+          <div class="param-name">Free Cl</div>
+          <div class="param-value">2.4<span class="unit">ppm</span></div>
+          <span class="param-pill good"><span class="dot"></span>1.0–3.0 ideal</span>
+        </div>
+        <div class="param-card">
+          <div class="param-name">pH</div>
+          <div class="param-value">7.4</div>
+          <span class="param-pill good"><span class="dot"></span>7.2–7.8 ideal</span>
+        </div>
+        <div class="param-card">
+          <div class="param-name">Total alk.</div>
+          <div class="param-value">90<span class="unit">ppm</span></div>
+          <span class="param-pill good"><span class="dot"></span>80–120 ideal</span>
+        </div>
+        <div class="param-card">
+          <div class="param-name">CYA</div>
+          <div class="param-value">42<span class="unit">ppm</span></div>
+          <span class="param-pill warn"><span class="dot"></span>climbing</span>
+        </div>
+        <div class="param-card">
+          <div class="param-name">Salt</div>
+          <div class="param-value">3,200<span class="unit">ppm</span></div>
+          <span class="param-pill good"><span class="dot"></span>2.7k–3.4k ideal</span>
+        </div>
+        <div class="param-card">
+          <div class="param-name">Calcium</div>
+          <div class="param-value">340<span class="unit">ppm</span></div>
+          <span class="param-pill good"><span class="dot"></span>200–400 ideal</span>
+        </div>
+        <div class="param-card">
+          <div class="param-name">Phosphate</div>
+          <div class="param-value">120<span class="unit">ppb</span></div>
+          <span class="param-pill warn"><span class="dot"></span>watch</span>
+        </div>
+        <div class="param-card">
+          <div class="param-name">Water temp</div>
+          <div class="param-value">82<span class="unit">°f</span></div>
+          <span class="param-pill good"><span class="dot"></span>seasonal</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trend chart -->
+    <section class="section">
+      <div class="chart-card">
+        <div class="chart-card-top">
+          <div>
+            <div class="chart-card-title">30-day trend</div>
+            <div class="chart-card-meta" style="margin-top: 4px;">Free Cl, pH, CYA · normalized to ideal range</div>
+          </div>
+          <div class="chart-legend">
+            <span><span class="legend-swatch swatch-fc"></span>Free Cl</span>
+            <span><span class="legend-swatch swatch-ph"></span>pH</span>
+            <span><span class="legend-swatch swatch-cya"></span>CYA</span>
+          </div>
+        </div>
+        <svg viewBox="0 0 800 220" width="100%" height="220" preserveAspectRatio="none" style="display: block;">
+          <!-- gridlines -->
+          <g stroke="rgba(239,230,210,0.12)" stroke-width="1">
+            <line x1="0" y1="40" x2="800" y2="40"/>
+            <line x1="0" y1="90" x2="800" y2="90"/>
+            <line x1="0" y1="140" x2="800" y2="140"/>
+            <line x1="0" y1="190" x2="800" y2="190"/>
+          </g>
+          <!-- y axis labels -->
+          <g font-family="IBM Plex Mono, monospace" font-size="9" fill="rgba(239,230,210,0.55)">
+            <text x="6" y="44">HIGH</text>
+            <text x="6" y="144">LOW</text>
+          </g>
+          <!-- x dates -->
+          <g font-family="IBM Plex Mono, monospace" font-size="9" fill="rgba(239,230,210,0.55)" text-anchor="middle">
+            <text x="80" y="212">04-12</text>
+            <text x="240" y="212">04-19</text>
+            <text x="400" y="212">04-26</text>
+            <text x="560" y="212">05-03</text>
+            <text x="720" y="212">TODAY</text>
+          </g>
+          <!-- pH (green/sage) -->
+          <polyline fill="none" stroke="#6FA178" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="80,82 160,76 240,84 320,72 400,68 480,80 560,74 640,70 720,76"/>
+          <g fill="#6FA178">
+            <circle cx="80" cy="82" r="3"/><circle cx="160" cy="76" r="3"/><circle cx="240" cy="84" r="3"/><circle cx="320" cy="72" r="3"/><circle cx="400" cy="68" r="3"/><circle cx="480" cy="80" r="3"/><circle cx="560" cy="74" r="3"/><circle cx="640" cy="70" r="3"/><circle cx="720" cy="76" r="3"/>
+          </g>
+          <!-- Free Cl (ochre) -->
+          <polyline fill="none" stroke="#C99A38" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" points="80,108 160,118 240,96 320,88 400,124 480,142 560,130 640,116 720,104"/>
+          <g fill="#C99A38">
+            <circle cx="80" cy="108" r="3.5"/><circle cx="160" cy="118" r="3.5"/><circle cx="240" cy="96" r="3.5"/><circle cx="320" cy="88" r="3.5"/><circle cx="400" cy="124" r="3.5"/><circle cx="480" cy="142" r="3.5"/><circle cx="560" cy="130" r="3.5"/><circle cx="640" cy="116" r="3.5"/><circle cx="720" cy="104" r="3.5"/>
+          </g>
+          <!-- CYA (brick) — climbing -->
+          <polyline fill="none" stroke="#A03E2C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="80,160 160,156 240,150 320,148 400,142 480,138 560,132 640,126 720,118"/>
+          <g fill="#A03E2C">
+            <circle cx="80" cy="160" r="3"/><circle cx="160" cy="156" r="3"/><circle cx="240" cy="150" r="3"/><circle cx="320" cy="148" r="3"/><circle cx="400" cy="142" r="3"/><circle cx="480" cy="138" r="3"/><circle cx="560" cy="132" r="3"/><circle cx="640" cy="126" r="3"/><circle cx="720" cy="118" r="3"/>
+          </g>
+          <!-- today marker -->
+          <line x1="720" y1="20" x2="720" y2="195" stroke="#C99A38" stroke-width="1" stroke-dasharray="2,3" opacity="0.6"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Observations from store techs -->
+    <section class="section">
+      <div class="section-label">
+        <span>Observations · entered by store technicians</span>
+        <span class="right">3 notes · last 30 days</span>
+      </div>
+      <div class="obs-grid">
+        <div class="obs-card">
+          <div class="obs-meta">2026-05-02 · ANTHONY T · SUN COUNTRY POOLS</div>
+          <p class="obs-body">"Your CYA is creeping up. Worth a partial drain in the next month, before summer hits and locks the chlorine."</p>
+          <div class="obs-attr">Latest visit · third mention this season</div>
+        </div>
+        <div class="obs-card alert">
+          <div class="obs-meta">2026-04-26 · JESSICA R · LESLIE'S POOL SUPPLIES</div>
+          <p class="obs-body">"Free Cl was on the low side (1.9). Recommended a single shock dose, customer confirmed handled same evening."</p>
+          <div class="obs-attr">Resolved · followup confirmed in 04-30 entry</div>
+        </div>
+        <div class="obs-card">
+          <div class="obs-meta">2026-04-22 · ANTHONY T · SUN COUNTRY POOLS</div>
+          <p class="obs-body">"All in range. Salt cell looks healthy, no scaling at the cell. Phosphate is climbing, recommend checking next visit."</p>
+          <div class="obs-attr">Routine visit · next scheduled 05-12</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recent tests table -->
+    <section class="section">
+      <div class="section-label">
+        <span>Test entries · log</span>
+        <span class="right">Showing 8 of 8 in range</span>
+      </div>
+      <div class="readings-card">
+        <table class="readings">
+          <thead>
+            <tr>
+              <th>Date / time</th>
+              <th>Source</th>
+              <th>Free Cl</th><th>pH</th><th>TA</th><th>CYA</th><th>Salt</th>
+              <th>Note</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="date">2026-05-05 · 09:14</td>
+              <td class="source">Sun Country Pools</td>
+              <td>2.4</td><td>7.4</td><td>90</td><td>42</td><td>3,200</td>
+              <td class="note">Today's reading. CYA mention third week running.</td>
+            </tr>
+            <tr>
+              <td class="date">2026-05-01 · 08:42</td>
+              <td class="source">Sun Country Pools</td>
+              <td>2.6</td><td>7.5</td><td>88</td><td>40</td><td>3,150</td>
+              <td class="note">All good. Cell amperage normal.</td>
+            </tr>
+            <tr>
+              <td class="date">2026-04-26 · 14:10</td>
+              <td class="source">Leslie's Pool Supplies</td>
+              <td class="out">1.9</td><td>7.6</td><td>86</td><td>38</td><td>3,200</td>
+              <td class="note">Free Cl on the low side. Single shock recommended.</td>
+            </tr>
+            <tr>
+              <td class="date">2026-04-22 · 09:30</td>
+              <td class="source">Sun Country Pools</td>
+              <td>2.1</td><td>7.4</td><td>90</td><td>36</td><td>3,180</td>
+              <td class="note">Routine visit. Phosphate noted.</td>
+            </tr>
+            <tr>
+              <td class="date">2026-04-17 · 11:00</td>
+              <td class="source">Manual entry</td>
+              <td>2.5</td><td>7.5</td><td>92</td><td>34</td><td>3,250</td>
+              <td class="note">Drop test before guests, Saturday afternoon.</td>
+            </tr>
+            <tr>
+              <td class="date">2026-04-12 · 08:50</td>
+              <td class="source">Sun Country Pools</td>
+              <td>2.2</td><td>7.6</td><td>88</td><td>32</td><td>3,200</td>
+              <td class="note">Routine, all in range.</td>
+            </tr>
+            <tr>
+              <td class="date">2026-04-08 · 09:05</td>
+              <td class="source">Sun Country Pools</td>
+              <td>2.5</td><td>7.5</td><td>86</td><td>30</td><td>3,180</td>
+              <td class="note">Salt added (2 bags), per request.</td>
+            </tr>
+            <tr>
+              <td class="date">2026-04-05 · 09:22</td>
+              <td class="source">Sun Country Pools</td>
+              <td>2.3</td><td>7.5</td><td>88</td><td>30</td><td>3,100</td>
+              <td class="note">Spring opening, first full panel.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="page-caption"><span class="num">FN · 02</span> Field Notebook · Water log</div>
+</body>
+</html>

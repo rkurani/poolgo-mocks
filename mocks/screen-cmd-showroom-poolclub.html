@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Command · Showroom × Pool Club — PoolGo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #F4EBDD;
+      --paper-2: #ECE0CB;
+      --bone: #FBF5E8;
+      --ink: #0E2B47;
+      --ink-soft: #3F5973;
+      --ink-mute: #6B7B8E;
+      --hockney: #3A8AC1;
+      --hockney-deep: #1F5C8B;
+      --terracotta: #C24E2E;
+      --sun: #F0CB35;
+      --sun-soft: rgba(240,203,53,0.16);
+      --sage: #6B9170;
+      --rule: #C9BC9F;
+      --rule-2: #B5A581;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--paper); color: var(--ink);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      font-feature-settings: 'tnum';
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+
+    /* nav */
+    .nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 18px 36px;
+      background: var(--paper);
+      border-bottom: 1px solid rgba(14,43,71,0.12);
+      position: sticky; top: 0; z-index: 10;
+    }
+    .wm {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 28px;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+    .wm .dot {
+      display: inline-block;
+      width: 9px; height: 9px;
+      background: var(--terracotta);
+      transform: rotate(45deg);
+      margin: 0 5px 4px;
+      vertical-align: middle;
+    }
+    .nav-tabs { display: flex; gap: 32px; }
+    .nav-tab {
+      font-size: 14px; color: var(--ink-soft); font-weight: 500;
+      padding: 6px 0;
+      letter-spacing: 0.005em;
+    }
+    .nav-tab.active {
+      color: var(--ink); font-weight: 600;
+      border-bottom: 1.5px solid var(--terracotta);
+    }
+    .nav-right { display: flex; align-items: center; gap: 14px; }
+    .nav-bell {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--bone); border: 1px solid rgba(14,43,71,0.1);
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--ink);
+    }
+    .nav-bell::after {
+      content: ''; position: absolute;
+      top: 7px; right: 8px; width: 7px; height: 7px;
+      background: var(--terracotta); border-radius: 50%;
+      border: 1.5px solid var(--bone);
+    }
+    .nav-avatar {
+      width: 36px; height: 36px;
+      background: var(--hockney);
+      color: var(--bone);
+      font-family: 'DM Serif Display', serif;
+      font-style: italic; font-weight: 500; font-size: 14px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+    }
+
+    /* hero */
+    .hero {
+      max-width: 1280px; margin: 32px auto 0;
+      padding: 0 36px;
+    }
+    .hero-row {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+    @media (max-width: 980px) { .hero-row { grid-template-columns: 1fr; } }
+
+    .hero-left {
+      display: flex; flex-direction: column;
+      justify-content: center;
+    }
+    .hero-eyebrow {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--terracotta); font-weight: 600;
+      margin-bottom: 16px;
+    }
+    .hero-title {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: clamp(42px, 5.5vw, 68px);
+      line-height: 0.98;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      max-width: 14ch;
+    }
+    .hero-meta-row {
+      margin-top: 28px;
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 0; background: var(--rule);
+      border: 1px solid var(--rule);
+    }
+    .hero-meta-cell {
+      background: var(--bone);
+      padding: 14px 18px;
+    }
+    .hero-meta-label {
+      font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--ink-mute); font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .hero-meta-num {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 28px; line-height: 1;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+    .hero-meta-num .sm {
+      font-size: 0.5em; color: var(--ink-mute); margin-left: 2px; font-weight: 400;
+    }
+
+    .pool-photo {
+      position: relative;
+      height: 360px;
+      border-radius: 4px;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 30% 30%, rgba(255,210,150,0.55) 0%, transparent 45%),
+        radial-gradient(ellipse at 75% 70%, rgba(58,138,193,0.7) 0%, transparent 50%),
+        linear-gradient(135deg, #4D9BAE 0%, #1F5C8B 50%, #0E2B47 100%);
+      box-shadow: 4px 4px 0 var(--rule);
+    }
+    .pool-photo::before {
+      content: ''; position: absolute; inset: 0;
+      background-image:
+        repeating-linear-gradient(95deg, transparent 0, transparent 20px, rgba(255,255,255,0.05) 20px, rgba(255,255,255,0.05) 21px);
+      mix-blend-mode: overlay;
+    }
+    .pool-photo::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.5) 100%);
+    }
+    .pool-state {
+      position: absolute;
+      top: 18px; left: 20px;
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 6px 12px;
+      background: rgba(248,242,232,0.92);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.04em;
+      z-index: 2;
+    }
+    .pool-state .dot {
+      width: 7px; height: 7px; border-radius: 50%; background: var(--sage);
+    }
+    .pool-overlay {
+      position: absolute;
+      bottom: 22px; left: 24px;
+      color: white;
+      z-index: 2;
+    }
+    .pool-name {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 30px;
+      letter-spacing: -0.02em;
+      text-shadow: 0 2px 14px rgba(0,0,0,0.4);
+    }
+    .pool-meta {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      color: rgba(255,255,255,0.85);
+      margin-top: 4px;
+    }
+
+    /* AI band */
+    .ai-band {
+      max-width: 1280px; margin: 24px auto 0;
+      padding: 0 36px;
+    }
+    .ai-card {
+      background: var(--ink);
+      color: var(--bone);
+      padding: 28px 36px;
+      border-radius: 4px;
+      display: grid; grid-template-columns: auto 1fr auto;
+      gap: 24px; align-items: center;
+      position: relative; overflow: hidden;
+    }
+    .ai-card::after {
+      content: ''; position: absolute;
+      bottom: -80px; right: -60px;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(240,203,53,0.25) 0%, transparent 70%);
+    }
+    .ai-mark {
+      width: 44px; height: 44px;
+      background: var(--terracotta);
+      transform: rotate(45deg);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'DM Serif Display', serif;
+      font-style: italic; color: var(--bone);
+      font-size: 18px;
+      position: relative; z-index: 2;
+    }
+    .ai-mark span { transform: rotate(-45deg); }
+    .ai-text {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: clamp(18px, 1.7vw, 22px);
+      line-height: 1.4;
+      color: var(--bone);
+      max-width: 60ch;
+      position: relative; z-index: 2;
+      letter-spacing: -0.005em;
+    }
+    .ai-text strong { font-weight: 500; }
+    .ai-text mark {
+      background: rgba(240,203,53,0.25);
+      color: var(--sun);
+      padding: 0 4px;
+    }
+    .ai-text .label {
+      font-family: 'DM Sans', sans-serif;
+      font-style: normal;
+      font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--sun); font-weight: 600;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .ai-actions { display: flex; gap: 8px; flex-direction: column; position: relative; z-index: 2; }
+    .ai-btn {
+      padding: 10px 18px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px; font-weight: 600;
+      letter-spacing: 0.005em;
+      border: none; cursor: pointer;
+      white-space: nowrap;
+    }
+    .ai-btn.primary { background: var(--bone); color: var(--ink); }
+    .ai-btn.ghost {
+      background: transparent; color: var(--bone);
+      border: 1px solid rgba(248,242,232,0.3);
+    }
+
+    /* sections */
+    .section {
+      max-width: 1280px; margin: 56px auto 0;
+      padding: 0 36px;
+    }
+    .section-head {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 32px;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+    .section-meta {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      color: var(--ink-mute);
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    .section-meta strong { color: var(--ink); font-weight: 600; }
+
+    /* equipment grid */
+    .eq-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 980px) { .eq-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { .eq-grid { grid-template-columns: 1fr; } }
+
+    .eq-card {
+      background: var(--bone);
+      border: 1px solid var(--rule);
+      box-shadow: 4px 4px 0 var(--rule);
+      transition: transform 200ms ease, box-shadow 200ms ease;
+      display: flex; flex-direction: column;
+    }
+    .eq-card:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 var(--rule-2);
+    }
+    .eq-product {
+      height: 200px;
+      background:
+        radial-gradient(ellipse at center, rgba(255,255,255,0.6) 0%, transparent 65%),
+        linear-gradient(135deg, var(--paper-2) 0%, #DAC9A6 100%);
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      border-bottom: 1px solid var(--rule);
+    }
+    .eq-product .badge {
+      position: absolute;
+      top: 14px; left: 14px;
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 11px;
+      background: var(--bone);
+      border: 1px solid currentColor;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 0.06em;
+    }
+    .eq-product .badge.live { color: var(--sage); }
+    .eq-product .badge.warn { color: #B07020; }
+    .eq-product .badge.off { color: var(--ink-mute); }
+    .eq-product .badge .dot {
+      width: 6px; height: 6px; border-radius: 50%; background: currentColor;
+    }
+    .eq-oem-logo { position: absolute; top: 14px; right: 14px; }
+    .eq-render { width: 72%; height: 72%; display: flex; align-items: center; justify-content: center; }
+
+    .eq-info {
+      padding: 22px 24px;
+      flex: 1;
+      display: flex; flex-direction: column;
+    }
+    .eq-no {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10px; letter-spacing: 0.14em;
+      color: var(--terracotta); font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .eq-info-top {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 12px; margin-bottom: 14px;
+    }
+    .eq-name {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 22px; letter-spacing: -0.015em; line-height: 1.05;
+      color: var(--ink);
+    }
+    .eq-model {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px; color: var(--ink-mute);
+      margin-top: 4px;
+      letter-spacing: 0.02em;
+    }
+    .eq-stat {
+      text-align: right;
+    }
+    .eq-stat .num {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 28px;
+      letter-spacing: -0.02em; line-height: 1;
+      color: var(--ink);
+    }
+    .eq-stat .unit {
+      display: block;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10px; color: var(--ink-mute);
+      letter-spacing: 0.06em; margin-top: 4px;
+      font-weight: 500; text-transform: uppercase;
+    }
+    .eq-rows {
+      display: grid; gap: 4px;
+      font-family: 'DM Sans', sans-serif; font-size: 13px;
+    }
+    .eq-row {
+      display: grid; grid-template-columns: 1fr auto;
+      color: var(--ink-soft);
+      padding: 4px 0;
+      border-bottom: 1px dashed var(--rule);
+    }
+    .eq-row:last-child { border-bottom: none; }
+    .eq-row strong { color: var(--ink); font-weight: 600; }
+    .eq-row strong.warn { color: #B07020; }
+
+    .eq-controls {
+      margin-top: auto; padding-top: 16px;
+      border-top: 1px dashed var(--rule);
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 12px;
+    }
+    .eq-control-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px; color: var(--ink-mute);
+      font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .toggle {
+      width: 38px; height: 22px;
+      background: var(--sage);
+      border: 1.5px solid var(--ink);
+      position: relative; cursor: pointer;
+    }
+    .toggle::after {
+      content: ''; position: absolute;
+      top: 1px; right: 1px;
+      width: 18px; height: 18px;
+      background: var(--bone);
+      border: 1px solid var(--ink);
+      transition: transform 120ms ease;
+    }
+    .toggle.off { background: var(--paper-2); }
+    .toggle.off::after { transform: translateX(-16px); }
+
+    .run-btn {
+      padding: 8px 16px;
+      background: var(--ink); color: var(--bone);
+      border: 1.5px solid var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px; font-weight: 600;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+    }
+    .run-btn.primary {
+      background: var(--terracotta); border-color: var(--terracotta);
+    }
+
+    /* folks */
+    .folks-row {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 880px) { .folks-row { grid-template-columns: repeat(2, 1fr); } }
+    .folk {
+      background: var(--bone);
+      border: 1px solid var(--rule);
+      padding: 22px;
+      display: flex; flex-direction: column;
+      box-shadow: 3px 3px 0 var(--rule);
+    }
+    .folk-top { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+    .folk-photo {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--bone);
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-weight: 500; font-size: 18px;
+      border: 2px solid var(--bone);
+      box-shadow: 0 0 0 1px rgba(14,43,71,0.15);
+      position: relative;
+    }
+    .folk-photo .badge {
+      position: absolute;
+      bottom: -3px; right: -3px;
+      width: 22px; height: 22px;
+      background: var(--bone);
+      border: 1px solid var(--ink);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .folk-name {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 18px; line-height: 1.05;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+    .folk-employer {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px; color: var(--ink-mute);
+      margin-top: 3px;
+      letter-spacing: 0.02em;
+    }
+    .folk-meta {
+      margin-top: 4px; padding-top: 14px;
+      border-top: 1px dashed var(--rule);
+      display: grid; gap: 6px;
+      font-family: 'DM Sans', sans-serif; font-size: 12px;
+    }
+    .folk-meta-row { display: flex; justify-content: space-between; color: var(--ink-soft); }
+    .folk-meta-row strong { color: var(--ink); font-weight: 600; }
+    .folk-action {
+      margin-top: 14px;
+      padding: 8px 14px;
+      background: transparent;
+      color: var(--terracotta);
+      border: 1px solid var(--terracotta);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px; font-weight: 600;
+      letter-spacing: 0.04em;
+      text-align: center;
+      cursor: pointer;
+    }
+    .folk-action:hover { background: var(--terracotta); color: var(--bone); }
+
+    /* water test */
+    .water-card {
+      background: var(--bone);
+      border: 1px solid var(--rule);
+      box-shadow: 4px 4px 0 var(--rule);
+      overflow: hidden;
+    }
+    .water-header {
+      display: flex; align-items: center; gap: 16px;
+      padding: 22px 28px;
+      border-bottom: 1px solid var(--rule);
+      background: var(--paper);
+    }
+    .water-store-logo {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .water-header-text { flex: 1; }
+    .water-store-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--ink-mute); font-weight: 600;
+    }
+    .water-store-name {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 22px;
+      letter-spacing: -0.015em; color: var(--ink);
+      margin-top: 2px;
+    }
+    .water-meta {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px; color: var(--ink-mute);
+      text-align: right;
+    }
+    .water-meta strong { color: var(--ink); font-weight: 600; display: block; }
+    .water-body { padding: 28px; }
+    .water-headline {
+      display: flex; align-items: baseline; gap: 14px;
+    }
+    .water-headline .num {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 64px; line-height: 0.95;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+    }
+    .water-headline .label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px; color: var(--ink-soft);
+    }
+    .water-verdict {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 18px; line-height: 1.4;
+      color: var(--ink-soft);
+      max-width: 50ch;
+      margin-top: 14px;
+    }
+    .water-mini-grid {
+      margin-top: 22px;
+      display: grid; grid-template-columns: repeat(8, 1fr);
+      gap: 1px; background: var(--rule);
+      border: 1px solid var(--rule);
+    }
+    @media (max-width: 880px) { .water-mini-grid { grid-template-columns: repeat(4, 1fr); } }
+    .wm-cell {
+      padding: 12px 8px;
+      background: var(--bone);
+      text-align: center;
+    }
+    .wm-name {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10px; letter-spacing: 0.08em;
+      color: var(--ink-mute); text-transform: uppercase;
+      font-weight: 600; margin-bottom: 4px;
+    }
+    .wm-val {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+    .wm-val.warn { color: #B07020; }
+
+    /* activity */
+    .activity-card {
+      background: var(--bone);
+      border: 1px solid var(--rule);
+      overflow: hidden;
+    }
+    .activity-row {
+      display: grid; grid-template-columns: 100px 36px 1fr auto;
+      gap: 18px; padding: 16px 28px;
+      border-bottom: 1px dashed var(--rule);
+      align-items: center;
+    }
+    .activity-row:last-child { border-bottom: none; }
+    .activity-row:hover { background: var(--paper); }
+    .act-time {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px; color: var(--terracotta);
+      letter-spacing: 0.06em; text-transform: uppercase;
+      font-weight: 600;
+    }
+    .act-source-logo {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .act-text {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px; color: var(--ink);
+    }
+    .act-text strong { font-weight: 600; }
+    .act-text .from {
+      font-family: 'DM Serif Display', serif;
+      font-style: italic;
+      font-size: 13px; color: var(--ink-soft);
+      margin-top: 2px;
+    }
+    .act-meta {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10px; letter-spacing: 0.12em;
+      color: var(--ink-mute); text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .page-caption {
+      position: fixed; bottom: 24px; left: 24px;
+      background: var(--ink); color: var(--bone);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+      font-weight: 600;
+      padding: 8px 14px; z-index: 100;
+      border: 1px solid var(--terracotta);
+    }
+    .page-caption .num { color: var(--terracotta); margin-right: 6px; }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="wm">Pool<span class="dot"></span>Go</div>
+    <div class="nav-tabs">
+      <a href="#" class="nav-tab active">My Pool</a>
+      <a href="#" class="nav-tab">Care</a>
+      <a href="#" class="nav-tab">Equipment</a>
+      <a href="#" class="nav-tab">Routines</a>
+      <a href="#" class="nav-tab">Discover</a>
+      <a href="#" class="nav-tab">Inbox</a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-bell">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      </div>
+      <div class="nav-avatar">R</div>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-row">
+      <div class="hero-left">
+        <div class="hero-eyebrow">Wednesday morning · Roseville · 78°F</div>
+        <h1 class="hero-title">The Big Blue, looking lovely.</h1>
+        <div class="hero-meta-row">
+          <div class="hero-meta-cell">
+            <div class="hero-meta-label">Water</div>
+            <div class="hero-meta-num">82<span class="sm">°F</span></div>
+          </div>
+          <div class="hero-meta-cell">
+            <div class="hero-meta-label">Free Cl</div>
+            <div class="hero-meta-num">2.4</div>
+          </div>
+          <div class="hero-meta-cell">
+            <div class="hero-meta-label">ORP</div>
+            <div class="hero-meta-num">680</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pool-photo">
+        <span class="pool-state"><span class="dot"></span>HEALTHY · ALL READINGS IN RANGE</span>
+        <div class="pool-overlay">
+          <div class="pool-name">The Big Blue</div>
+          <div class="pool-meta">18,500 gal · plaster · salt water · Roseville, CA</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ai-band">
+    <div class="ai-card">
+      <div class="ai-mark"><span>P</span></div>
+      <div class="ai-text">
+        <span class="label">PoolGo concierge · just now</span>
+        Yesterday's <strong>Sun Country</strong> test and this morning's <strong>Pentair IntelliFlo3</strong> telemetry agree. The pool is healthy. The only thing climbing is <mark>CYA at 42 ppm</mark>. Drafted a partial-drain plan with Carlos for Tuesday.
+      </div>
+      <div class="ai-actions">
+        <button class="ai-btn primary">See the plan →</button>
+        <button class="ai-btn ghost">Ask</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2 class="section-title">Your equipment.</h2>
+      <span class="section-meta"><strong>5 connected</strong> · 1 manual · ranked by cost-to-fix</span>
+    </div>
+
+    <div class="eq-grid">
+
+      <!-- pump -->
+      <div class="eq-card">
+        <div class="eq-product">
+          <span class="badge live"><span class="dot"></span>RUNNING · 1,750 RPM</span>
+          <div class="eq-oem-logo">
+            <svg width="56" height="20" viewBox="0 0 140 50">
+              <rect width="140" height="50" rx="3" fill="#1A4F8B"/>
+              <text x="70" y="33" text-anchor="middle" fill="white" font-family="Inter, sans-serif" font-weight="800" font-size="18" letter-spacing="0.03em">PENTAIR</text>
+            </svg>
+          </div>
+          <div class="eq-render">
+            <svg width="160" height="120" viewBox="0 0 200 150">
+              <rect x="20" y="60" width="160" height="55" rx="6" fill="#1F2629"/>
+              <rect x="22" y="62" width="156" height="51" rx="5" fill="#2A3338"/>
+              <circle cx="60" cy="60" r="36" fill="#1F2629"/>
+              <circle cx="60" cy="60" r="32" fill="#2A3338"/>
+              <circle cx="60" cy="60" r="14" fill="#1A4F8B"/>
+              <circle cx="60" cy="60" r="8" fill="#0E2F55"/>
+              <rect x="100" y="68" width="80" height="28" fill="#1A4F8B"/>
+              <rect x="105" y="73" width="70" height="18" rx="2" fill="#2A6098"/>
+              <rect x="118" y="78" width="40" height="10" rx="1" fill="#0E2F55"/>
+              <text x="138" y="86" text-anchor="middle" fill="#5BC0EB" font-family="Inter, monospace" font-size="6" font-weight="700">1750 RPM</text>
+              <rect x="2" y="80" width="22" height="20" fill="#3A4248"/>
+              <rect x="178" y="68" width="20" height="32" fill="#3A4248"/>
+              <rect x="40" y="115" width="20" height="14" fill="#1F2629"/>
+              <rect x="140" y="115" width="20" height="14" fill="#1F2629"/>
+              <ellipse cx="60" cy="50" rx="20" ry="8" fill="white" opacity="0.15"/>
+            </svg>
+          </div>
+        </div>
+        <div class="eq-info">
+          <div class="eq-no">No. 01 · Pump</div>
+          <div class="eq-info-top">
+            <div>
+              <div class="eq-name">Variable-flow pump.</div>
+              <div class="eq-model">Pentair IntelliFlo3 VSF · 3 HP</div>
+            </div>
+            <div class="eq-stat">
+              <span class="num">1,750</span>
+              <span class="unit">RPM</span>
+            </div>
+          </div>
+          <div class="eq-rows">
+            <div class="eq-row"><span>Flow</span><strong>42 GPM</strong></div>
+            <div class="eq-row"><span>Watts</span><strong>380</strong></div>
+            <div class="eq-row"><span>Schedule</span><strong>B · 5:30–11:30</strong></div>
+          </div>
+          <div class="eq-controls">
+            <span class="eq-control-label">Pump power</span>
+            <div class="toggle"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- filter -->
+      <div class="eq-card">
+        <div class="eq-product">
+          <span class="badge warn"><span class="dot"></span>BACKWASH SOON</span>
+          <div class="eq-oem-logo">
+            <svg width="64" height="20" viewBox="0 0 160 50">
+              <rect width="160" height="50" rx="3" fill="#FCB813"/>
+              <text x="80" y="33" text-anchor="middle" fill="#1A1A1A" font-family="Inter, sans-serif" font-weight="800" font-size="18" letter-spacing="-0.02em">HAYWARD</text>
+            </svg>
+          </div>
+          <div class="eq-render">
+            <svg width="120" height="160" viewBox="0 0 150 200">
+              <ellipse cx="75" cy="35" rx="48" ry="22" fill="#1A4F38"/>
+              <ellipse cx="75" cy="32" rx="44" ry="18" fill="#2A6048"/>
+              <rect x="27" y="35" width="96" height="115" fill="#2A6048"/>
+              <ellipse cx="75" cy="150" rx="48" ry="20" fill="#1A4F38"/>
+              <circle cx="75" cy="22" r="14" fill="#FAFAFA" stroke="#1A1A1A" stroke-width="1.5"/>
+              <text x="75" y="20" text-anchor="middle" fill="#1A1A1A" font-family="Inter, monospace" font-size="6" font-weight="700">PSI</text>
+              <text x="75" y="29" text-anchor="middle" fill="#C24E2E" font-family="Inter, sans-serif" font-size="9" font-weight="800">18</text>
+              <line x1="71" y1="22" x2="80" y2="14" stroke="#1A1A1A" stroke-width="1.5"/>
+              <rect x="50" y="100" width="50" height="14" fill="#FCB813"/>
+              <text x="75" y="111" text-anchor="middle" fill="#1A1A1A" font-family="Inter, sans-serif" font-size="9" font-weight="800">HAYWARD</text>
+              <rect x="0" y="80" width="28" height="14" fill="#3A4248"/>
+              <rect x="122" y="120" width="28" height="14" fill="#3A4248"/>
+              <rect x="40" y="168" width="14" height="16" fill="#1A4F38"/>
+              <rect x="96" y="168" width="14" height="16" fill="#1A4F38"/>
+            </svg>
+          </div>
+        </div>
+        <div class="eq-info">
+          <div class="eq-no">No. 02 · Filter</div>
+          <div class="eq-info-top">
+            <div>
+              <div class="eq-name">Sand filter.</div>
+              <div class="eq-model">Hayward Pro Series · 24"</div>
+            </div>
+            <div class="eq-stat">
+              <span class="num">18</span>
+              <span class="unit">PSI</span>
+            </div>
+          </div>
+          <div class="eq-rows">
+            <div class="eq-row"><span>Baseline</span><strong>14 PSI</strong></div>
+            <div class="eq-row"><span>Delta</span><strong class="warn">+4 (29%)</strong></div>
+            <div class="eq-row"><span>Last backwash</span><strong>Apr 22</strong></div>
+          </div>
+          <div class="eq-controls">
+            <span class="eq-control-label">Action</span>
+            <button class="run-btn">Plan backwash</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- heater -->
+      <div class="eq-card">
+        <div class="eq-product">
+          <span class="badge off"><span class="dot"></span>OFF · SET 84°F</span>
+          <div class="eq-oem-logo">
+            <svg width="56" height="20" viewBox="0 0 140 50">
+              <rect width="140" height="50" rx="3" fill="#1A4F8B"/>
+              <text x="70" y="33" text-anchor="middle" fill="white" font-family="Inter, sans-serif" font-weight="800" font-size="18" letter-spacing="0.03em">PENTAIR</text>
+            </svg>
+          </div>
+          <div class="eq-render">
+            <svg width="170" height="140" viewBox="0 0 200 160">
+              <rect x="20" y="20" width="160" height="115" rx="6" fill="#E5E1D5"/>
+              <rect x="22" y="22" width="156" height="111" rx="5" fill="#F2EFE5"/>
+              <rect x="60" y="22" width="80" height="14" fill="#888885"/>
+              <rect x="40" y="55" width="120" height="32" rx="3" fill="#1F2629"/>
+              <rect x="45" y="60" width="110" height="22" rx="2" fill="#0E2F55"/>
+              <text x="100" y="78" text-anchor="middle" fill="#5BC0EB" font-family="Inter, monospace" font-size="14" font-weight="700">82°F</text>
+              <rect x="64" y="100" width="72" height="12" rx="1" fill="#1A4F8B"/>
+              <text x="100" y="109" text-anchor="middle" fill="white" font-family="Inter, sans-serif" font-size="8" font-weight="800">PENTAIR</text>
+              <text x="100" y="124" text-anchor="middle" fill="#888" font-family="Inter, sans-serif" font-size="7" font-weight="600" letter-spacing="0.05em">MASTERTEMP 400</text>
+              <rect x="35" y="135" width="30" height="14" fill="#3A4248"/>
+              <rect x="135" y="135" width="30" height="14" fill="#3A4248"/>
+            </svg>
+          </div>
+        </div>
+        <div class="eq-info">
+          <div class="eq-no">No. 03 · Heater</div>
+          <div class="eq-info-top">
+            <div>
+              <div class="eq-name">Gas heater.</div>
+              <div class="eq-model">Pentair MasterTemp 400 · 400k BTU</div>
+            </div>
+            <div class="eq-stat">
+              <span class="num">82°</span>
+              <span class="unit">CURRENT</span>
+            </div>
+          </div>
+          <div class="eq-rows">
+            <div class="eq-row"><span>Setpoint</span><strong>84°F</strong></div>
+            <div class="eq-row"><span>BTU/hr</span><strong>400,000</strong></div>
+            <div class="eq-row"><span>Last run</span><strong>May 2</strong></div>
+          </div>
+          <div class="eq-controls">
+            <span class="eq-control-label">Heater power</span>
+            <div class="toggle off"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- salt cell -->
+      <div class="eq-card">
+        <div class="eq-product">
+          <span class="badge live"><span class="dot"></span>HEALTHY · 60%</span>
+          <div class="eq-oem-logo">
+            <svg width="56" height="20" viewBox="0 0 140 50">
+              <rect width="140" height="50" rx="3" fill="#1A4F8B"/>
+              <text x="70" y="33" text-anchor="middle" fill="white" font-family="Inter, sans-serif" font-weight="800" font-size="18" letter-spacing="0.03em">PENTAIR</text>
+            </svg>
+          </div>
+          <div class="eq-render">
+            <svg width="180" height="120" viewBox="0 0 220 150">
+              <rect x="40" y="50" width="140" height="55" rx="28" fill="#2A6098" opacity="0.85"/>
+              <rect x="80" y="60" width="3" height="35" fill="#888"/>
+              <rect x="95" y="60" width="3" height="35" fill="#888"/>
+              <rect x="110" y="60" width="3" height="35" fill="#888"/>
+              <rect x="125" y="60" width="3" height="35" fill="#888"/>
+              <rect x="140" y="60" width="3" height="35" fill="#888"/>
+              <rect x="20" y="55" width="22" height="45" rx="3" fill="#1F2629"/>
+              <rect x="178" y="55" width="22" height="45" rx="3" fill="#1F2629"/>
+              <rect x="80" y="20" width="60" height="30" rx="3" fill="#1F2629"/>
+              <rect x="84" y="24" width="52" height="22" rx="1" fill="#0E2F55"/>
+              <text x="110" y="40" text-anchor="middle" fill="#5BC0EB" font-family="Inter, monospace" font-size="11" font-weight="700">60%</text>
+              <line x1="110" y1="50" x2="110" y2="60" stroke="#1F2629" stroke-width="3"/>
+              <rect x="92" y="78" width="36" height="9" rx="1" fill="#1A4F8B"/>
+              <text x="110" y="85" text-anchor="middle" fill="white" font-family="Inter, sans-serif" font-size="6" font-weight="800">PENTAIR</text>
+            </svg>
+          </div>
+        </div>
+        <div class="eq-info">
+          <div class="eq-no">No. 04 · Salt cell</div>
+          <div class="eq-info-top">
+            <div>
+              <div class="eq-name">Salt chlorine generator.</div>
+              <div class="eq-model">Pentair IntelliChlor IC40</div>
+            </div>
+            <div class="eq-stat">
+              <span class="num">60%</span>
+              <span class="unit">OUTPUT</span>
+            </div>
+          </div>
+          <div class="eq-rows">
+            <div class="eq-row"><span>Salt</span><strong>3,200 PPM</strong></div>
+            <div class="eq-row"><span>Cell life</span><strong>3,840 / 10k hrs</strong></div>
+            <div class="eq-row"><span>Amperage</span><strong>5.4 A</strong></div>
+          </div>
+          <div class="eq-controls">
+            <span class="eq-control-label">Read-only · live</span>
+            <span style="font-size: 11px; font-weight: 600; color: var(--sage); letter-spacing: 0.04em;">● HEALTHY</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- cleaner -->
+      <div class="eq-card">
+        <div class="eq-product">
+          <span class="badge live"><span class="dot"></span>SCHED 2:00 PM</span>
+          <div class="eq-oem-logo">
+            <svg width="60" height="20" viewBox="0 0 150 50">
+              <rect width="150" height="50" rx="3" fill="#00759C"/>
+              <text x="75" y="33" text-anchor="middle" fill="white" font-family="Inter, sans-serif" font-weight="800" font-size="17" letter-spacing="-0.01em">POLARIS</text>
+            </svg>
+          </div>
+          <div class="eq-render">
+            <svg width="180" height="130" viewBox="0 0 220 160">
+              <ellipse cx="110" cy="148" rx="80" ry="6" fill="black" opacity="0.15"/>
+              <ellipse cx="110" cy="100" rx="92" ry="34" fill="#1F2629"/>
+              <ellipse cx="110" cy="92" rx="92" ry="34" fill="#2A3338"/>
+              <ellipse cx="110" cy="60" rx="65" ry="38" fill="#00759C"/>
+              <ellipse cx="110" cy="55" rx="65" ry="36" fill="#0089B5"/>
+              <rect x="100" y="20" width="20" height="8" rx="3" fill="#1F2629"/>
+              <rect x="80" y="68" width="60" height="11" rx="1" fill="#FAFAFA"/>
+              <text x="110" y="76" text-anchor="middle" fill="#00759C" font-family="Inter, sans-serif" font-size="7" font-weight="800">POLARIS</text>
+              <ellipse cx="50" cy="115" rx="20" ry="12" fill="#1F2629"/>
+              <ellipse cx="170" cy="115" rx="20" ry="12" fill="#1F2629"/>
+              <ellipse cx="50" cy="113" rx="18" ry="10" fill="#3A4248"/>
+              <ellipse cx="170" cy="113" rx="18" ry="10" fill="#3A4248"/>
+            </svg>
+          </div>
+        </div>
+        <div class="eq-info">
+          <div class="eq-no">No. 05 · Cleaner</div>
+          <div class="eq-info-top">
+            <div>
+              <div class="eq-name">Robotic cleaner.</div>
+              <div class="eq-model">Polaris 9650iQ Sport</div>
+            </div>
+            <div class="eq-stat">
+              <span class="num">92%</span>
+              <span class="unit">BATTERY</span>
+            </div>
+          </div>
+          <div class="eq-rows">
+            <div class="eq-row"><span>Last run</span><strong>Yday · 38m</strong></div>
+            <div class="eq-row"><span>Mode</span><strong>Quick clean</strong></div>
+            <div class="eq-row"><span>Cycles MTD</span><strong>12</strong></div>
+          </div>
+          <div class="eq-controls">
+            <span class="eq-control-label">Run cleaner</span>
+            <button class="run-btn primary">Run now →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- lights -->
+      <div class="eq-card">
+        <div class="eq-product">
+          <span class="badge off"><span class="dot"></span>ALL OFF · 3 ZONES</span>
+          <div class="eq-oem-logo">
+            <svg width="56" height="20" viewBox="0 0 140 50">
+              <rect width="140" height="50" rx="3" fill="#1A4F8B"/>
+              <text x="70" y="33" text-anchor="middle" fill="white" font-family="Inter, sans-serif" font-weight="800" font-size="18" letter-spacing="0.03em">PENTAIR</text>
+            </svg>
+          </div>
+          <div class="eq-render">
+            <svg width="200" height="130" viewBox="0 0 240 160">
+              <circle cx="120" cy="80" r="60" fill="#1F2629"/>
+              <circle cx="120" cy="80" r="56" fill="#2A3338"/>
+              <circle cx="120" cy="80" r="44" fill="#0E2F55"/>
+              <g fill="#1A4F8B">
+                <circle cx="100" cy="70" r="4"/><circle cx="120" cy="65" r="4"/><circle cx="140" cy="70" r="4"/>
+                <circle cx="95" cy="85" r="4"/><circle cx="115" cy="92" r="4"/><circle cx="135" cy="85" r="4"/>
+                <circle cx="105" cy="100" r="4"/><circle cx="125" cy="98" r="4"/><circle cx="145" cy="100" r="4"/>
+              </g>
+              <circle cx="68" cy="80" r="3" fill="#888"/>
+              <circle cx="172" cy="80" r="3" fill="#888"/>
+              <ellipse cx="105" cy="55" rx="22" ry="10" fill="white" opacity="0.18"/>
+            </svg>
+          </div>
+        </div>
+        <div class="eq-info">
+          <div class="eq-no">No. 06 · Lights</div>
+          <div class="eq-info-top">
+            <div>
+              <div class="eq-name">LED lights, 3 zones.</div>
+              <div class="eq-model">Pentair IntelliBrite 5G</div>
+            </div>
+            <div class="eq-stat">
+              <span class="num">0</span>
+              <span class="unit">/ 3 ON</span>
+            </div>
+          </div>
+          <div class="eq-rows">
+            <div class="eq-row"><span>Pool zone</span><strong>Off</strong></div>
+            <div class="eq-row"><span>Spa zone</span><strong>Off</strong></div>
+            <div class="eq-row"><span>Deck zone</span><strong>Off</strong></div>
+          </div>
+          <div class="eq-controls">
+            <span class="eq-control-label">All zones</span>
+            <div class="toggle off"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- folks -->
+  <section class="section">
+    <div class="section-head">
+      <h2 class="section-title">Folks on your pool.</h2>
+      <span class="section-meta">Independent · <strong>4 contacts</strong> · PoolGo doesn't take a cut</span>
+    </div>
+
+    <div class="folks-row">
+      <div class="folk">
+        <div class="folk-top">
+          <div class="folk-photo" style="background: linear-gradient(135deg, #2C5F4A, #1A4332);">CT
+            <div class="badge">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#2C5F4A" stroke-width="2.5"><circle cx="12" cy="5" r="3"/><line x1="12" y1="22" x2="12" y2="8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/></svg>
+            </div>
+          </div>
+          <div>
+            <div class="folk-name">Carlos Torres</div>
+            <div class="folk-employer">Marina Pool Service</div>
+          </div>
+        </div>
+        <div class="folk-meta">
+          <div class="folk-meta-row"><span>Cadence</span><strong>Weekly · Tue</strong></div>
+          <div class="folk-meta-row"><span>Last visit</span><strong>4 days ago</strong></div>
+          <div class="folk-meta-row"><span>Since</span><strong>2024 · 47 visits</strong></div>
+        </div>
+        <button class="folk-action">Message Carlos →</button>
+      </div>
+
+      <div class="folk">
+        <div class="folk-top">
+          <div class="folk-photo" style="background: linear-gradient(135deg, #D89A35, #A57014);">AT
+            <div class="badge">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#D89A35" stroke-width="2.5"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>
+            </div>
+          </div>
+          <div>
+            <div class="folk-name">Anthony T.</div>
+            <div class="folk-employer">Sun Country Pools</div>
+          </div>
+        </div>
+        <div class="folk-meta">
+          <div class="folk-meta-row"><span>Role</span><strong>Retail counter</strong></div>
+          <div class="folk-meta-row"><span>Last test</span><strong>Yesterday</strong></div>
+          <div class="folk-meta-row"><span>Since</span><strong>2018 · 14 ytd</strong></div>
+        </div>
+        <button class="folk-action">Message Anthony →</button>
+      </div>
+
+      <div class="folk">
+        <div class="folk-top">
+          <div class="folk-photo" style="background: linear-gradient(135deg, #2A6098, #0E2F55);">JR
+            <div class="badge">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#2A6098" stroke-width="2.5"><path d="M5 4v16h14"/></svg>
+            </div>
+          </div>
+          <div>
+            <div class="folk-name">Jessica R.</div>
+            <div class="folk-employer">Leslie's Pool Supplies</div>
+          </div>
+        </div>
+        <div class="folk-meta">
+          <div class="folk-meta-row"><span>Role</span><strong>Backup tester</strong></div>
+          <div class="folk-meta-row"><span>Last test</span><strong>9 days ago</strong></div>
+          <div class="folk-meta-row"><span>Since</span><strong>2023 · occasional</strong></div>
+        </div>
+        <button class="folk-action">Message Jessica →</button>
+      </div>
+
+      <div class="folk">
+        <div class="folk-top">
+          <div class="folk-photo" style="background: linear-gradient(135deg, #4D6B50, #2C4530);">WB
+            <div class="badge">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#4D6B50" stroke-width="2.5"><path d="M2 22h20L17 9l-5 6-5-3z"/></svg>
+            </div>
+          </div>
+          <div>
+            <div class="folk-name">Westshore Builders</div>
+            <div class="folk-employer">Independent · Loomis</div>
+          </div>
+        </div>
+        <div class="folk-meta">
+          <div class="folk-meta-row"><span>Role</span><strong>Builder</strong></div>
+          <div class="folk-meta-row"><span>Last touch</span><strong>2024 warranty</strong></div>
+          <div class="folk-meta-row"><span>Since</span><strong>2019</strong></div>
+        </div>
+        <button class="folk-action">Open warranty →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- water test -->
+  <section class="section">
+    <div class="section-head">
+      <h2 class="section-title">Latest water test.</h2>
+      <span class="section-meta">Imported · <strong>2 stores tested this month</strong></span>
+    </div>
+
+    <div class="water-card">
+      <div class="water-header">
+        <div class="water-store-logo" style="background: linear-gradient(135deg, #D89A35, #A57014);">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
+            <circle cx="12" cy="12" r="4"/>
+            <line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/>
+            <line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/>
+            <line x1="4.93" y1="4.93" x2="6.34" y2="6.34"/>
+            <line x1="17.66" y1="17.66" x2="19.07" y2="19.07"/>
+            <line x1="4.93" y1="19.07" x2="6.34" y2="17.66"/>
+            <line x1="17.66" y1="6.34" x2="19.07" y2="4.93"/>
+          </svg>
+        </div>
+        <div class="water-header-text">
+          <div class="water-store-label">Tested at</div>
+          <div class="water-store-name">Sun Country Pools, Roseville.</div>
+        </div>
+        <div class="water-meta">
+          <strong>Yesterday · 9:14 am</strong>
+          K-2006 drop test · by Anthony T.
+        </div>
+      </div>
+      <div class="water-body">
+        <div class="water-headline">
+          <span class="num">2.4</span>
+          <span class="label">ppm free chlorine, all 8 parameters in range.</span>
+        </div>
+        <p class="water-verdict">"Anthony noted your CYA is climbing, third week running. Worth talking to Carlos about a partial drain before summer locks the chlorine."</p>
+        <div class="water-mini-grid">
+          <div class="wm-cell"><div class="wm-name">pH</div><div class="wm-val">7.4</div></div>
+          <div class="wm-cell"><div class="wm-name">TA</div><div class="wm-val">90</div></div>
+          <div class="wm-cell"><div class="wm-name">CYA</div><div class="wm-val warn">42</div></div>
+          <div class="wm-cell"><div class="wm-name">Salt</div><div class="wm-val">3,200</div></div>
+          <div class="wm-cell"><div class="wm-name">Calcium</div><div class="wm-val">340</div></div>
+          <div class="wm-cell"><div class="wm-name">Phos</div><div class="wm-val warn">120</div></div>
+          <div class="wm-cell"><div class="wm-name">ORP</div><div class="wm-val">680</div></div>
+          <div class="wm-cell"><div class="wm-name">Temp</div><div class="wm-val">82°</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- activity -->
+  <section class="section" style="margin-bottom: 64px;">
+    <div class="section-head">
+      <h2 class="section-title">Today's record.</h2>
+      <span class="section-meta">8 events</span>
+    </div>
+
+    <div class="activity-card">
+      <div class="activity-row">
+        <div class="act-time">JUST NOW</div>
+        <div class="act-source-logo">
+          <div style="width: 28px; height: 28px; background: var(--terracotta); transform: rotate(45deg); display: flex; align-items: center; justify-content: center;">
+            <span style="color: white; font-family: 'DM Serif Display', serif; font-style: italic; font-size: 13px; transform: rotate(-45deg);">P</span>
+          </div>
+        </div>
+        <div>
+          <div class="act-text"><strong>PoolGo concierge</strong> drafted a partial-drain plan for next Tuesday's visit.</div>
+          <div class="act-text from">Pulled from 4 sources, sent to Carlos for review.</div>
+        </div>
+        <div class="act-meta">CONCIERGE</div>
+      </div>
+
+      <div class="activity-row">
+        <div class="act-time">9:14 AM</div>
+        <div class="act-source-logo">
+          <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #D89A35, #A57014); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><circle cx="12" cy="12" r="4"/></svg>
+          </div>
+        </div>
+        <div>
+          <div class="act-text">Water test imported · <strong>Free Cl 2.4 ppm</strong>, all parameters in range.</div>
+          <div class="act-text from">Sun Country Pools · Anthony noted CYA is climbing.</div>
+        </div>
+        <div class="act-meta">SUN COUNTRY</div>
+      </div>
+
+      <div class="activity-row">
+        <div class="act-time">8:42 AM</div>
+        <div class="act-source-logo">
+          <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #D89A35, #A57014); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"><circle cx="12" cy="12" r="4"/></svg>
+          </div>
+        </div>
+        <div>
+          <div class="act-text"><strong>Anthony T.</strong> sent a message about CYA, suggested a partial-drain quote.</div>
+          <div class="act-text from">Sun Country Pools · 1 unread.</div>
+        </div>
+        <div class="act-meta">MESSAGE</div>
+      </div>
+
+      <div class="activity-row">
+        <div class="act-time">5:30 AM</div>
+        <div class="act-source-logo">
+          <div style="width: 32px; height: 32px; background: #1A4F8B; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+            <span style="color: white; font-family: 'Inter', sans-serif; font-weight: 800; font-size: 9px; letter-spacing: 0.02em;">PNT</span>
+          </div>
+        </div>
+        <div>
+          <div class="act-text"><strong>IntelliFlo3 pump</strong> started Schedule B run · 1,750 RPM, stops 11:30 am.</div>
+          <div class="act-text from">Pentair IntelliCenter, automated.</div>
+        </div>
+        <div class="act-meta">PENTAIR</div>
+      </div>
+
+      <div class="activity-row">
+        <div class="act-time">YESTERDAY</div>
+        <div class="act-source-logo">
+          <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #2A6098, #0E2F55); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.4"><path d="M5 4v16h14"/></svg>
+          </div>
+        </div>
+        <div>
+          <div class="act-text">Backup water test imported · <strong>matches Sun Country reading</strong>.</div>
+          <div class="act-text from">Leslie's Pool Supplies · Jessica R., Roseville location.</div>
+        </div>
+        <div class="act-meta">LESLIE'S</div>
+      </div>
+
+      <div class="activity-row">
+        <div class="act-time">YESTERDAY</div>
+        <div class="act-source-logo">
+          <div style="width: 32px; height: 32px; background: var(--paper-2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink-soft)" stroke-width="2"><path d="M20 12H4M12 4l-8 8 8 8"/></svg>
+          </div>
+        </div>
+        <div>
+          <div class="act-text">You turned off the <strong>heater</strong>, setpoint was 84°F.</div>
+          <div class="act-text from">Manual, via PoolGo iOS.</div>
+        </div>
+        <div class="act-meta">YOU</div>
+      </div>
+
+      <div class="activity-row">
+        <div class="act-time">2D AGO</div>
+        <div class="act-source-logo">
+          <div style="width: 32px; height: 32px; background: #00759C; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+            <span style="color: white; font-weight: 800; font-size: 9px;">POL</span>
+          </div>
+        </div>
+        <div>
+          <div class="act-text"><strong>Polaris cleaner</strong> ran Quick Clean for 38 minutes, battery 92%.</div>
+          <div class="act-text from">Polaris 9650iQ, scheduled.</div>
+        </div>
+        <div class="act-meta">POLARIS</div>
+      </div>
+
+      <div class="activity-row">
+        <div class="act-time">4D AGO</div>
+        <div class="act-source-logo">
+          <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #2C5F4A, #1A4332); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="5" r="3"/><line x1="12" y1="22" x2="12" y2="8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/></svg>
+          </div>
+        </div>
+        <div>
+          <div class="act-text"><strong>Carlos Torres</strong> serviced your pool, 36 min, $58, filter PSI noted at 18.</div>
+          <div class="act-text from">Marina Pool Service, weekly visit.</div>
+        </div>
+        <div class="act-meta">MARINA</div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="page-caption"><span class="num">POOL CLUB</span> Showroom × Aesop / Slim Aarons</div>
+</body>
+</html>
