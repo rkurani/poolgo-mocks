@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Routines · Showroom (Pure) — PoolGo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================================
+       ROUTINES · PURE
+       The LLM middleware as a UI surface. Active routines, an AI
+       builder chat, and a routine library. Source-AI cyan dominates.
+       ============================================================ */
+
+    :root {
+      --bg: #FFFFFF;
+      --surface: #FAFAFA;
+      --surface-2: #F5F5F4;
+      --line: #ECECEC;
+      --line-2: #D8D8D8;
+      --ink: #0F1115;
+      --ink-soft: #45494F;
+      --ink-mute: #6B7079;
+
+      --pool: #1FA0BF;
+      --pool-soft: #E2F3F8;
+      --pentair: #1A4F8B;
+      --pentair-soft: #E5ECF4;
+      --hayward: #D8A700;
+      --hayward-soft: #FBF1D0;
+      --polaris: #00759C;
+      --polaris-soft: #DCEDF4;
+      --suncountry: #B07B00;
+      --suncountry-soft: #F8EFD6;
+      --marina: #2C5F4A;
+      --marina-soft: #DFE8E2;
+
+      --sage: #2A8540;
+      --gold: #B07B00;
+      --coral: #C75240;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg); color: var(--ink);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      font-feature-settings: 'tnum';
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+
+    /* nav */
+    .nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 32px; background: var(--bg);
+      border-bottom: 1px solid var(--line);
+      position: sticky; top: 0; z-index: 10;
+    }
+    .wm { font-weight: 700; font-size: 18px; letter-spacing: -0.03em; }
+    .wm .accent { color: var(--pool); font-weight: 800; }
+    .nav-tabs { display: flex; gap: 4px; }
+    .nav-tab {
+      padding: 8px 14px; border-radius: 8px;
+      font-size: 14px; font-weight: 500; color: var(--ink-mute);
+      letter-spacing: -0.005em;
+    }
+    .nav-tab:hover { color: var(--ink); background: var(--surface); }
+    .nav-tab.active { background: var(--ink); color: white; }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .nav-bell {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: var(--surface); position: relative;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--ink);
+    }
+    .nav-bell::after {
+      content: ''; position: absolute;
+      top: 8px; right: 9px; width: 7px; height: 7px;
+      background: var(--coral); border-radius: 50%;
+      border: 1.5px solid var(--surface);
+    }
+    .nav-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, #2A6098, #0E2F55);
+      color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 13px;
+    }
+
+    /* header */
+    .header {
+      max-width: 1280px; margin: 32px auto 0;
+      padding: 0 32px;
+      display: grid; grid-template-columns: 1fr auto;
+      gap: 28px; align-items: end;
+    }
+    .header h1 {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: clamp(32px, 4vw, 44px);
+      font-weight: 800;
+      letter-spacing: -0.04em; line-height: 1.02;
+      color: var(--ink);
+      margin: 0;
+    }
+    .header .lede {
+      margin-top: 10px;
+      font-size: 15px; color: var(--ink-soft);
+      max-width: 60ch;
+    }
+    .header .lede strong { color: var(--ink); font-weight: 600; }
+    .header-stat-row { display: flex; gap: 28px; }
+    .header-stat .num {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 32px; font-weight: 800;
+      letter-spacing: -0.04em; line-height: 1;
+      color: var(--ink);
+    }
+    .header-stat .label {
+      margin-top: 6px;
+      font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase;
+      color: var(--ink-mute); font-weight: 600;
+    }
+
+    /* section */
+    .section {
+      max-width: 1280px; margin: 56px auto 0;
+      padding: 0 32px;
+    }
+    .section-head {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-bottom: 20px;
+    }
+    .section-title {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 22px; font-weight: 700;
+      letter-spacing: -0.03em;
+      margin: 0;
+    }
+    .section-meta {
+      font-size: 13px; color: var(--ink-mute); font-weight: 500;
+    }
+    .section-meta strong { color: var(--ink); font-weight: 600; }
+
+    /* AI builder hero — full-bleed cyan-tinted card */
+    .builder-hero {
+      max-width: 1280px; margin: 28px auto 0;
+      padding: 0 32px;
+    }
+    .builder-card {
+      background: var(--ink); color: white;
+      border-radius: 20px;
+      padding: 36px 40px;
+      position: relative; overflow: hidden;
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 36px;
+      align-items: center;
+    }
+    .builder-card::after {
+      content: ''; position: absolute;
+      top: -100px; right: -100px;
+      width: 380px; height: 380px;
+      background: radial-gradient(circle, rgba(31,160,191,0.55) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .builder-left { position: relative; z-index: 2; }
+    .builder-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+      color: rgba(255,255,255,0.65); font-weight: 600;
+      margin-bottom: 14px;
+    }
+    .builder-eyebrow .dot {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--pool);
+      box-shadow: 0 0 0 4px rgba(31,160,191,0.25);
+    }
+    .builder-h2 {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: clamp(28px, 3.2vw, 38px);
+      font-weight: 800; letter-spacing: -0.04em; line-height: 1.05;
+      margin: 0 0 16px;
+    }
+    .builder-h2 .accent { color: var(--pool); }
+    .builder-sub {
+      font-size: 15px; color: rgba(255,255,255,0.78);
+      max-width: 52ch; line-height: 1.5; margin: 0 0 22px;
+    }
+    .builder-input-row {
+      display: flex; gap: 10px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 14px;
+      padding: 6px 6px 6px 16px; align-items: center;
+    }
+    .builder-input-row svg { color: rgba(255,255,255,0.5); flex-shrink: 0; }
+    .builder-input-row input {
+      flex: 1; min-width: 0;
+      background: transparent; border: none; outline: none;
+      color: white; font: inherit; font-size: 15px;
+      padding: 12px 0;
+    }
+    .builder-input-row input::placeholder { color: rgba(255,255,255,0.5); }
+    .builder-go {
+      background: var(--pool); color: white;
+      border: none; padding: 12px 20px; border-radius: 10px;
+      font-size: 14px; font-weight: 600;
+      letter-spacing: -0.005em; white-space: nowrap;
+    }
+    .builder-suggestions {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      margin-top: 16px;
+    }
+    .builder-pill {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.85);
+      font-size: 12px; padding: 7px 12px; border-radius: 999px;
+      cursor: pointer;
+    }
+    .builder-pill:hover { background: rgba(255,255,255,0.14); }
+
+    /* chat preview on the right */
+    .builder-chat {
+      position: relative; z-index: 2;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 18px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .chat-msg {
+      display: flex; gap: 10px; align-items: flex-start;
+    }
+    .chat-mark {
+      width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700;
+    }
+    .chat-mark.you {
+      background: rgba(255,255,255,0.18); color: white;
+    }
+    .chat-mark.ai {
+      background: var(--pool); color: white;
+    }
+    .chat-bubble {
+      flex: 1;
+      background: rgba(255,255,255,0.06);
+      padding: 10px 14px; border-radius: 12px;
+      font-size: 13px; line-height: 1.45;
+      color: rgba(255,255,255,0.92);
+    }
+    .chat-bubble strong { color: white; font-weight: 700; }
+    .chat-bubble.ai {
+      background: rgba(31,160,191,0.18);
+      border-left: 3px solid var(--pool);
+      border-radius: 12px;
+    }
+    .chat-bubble.ai .preview-routine {
+      margin-top: 10px; padding: 10px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 8px;
+      font-size: 12px;
+    }
+    .chat-bubble.ai .preview-routine .label {
+      font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase;
+      color: rgba(255,255,255,0.5); font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .chat-bubble.ai .preview-routine .step {
+      display: flex; gap: 8px; align-items: center;
+      padding: 4px 0;
+    }
+    .chat-bubble.ai .preview-routine .step .num {
+      width: 18px; height: 18px; border-radius: 50%;
+      background: var(--pool); color: white;
+      font-size: 10px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* active routines grid */
+    .routines-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 900px) { .routines-grid { grid-template-columns: 1fr; } }
+
+    .routine {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 22px 24px;
+      position: relative;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 14px;
+    }
+    .routine[data-src="ai"]      { --row-accent: var(--pool); --row-soft: var(--pool-soft); }
+    .routine[data-src="human"]   { --row-accent: var(--coral); --row-soft: #F8E2DD; }
+    .routine[data-src="pentair"] { --row-accent: var(--pentair); --row-soft: var(--pentair-soft); }
+    .routine[data-src="weather"] { --row-accent: var(--gold); --row-soft: #F8EFD6; }
+    .routine::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 3px; background: var(--row-accent, var(--ink-mute));
+    }
+
+    .routine-top {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .routine-mark {
+      width: 36px; height: 36px;
+      background: var(--row-soft);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--row-accent);
+      flex-shrink: 0;
+    }
+    .routine-source {
+      font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase;
+      color: var(--row-accent); font-weight: 700;
+    }
+    .routine-toggle {
+      margin-left: auto;
+      width: 40px; height: 22px;
+      background: var(--row-accent);
+      border-radius: 999px;
+      position: relative; cursor: pointer;
+    }
+    .routine-toggle::after {
+      content: ''; position: absolute;
+      top: 2px; right: 2px;
+      width: 18px; height: 18px;
+      background: white; border-radius: 50%;
+    }
+    .routine-toggle.off { background: var(--line-2); }
+    .routine-toggle.off::after { right: auto; left: 2px; }
+
+    .routine-name {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 19px; font-weight: 700;
+      letter-spacing: -0.025em; line-height: 1.2;
+      margin: 0;
+    }
+
+    .routine-steps {
+      display: flex; flex-direction: column; gap: 6px;
+      font-size: 13px; color: var(--ink-soft);
+      padding: 12px 14px; border-radius: 10px;
+      background: var(--surface);
+      line-height: 1.45;
+    }
+    .routine-step {
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+    .routine-step .when {
+      color: var(--row-accent); font-weight: 700;
+      font-size: 12px; letter-spacing: 0.02em;
+      flex-shrink: 0; min-width: 64px;
+    }
+    .routine-step .body { flex: 1; }
+    .routine-step .body strong { color: var(--ink); font-weight: 600; }
+
+    .routine-meta {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 12px; padding-top: 12px;
+      border-top: 1px solid var(--line);
+      font-size: 12px; color: var(--ink-mute);
+    }
+    .routine-meta strong { color: var(--ink); font-weight: 600; }
+
+    /* library */
+    .library-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    @media (max-width: 1000px) { .library-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 700px) { .library-grid { grid-template-columns: 1fr; } }
+
+    .library-card {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px 20px;
+      display: flex; flex-direction: column; gap: 10px;
+      position: relative;
+    }
+    .library-card[data-src="ai"]      { --row-accent: var(--pool);  --row-soft: var(--pool-soft); }
+    .library-card[data-src="weather"] { --row-accent: var(--gold);  --row-soft: #F8EFD6; }
+    .library-card[data-src="energy"]  { --row-accent: var(--sage);  --row-soft: #DCEDE0; }
+    .library-card[data-src="cost"]    { --row-accent: var(--ink);   --row-soft: var(--surface); }
+    .library-card[data-src="event"]   { --row-accent: var(--coral); --row-soft: #F8E2DD; }
+    .library-card[data-src="store"]   { --row-accent: var(--suncountry); --row-soft: var(--suncountry-soft); }
+    .library-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 3px; background: var(--row-accent, var(--ink-mute));
+      border-radius: 14px 14px 0 0;
+    }
+
+    .library-mark {
+      width: 32px; height: 32px;
+      background: var(--row-soft);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--row-accent);
+    }
+    .library-cat {
+      font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--row-accent); font-weight: 700;
+    }
+    .library-name {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 16px; font-weight: 700;
+      letter-spacing: -0.02em; line-height: 1.2;
+      margin: 0;
+    }
+    .library-body {
+      font-size: 13px; color: var(--ink-soft);
+      line-height: 1.45;
+    }
+    .library-foot {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 10px; border-top: 1px solid var(--line);
+      font-size: 11px; color: var(--ink-mute);
+      letter-spacing: 0.04em; text-transform: uppercase;
+      font-weight: 600;
+    }
+    .library-foot a {
+      color: var(--row-accent); font-weight: 700;
+    }
+
+    /* page caption */
+    .page-caption {
+      position: fixed; bottom: 24px; left: 24px;
+      background: var(--ink); color: white;
+      font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase;
+      font-weight: 600;
+      padding: 8px 14px; border-radius: 999px; z-index: 100;
+    }
+    .page-caption .num { color: var(--pool); margin-right: 6px; }
+
+    .footer-pad { height: 80px; }
+  </style>
+</head>
+<body>
+
+  <!-- nav -->
+  <nav class="nav">
+    <div class="wm">PoolGo<span class="accent">.</span></div>
+    <div class="nav-tabs">
+      <a href="screen-cmd-showroom-pure.html" class="nav-tab">My Pool</a>
+      <a href="screen-care-pure.html" class="nav-tab">Care</a>
+      <a href="screen-equipment-pure.html" class="nav-tab">Equipment</a>
+      <a href="#" class="nav-tab active">Routines</a>
+      <a href="screen-discover-pure.html" class="nav-tab">Folks</a>
+      <a href="screen-inbox-pure.html" class="nav-tab">Inbox</a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-bell">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      </div>
+      <div class="nav-avatar">RK</div>
+    </div>
+  </nav>
+
+  <!-- header -->
+  <header class="header">
+    <div>
+      <h1>Routines.</h1>
+      <p class="lede">Automations that combine your equipment, your water tests, and your day. <strong>4 routines running. 1 paused.</strong> Build new ones in plain English — no node-graphs, no code.</p>
+    </div>
+    <div class="header-stat-row">
+      <div class="header-stat">
+        <div class="num">5</div>
+        <div class="label">Routines</div>
+      </div>
+      <div class="header-stat">
+        <div class="num">23</div>
+        <div class="label">Triggered 30d</div>
+      </div>
+      <div class="header-stat">
+        <div class="num">$14</div>
+        <div class="label">Saved est. 30d</div>
+      </div>
+      <div class="header-stat">
+        <div class="num">2h ago</div>
+        <div class="label">Last fired</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- AI builder hero -->
+  <div class="builder-hero">
+    <div class="builder-card">
+      <div class="builder-left">
+        <div class="builder-eyebrow">
+          <span class="dot"></span>
+          PoolGo concierge · build in plain English
+        </div>
+        <h2 class="builder-h2">What would you like<br/>your pool to <span class="accent">do for you</span>?</h2>
+        <p class="builder-sub">Describe the routine like you'd describe it to a neighbor. The concierge will read your equipment, your tests, and your weather, and build it.</p>
+        <div class="builder-input-row">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg>
+          <input value="Heat the pool to 84° on Friday afternoon if guests are coming" />
+          <button class="builder-go">Build →</button>
+        </div>
+        <div class="builder-suggestions">
+          <span class="builder-pill">Backwash my filter when PSI hits 20</span>
+          <span class="builder-pill">Run the pump cheap-rate hours only</span>
+          <span class="builder-pill">Light the pool blue at sunset on weekends</span>
+          <span class="builder-pill">Tell me if Carlos misses a visit</span>
+        </div>
+      </div>
+
+      <div class="builder-chat">
+        <div class="chat-msg">
+          <div class="chat-mark you">RK</div>
+          <div class="chat-bubble">Heat the pool to 84° on Friday afternoon if guests are coming.</div>
+        </div>
+        <div class="chat-msg">
+          <div class="chat-mark ai">P</div>
+          <div class="chat-bubble ai">
+            Got it. Here's a draft. It checks your <strong>calendar for "guests"</strong>, then runs the <strong>MasterTemp 400</strong> from 10 AM Friday until 84° is reached.
+            <div class="preview-routine">
+              <div class="label">Preview</div>
+              <div class="step"><span class="num">1</span><span><strong>Friday 8 AM</strong> · check calendar for "guests" or "pool"</span></div>
+              <div class="step"><span class="num">2</span><span>If found · <strong>turn on heater 10 AM</strong>, target 84°</span></div>
+              <div class="step"><span class="num">3</span><span>When 84° reached · stop &amp; <strong>send confirmation</strong></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Active routines -->
+  <section class="section">
+    <div class="section-head">
+      <h2 class="section-title">Active routines</h2>
+      <span class="section-meta">4 on · 1 paused · color-coded by who built them</span>
+    </div>
+
+    <div class="routines-grid">
+
+      <!-- AI-built morning routine -->
+      <div class="routine" data-src="ai">
+        <div class="routine-top">
+          <div class="routine-mark">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+          </div>
+          <div>
+            <div class="routine-source">PoolGo concierge · built Apr 12</div>
+          </div>
+          <div class="routine-toggle"></div>
+        </div>
+        <h3 class="routine-name">Morning chemistry check</h3>
+        <div class="routine-steps">
+          <div class="routine-step">
+            <span class="when">5:30 AM</span>
+            <span class="body"><strong>Read</strong> last test from Sun Country &amp; salt cell output</span>
+          </div>
+          <div class="routine-step">
+            <span class="when">5:32</span>
+            <span class="body">If <strong>FC &lt; 1.5 ppm</strong> · bump IC40 to 95% for 6 h</span>
+          </div>
+          <div class="routine-step">
+            <span class="when">5:35</span>
+            <span class="body"><strong>Notify you</strong> only if action was taken</span>
+          </div>
+        </div>
+        <div class="routine-meta">
+          <span><strong>Triggered 6×</strong> in last 30 days · all silent</span>
+          <span>Last: <strong>2h ago</strong> (no action)</span>
+        </div>
+      </div>
+
+      <!-- Weather: heater protect -->
+      <div class="routine" data-src="weather">
+        <div class="routine-top">
+          <div class="routine-mark">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 17h2a3 3 0 0 0 0-6 5 5 0 0 0-9.9-1A4 4 0 0 0 5 17h2"/><path d="M12 13v8M9 17l3-4 3 4"/></svg>
+          </div>
+          <div>
+            <div class="routine-source">Weather · NOAA forecast</div>
+          </div>
+          <div class="routine-toggle"></div>
+        </div>
+        <h3 class="routine-name">Freeze-protect the pad</h3>
+        <div class="routine-steps">
+          <div class="routine-step">
+            <span class="when">9 PM each</span>
+            <span class="body">Read <strong>Roseville overnight low</strong></span>
+          </div>
+          <div class="routine-step">
+            <span class="when">If &lt;38°</span>
+            <span class="body"><strong>Run pump 30%</strong> from 11 PM to 7 AM via IntelliCenter</span>
+          </div>
+          <div class="routine-step">
+            <span class="when">Resume</span>
+            <span class="body">Normal schedule the next day</span>
+          </div>
+        </div>
+        <div class="routine-meta">
+          <span><strong>0 triggers</strong> this season · last winter ran 8×</span>
+          <span>Saves: <strong>~$240 / freeze damage</strong></span>
+        </div>
+      </div>
+
+      <!-- Pentair-built backwash -->
+      <div class="routine" data-src="pentair">
+        <div class="routine-top">
+          <div class="routine-mark">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 9-9"/><path d="M3 4v5h5"/></svg>
+          </div>
+          <div>
+            <div class="routine-source">IntelliCenter · pre-installed</div>
+          </div>
+          <div class="routine-toggle"></div>
+        </div>
+        <h3 class="routine-name">Backwash reminder</h3>
+        <div class="routine-steps">
+          <div class="routine-step">
+            <span class="when">Daily 6 AM</span>
+            <span class="body">Read <strong>Hayward filter PSI</strong></span>
+          </div>
+          <div class="routine-step">
+            <span class="when">If PSI ≥ 20</span>
+            <span class="body"><strong>Notify you and Carlos</strong> · suggest backwash this weekend</span>
+          </div>
+          <div class="routine-step">
+            <span class="when">Then</span>
+            <span class="body">Reset baseline once Carlos confirms done</span>
+          </div>
+        </div>
+        <div class="routine-meta">
+          <span><strong>Triggered 4×</strong> in last 30 d</span>
+          <span>Filter PSI now: <strong>18</strong> (close)</span>
+        </div>
+      </div>
+
+      <!-- Human-built guest mode -->
+      <div class="routine" data-src="human">
+        <div class="routine-top">
+          <div class="routine-mark">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5 21a7 7 0 0 1 14 0"/></svg>
+          </div>
+          <div>
+            <div class="routine-source">You · built Apr 24</div>
+          </div>
+          <div class="routine-toggle off"></div>
+        </div>
+        <h3 class="routine-name">Guest mode (paused)</h3>
+        <div class="routine-steps">
+          <div class="routine-step">
+            <span class="when">On demand</span>
+            <span class="body">Heat to <strong>84°</strong> · all 5 IntelliBrite colors on rotate</span>
+          </div>
+          <div class="routine-step">
+            <span class="when">Pump</span>
+            <span class="body">Bump to <strong>2,400 RPM</strong> for circulation during the party</span>
+          </div>
+          <div class="routine-step">
+            <span class="when">Auto-off</span>
+            <span class="body">11 PM — back to schedule</span>
+          </div>
+        </div>
+        <div class="routine-meta">
+          <span><strong>Paused</strong> · 0 triggers in 14 days</span>
+          <span>Last fired: <strong>Apr 27</strong> (Sat dinner)</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Library -->
+  <section class="section">
+    <div class="section-head">
+      <h2 class="section-title">Suggested for your pool</h2>
+      <span class="section-meta">Built by the concierge from <strong>your</strong> equipment, tests, and rates</span>
+    </div>
+
+    <div class="library-grid">
+
+      <div class="library-card" data-src="energy">
+        <div class="library-mark">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2 L4 13 h7 l-1 9 9-11 h-7 z"/></svg>
+        </div>
+        <div class="library-cat">ENERGY · ESTIMATE</div>
+        <h3 class="library-name">Pump on cheap-rate hours only</h3>
+        <p class="library-body">Your IntelliFlo3 currently runs 6 AM to 11:30 AM. PG&amp;E off-peak is 10 PM to 9 AM. Shifting saves <strong>~$11 / month</strong> at current rates.</p>
+        <div class="library-foot">
+          <span>15 min setup</span>
+          <a href="#">Build →</a>
+        </div>
+      </div>
+
+      <div class="library-card" data-src="cost">
+        <div class="library-mark">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="library-cat">COST · WATCH</div>
+        <h3 class="library-name">Tell me if my service bill jumps</h3>
+        <p class="library-body">Carlos's last 12 visits averaged <strong>$56</strong>. Get notified if a single visit exceeds <strong>$80</strong> or if his weekly cadence slips by 2+ days.</p>
+        <div class="library-foot">
+          <span>Quiet · email only</span>
+          <a href="#">Build →</a>
+        </div>
+      </div>
+
+      <div class="library-card" data-src="event">
+        <div class="library-mark">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div class="library-cat">EVENT · CALENDAR</div>
+        <h3 class="library-name">Ready the pool for "guests" days</h3>
+        <p class="library-body">Reads your calendar for events tagged <strong>"pool"</strong> or <strong>"guests"</strong>. Heats, lights, and tests automatically the morning of.</p>
+        <div class="library-foot">
+          <span>Cal access required</span>
+          <a href="#">Build →</a>
+        </div>
+      </div>
+
+      <div class="library-card" data-src="store">
+        <div class="library-mark">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l3 12h12l3-12"/><path d="M5 7L7 3h10l2 4"/></svg>
+        </div>
+        <div class="library-cat">STORE · SUN COUNTRY</div>
+        <h3 class="library-name">Re-test reminder</h3>
+        <p class="library-body">Anthony's last 3 tests have been <strong>14, 13, 15 days apart</strong>. Nudge you to drop by Sun Country if it's been 16+ days.</p>
+        <div class="library-foot">
+          <span>SMS + push</span>
+          <a href="#">Build →</a>
+        </div>
+      </div>
+
+      <div class="library-card" data-src="ai">
+        <div class="library-mark">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+        </div>
+        <div class="library-cat">CONCIERGE · LIGHT</div>
+        <h3 class="library-name">Sunset light theme</h3>
+        <p class="library-body">Reads sunset time. Lights the pool in <strong>blue</strong> 15 min before, fades to <strong>warm</strong> at 9 PM, off at 11. Weekends only.</p>
+        <div class="library-foot">
+          <span>5 min setup</span>
+          <a href="#">Build →</a>
+        </div>
+      </div>
+
+      <div class="library-card" data-src="weather">
+        <div class="library-mark">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/><circle cx="6" cy="6" r="2"/><circle cx="14" cy="12" r="2"/></svg>
+        </div>
+        <div class="library-cat">WEATHER · STORM</div>
+        <h3 class="library-name">Pad cleanup after a storm</h3>
+        <p class="library-body">If wind 20+ mph or rain &gt; 0.4". Schedule Polaris VRX for <strong>2× cycle</strong> the morning after, and prompt a manual skim.</p>
+        <div class="library-foot">
+          <span>Auto · NOAA</span>
+          <a href="#">Build →</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="footer-pad"></div>
+
+  <div class="page-caption"><span class="num">ROUTINES</span> · SHOWROOM · PURE BRAND APPLIED TO ROUTINES</div>
+
+</body>
+</html>

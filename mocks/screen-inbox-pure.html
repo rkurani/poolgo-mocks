@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inbox · Showroom (Pure) — PoolGo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================================
+       INBOX · PURE
+       Unified messages from techs, stores, equipment, and the AI.
+       Each thread carries the brand color of who sent it.
+       ============================================================ */
+
+    :root {
+      --bg: #FFFFFF;
+      --surface: #FAFAFA;
+      --surface-2: #F5F5F4;
+      --line: #ECECEC;
+      --line-2: #D8D8D8;
+      --ink: #0F1115;
+      --ink-soft: #45494F;
+      --ink-mute: #6B7079;
+
+      --pool: #1FA0BF;
+      --pool-soft: #E2F3F8;
+      --pentair: #1A4F8B;
+      --pentair-soft: #E5ECF4;
+      --hayward: #D8A700;
+      --hayward-soft: #FBF1D0;
+      --polaris: #00759C;
+      --polaris-soft: #DCEDF4;
+      --leslies: #0046A8;
+      --leslies-soft: #DEE8F7;
+      --suncountry: #B07B00;
+      --suncountry-soft: #F8EFD6;
+      --marina: #2C5F4A;
+      --marina-soft: #DFE8E2;
+
+      --sage: #2A8540;
+      --gold: #B07B00;
+      --coral: #C75240;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg); color: var(--ink);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      font-feature-settings: 'tnum';
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+
+    /* nav */
+    .nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 32px; background: var(--bg);
+      border-bottom: 1px solid var(--line);
+      position: sticky; top: 0; z-index: 10;
+    }
+    .wm { font-weight: 700; font-size: 18px; letter-spacing: -0.03em; }
+    .wm .accent { color: var(--pool); font-weight: 800; }
+    .nav-tabs { display: flex; gap: 4px; }
+    .nav-tab {
+      padding: 8px 14px; border-radius: 8px;
+      font-size: 14px; font-weight: 500; color: var(--ink-mute);
+      letter-spacing: -0.005em;
+    }
+    .nav-tab:hover { color: var(--ink); background: var(--surface); }
+    .nav-tab.active { background: var(--ink); color: white; }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .nav-bell {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: var(--surface); position: relative;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--ink);
+    }
+    .nav-bell::after {
+      content: ''; position: absolute;
+      top: 8px; right: 9px; width: 7px; height: 7px;
+      background: var(--coral); border-radius: 50%;
+      border: 1.5px solid var(--surface);
+    }
+    .nav-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, #2A6098, #0E2F55);
+      color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 13px;
+    }
+
+    /* header */
+    .header {
+      max-width: 1280px; margin: 32px auto 0;
+      padding: 0 32px;
+      display: grid; grid-template-columns: 1fr auto;
+      gap: 28px; align-items: end;
+    }
+    .header h1 {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: clamp(32px, 4vw, 44px);
+      font-weight: 800;
+      letter-spacing: -0.04em; line-height: 1.02;
+      color: var(--ink);
+      margin: 0;
+    }
+    .header .lede {
+      margin-top: 10px;
+      font-size: 15px; color: var(--ink-soft);
+      max-width: 60ch;
+    }
+    .header .lede strong { color: var(--ink); font-weight: 600; }
+    .header-stat-row { display: flex; gap: 28px; }
+    .header-stat .num {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 32px; font-weight: 800;
+      letter-spacing: -0.04em; line-height: 1;
+      color: var(--ink);
+    }
+    .header-stat .label {
+      margin-top: 6px;
+      font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase;
+      color: var(--ink-mute); font-weight: 600;
+    }
+
+    /* filter chips */
+    .filter-bar {
+      max-width: 1280px; margin: 28px auto 0;
+      padding: 0 32px;
+      display: flex; gap: 8px; align-items: center;
+      flex-wrap: wrap;
+    }
+    .chip {
+      padding: 8px 14px; border-radius: 999px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      font-size: 13px; font-weight: 500;
+      color: var(--ink-soft); cursor: pointer;
+      letter-spacing: -0.005em;
+    }
+    .chip:hover { background: var(--surface); }
+    .chip.active {
+      background: var(--ink); color: white;
+      border-color: var(--ink);
+    }
+    .chip .count {
+      margin-left: 6px; font-weight: 700;
+      color: var(--ink-mute); font-size: 12px;
+    }
+    .chip.active .count { color: rgba(255,255,255,0.6); }
+
+    /* section */
+    .section {
+      max-width: 1280px; margin: 56px auto 0;
+      padding: 0 32px;
+    }
+    .section-head {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-bottom: 20px;
+    }
+    .section-title {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 22px; font-weight: 700;
+      letter-spacing: -0.03em;
+      margin: 0;
+    }
+    .section-meta {
+      font-size: 13px; color: var(--ink-mute); font-weight: 500;
+    }
+    .section-meta strong { color: var(--ink); font-weight: 600; }
+
+    /* AI band */
+    .ai-card {
+      background: var(--ink); color: white;
+      border-radius: 16px;
+      padding: 22px 28px;
+      position: relative; overflow: hidden;
+    }
+    .ai-card::after {
+      content: ''; position: absolute;
+      bottom: -50px; right: -50px;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(31,160,191,0.45) 0%, transparent 70%);
+    }
+    .ai-top {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 12px;
+      position: relative; z-index: 2;
+    }
+    .ai-mark {
+      width: 32px; height: 32px;
+      background: var(--pool); color: white;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 14px; letter-spacing: -0.04em;
+    }
+    .ai-meta {
+      font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase;
+      color: rgba(255,255,255,0.6); font-weight: 600;
+    }
+    .ai-body {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 16px; font-weight: 500; line-height: 1.5;
+      color: white; max-width: 70ch;
+      letter-spacing: -0.005em;
+      position: relative; z-index: 2;
+    }
+    .ai-body strong { font-weight: 700; }
+    .ai-body mark {
+      background: rgba(255,255,255,0.15); color: white;
+      padding: 0 4px; border-radius: 3px;
+    }
+
+    /* day group */
+    .day-bar {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin: 24px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--line);
+    }
+    .day-bar:first-child { margin-top: 0; }
+    .day-title {
+      font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+      font-weight: 700; color: var(--ink-mute);
+    }
+    .day-bar .count { font-size: 12px; color: var(--ink-mute); }
+    .day-bar .count strong { color: var(--ink); font-weight: 600; }
+
+    /* thread row */
+    .thread {
+      display: grid;
+      grid-template-columns: 44px 220px 1fr auto;
+      gap: 18px;
+      align-items: center;
+      padding: 16px 20px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      margin-bottom: 8px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.12s ease;
+    }
+    .thread:hover { background: var(--surface); }
+    .thread[data-src="marina"]      { --row-accent: var(--marina); --row-soft: var(--marina-soft); }
+    .thread[data-src="suncountry"]  { --row-accent: var(--suncountry); --row-soft: var(--suncountry-soft); }
+    .thread[data-src="leslies"]     { --row-accent: var(--leslies); --row-soft: var(--leslies-soft); }
+    .thread[data-src="pentair"]     { --row-accent: var(--pentair); --row-soft: var(--pentair-soft); }
+    .thread[data-src="hayward"]     { --row-accent: var(--hayward); --row-soft: var(--hayward-soft); }
+    .thread[data-src="polaris"]     { --row-accent: var(--polaris); --row-soft: var(--polaris-soft); }
+    .thread[data-src="ai"]          { --row-accent: var(--pool); --row-soft: var(--pool-soft); }
+    .thread::before {
+      content: ''; position: absolute;
+      left: 0; top: 14px; bottom: 14px;
+      width: 3px;
+      background: var(--row-accent, var(--ink-mute));
+      border-radius: 0 3px 3px 0;
+    }
+    .thread.unread { background: var(--bg); }
+    .thread.unread .subject { color: var(--ink); font-weight: 700; }
+    .thread.unread::after {
+      content: ''; position: absolute; top: 50%; right: 14px;
+      transform: translateY(-50%);
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--row-accent);
+      box-shadow: 0 0 0 4px var(--row-soft);
+    }
+
+    .thread-avatar {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: var(--row-soft);
+      border: 1px solid var(--line);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--row-accent);
+      flex-shrink: 0;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(15,17,21,0.04);
+    }
+    .thread-avatar img { max-width: 80%; max-height: 80%; object-fit: contain; }
+    .thread-avatar.initials {
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 800; font-size: 14px;
+      letter-spacing: -0.025em;
+      color: var(--row-accent);
+    }
+
+    .thread-sender {
+      display: flex; flex-direction: column; gap: 3px;
+      min-width: 0;
+    }
+    .sender-name {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 14px; font-weight: 700;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .sender-meta {
+      font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+      color: var(--row-accent); font-weight: 700;
+    }
+
+    .thread-content {
+      min-width: 0; display: flex; flex-direction: column; gap: 4px;
+    }
+    .subject {
+      font-size: 14px; font-weight: 500;
+      color: var(--ink-soft);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .preview {
+      font-size: 13px; color: var(--ink-mute);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .preview strong { color: var(--ink-soft); font-weight: 600; }
+
+    .thread-time {
+      display: flex; flex-direction: column; align-items: flex-end;
+      gap: 4px;
+      font-size: 11px; color: var(--ink-mute);
+      flex-shrink: 0; min-width: 80px;
+    }
+    .thread-time .time {
+      font-size: 12px; font-weight: 600; color: var(--ink-soft);
+    }
+    .thread-time .tag {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase;
+      color: var(--row-accent); font-weight: 700;
+      background: var(--row-soft);
+      padding: 2px 7px; border-radius: 4px;
+    }
+
+    /* compose bar */
+    .compose-bar {
+      max-width: 1280px; margin: 28px auto 0;
+      padding: 0 32px;
+      display: flex; gap: 12px;
+    }
+    .compose-input {
+      flex: 1;
+      display: flex; align-items: center; gap: 10px;
+      padding: 0 16px; height: 48px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      color: var(--ink-mute);
+    }
+    .compose-input svg { flex-shrink: 0; }
+    .compose-input input {
+      flex: 1;
+      border: none; background: transparent; outline: none;
+      font: inherit; color: var(--ink);
+    }
+    .compose-btn {
+      height: 48px; padding: 0 22px;
+      background: var(--ink); color: white;
+      border: none; border-radius: 12px;
+      font-size: 14px; font-weight: 600;
+      letter-spacing: -0.005em;
+    }
+
+    /* page caption */
+    .page-caption {
+      position: fixed; bottom: 24px; left: 24px;
+      background: var(--ink); color: white;
+      font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase;
+      font-weight: 600;
+      padding: 8px 14px; border-radius: 999px; z-index: 100;
+    }
+    .page-caption .num { color: var(--pool); margin-right: 6px; }
+
+    .footer-pad { height: 80px; }
+  </style>
+</head>
+<body>
+
+  <!-- nav -->
+  <nav class="nav">
+    <div class="wm">PoolGo<span class="accent">.</span></div>
+    <div class="nav-tabs">
+      <a href="screen-cmd-showroom-pure.html" class="nav-tab">My Pool</a>
+      <a href="screen-care-pure.html" class="nav-tab">Care</a>
+      <a href="screen-equipment-pure.html" class="nav-tab">Equipment</a>
+      <a href="screen-routines-pure.html" class="nav-tab">Routines</a>
+      <a href="screen-discover-pure.html" class="nav-tab">Folks</a>
+      <a href="#" class="nav-tab active">Inbox</a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-bell">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      </div>
+      <div class="nav-avatar">RK</div>
+    </div>
+  </nav>
+
+  <!-- header -->
+  <header class="header">
+    <div>
+      <h1>Inbox.</h1>
+      <p class="lede">Every conversation about The Big Blue, all in one place. <strong>Carlos, Anthony, your equipment, and the concierge.</strong> Each thread is colored by who sent it, so you can scan at a glance.</p>
+    </div>
+    <div class="header-stat-row">
+      <div class="header-stat">
+        <div class="num">3</div>
+        <div class="label">Unread</div>
+      </div>
+      <div class="header-stat">
+        <div class="num">12</div>
+        <div class="label">This week</div>
+      </div>
+      <div class="header-stat">
+        <div class="num">6</div>
+        <div class="label">From people</div>
+      </div>
+      <div class="header-stat">
+        <div class="num">5</div>
+        <div class="label">From equipment</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- filter chips -->
+  <div class="filter-bar">
+    <button class="chip active">All<span class="count">12</span></button>
+    <button class="chip">Unread<span class="count">3</span></button>
+    <button class="chip">Service techs<span class="count">4</span></button>
+    <button class="chip">Pool stores<span class="count">2</span></button>
+    <button class="chip">Equipment<span class="count">5</span></button>
+    <button class="chip">Concierge<span class="count">1</span></button>
+    <span style="margin-left: auto; font-size: 12px; color: var(--ink-mute);">Sort · <strong style="color: var(--ink); font-weight: 600;">Newest first</strong> · oldest · sender · unread first</span>
+  </div>
+
+  <!-- compose -->
+  <div class="compose-bar">
+    <div class="compose-input">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+      <input placeholder="Ask Carlos, Anthony, the concierge — or @everyone…" />
+    </div>
+    <button class="compose-btn">Send →</button>
+  </div>
+
+  <!-- AI summary -->
+  <section class="section">
+    <div class="ai-card">
+      <div class="ai-top">
+        <div class="ai-mark">P</div>
+        <div class="ai-meta">PoolGo concierge · inbox summary</div>
+      </div>
+      <p class="ai-body">Three threads need your attention. <strong>Anthony at Sun Country</strong> flagged CYA again (third week). <mark>Carlos asked about Friday's heater run</mark> — your guests routine should handle it. The IntelliFlo3 sent its monthly energy report. Everything else is steady.</p>
+    </div>
+  </section>
+
+  <!-- threads list -->
+  <section class="section">
+
+    <!-- TODAY -->
+    <div class="day-bar">
+      <span class="day-title">Today · May 8</span>
+      <span class="count"><strong>4 messages</strong> · 3 unread</span>
+    </div>
+
+    <!-- Carlos: heater Friday (unread) -->
+    <div class="thread unread" data-src="marina">
+      <div class="thread-avatar initials">CT</div>
+      <div class="thread-sender">
+        <div class="sender-name">Carlos Torres</div>
+        <div class="sender-meta">Marina pool service</div>
+      </div>
+      <div class="thread-content">
+        <div class="subject">Quick question on Friday — heater?</div>
+        <div class="preview"><strong>"Hey Ravi, you usually have me bump the heater for guests. Want me to set it for Friday morning so it's ready by 4 PM?"</strong></div>
+      </div>
+      <div class="thread-time">
+        <span class="time">9:42 AM</span>
+        <span class="tag">REPLY NEEDED</span>
+      </div>
+    </div>
+
+    <!-- Sun Country: water test imported (unread) -->
+    <div class="thread unread" data-src="suncountry">
+      <div class="thread-avatar">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B07B00" stroke-width="2" stroke-linecap="round">
+          <circle cx="12" cy="12" r="4"/>
+          <line x1="12" y1="2" x2="12" y2="5"/>
+          <line x1="12" y1="19" x2="12" y2="22"/>
+          <line x1="2" y1="12" x2="5" y2="12"/>
+          <line x1="19" y1="12" x2="22" y2="12"/>
+        </svg>
+      </div>
+      <div class="thread-sender">
+        <div class="sender-name">Anthony T. · Sun Country</div>
+        <div class="sender-meta">Roseville · 3.1 mi</div>
+      </div>
+      <div class="thread-content">
+        <div class="subject">Your CYA is at 42, third week running</div>
+        <div class="preview">Test imported · K-2006 · <strong>FC 2.4 · pH 7.4 · TA 90 · CYA 42 · Salt 3.2k</strong> · suggested partial drain</div>
+      </div>
+      <div class="thread-time">
+        <span class="time">9:14 AM</span>
+        <span class="tag">IMPORTED</span>
+      </div>
+    </div>
+
+    <!-- IntelliFlo3 monthly report (unread) -->
+    <div class="thread unread" data-src="pentair">
+      <div class="thread-avatar"><img src="assets/pentair.jpg" alt="Pentair" /></div>
+      <div class="thread-sender">
+        <div class="sender-name">IntelliFlo3 VSF</div>
+        <div class="sender-meta">Pentair · pump</div>
+      </div>
+      <div class="thread-content">
+        <div class="subject">April energy report</div>
+        <div class="preview"><strong>68.4 kWh</strong> last month, $11.65 at off-peak · <strong>2,184 hrs total runtime</strong> · 0 errors · firmware 2.04 healthy</div>
+      </div>
+      <div class="thread-time">
+        <span class="time">5:30 AM</span>
+        <span class="tag">LIVE</span>
+      </div>
+    </div>
+
+    <!-- Concierge daily brief (read) -->
+    <div class="thread" data-src="ai">
+      <div class="thread-avatar initials">P</div>
+      <div class="thread-sender">
+        <div class="sender-name">PoolGo concierge</div>
+        <div class="sender-meta">Daily brief</div>
+      </div>
+      <div class="thread-content">
+        <div class="subject">Your pool overnight</div>
+        <div class="preview">Salt cell ran 4 hrs · pump completed Schedule B · no alerts · <strong>filter PSI 18 (close to backwash)</strong> · 0.42 kWh from VRX cycle</div>
+      </div>
+      <div class="thread-time">
+        <span class="time">5:45 AM</span>
+      </div>
+    </div>
+
+    <!-- YESTERDAY -->
+    <div class="day-bar">
+      <span class="day-title">Yesterday · May 7</span>
+      <span class="count"><strong>3 messages</strong></span>
+    </div>
+
+    <!-- Carlos visit summary (read) -->
+    <div class="thread" data-src="marina">
+      <div class="thread-avatar initials">CT</div>
+      <div class="thread-sender">
+        <div class="sender-name">Carlos Torres</div>
+        <div class="sender-meta">Marina pool service</div>
+      </div>
+      <div class="thread-content">
+        <div class="subject">Visit recap — May 7</div>
+        <div class="preview">36 min on site · 8 tasks · backwash skipped (PSI 18, watching) · <strong>$58 invoiced</strong> · pilot on heater confirmed lit</div>
+      </div>
+      <div class="thread-time">
+        <span class="time">1:14 PM</span>
+        <span class="tag">VISIT</span>
+      </div>
+    </div>
+
+    <!-- Polaris cycle complete (read) -->
+    <div class="thread" data-src="polaris">
+      <div class="thread-avatar"><img src="assets/polaris.png" alt="Polaris" /></div>
+      <div class="thread-sender">
+        <div class="sender-name">VRX iQ+</div>
+        <div class="sender-meta">Polaris · robot</div>
+      </div>
+      <div class="thread-content">
+        <div class="subject">Cycle complete</div>
+        <div class="preview">2.5 hr cycle · <strong>0.42 kWh</strong> · debris bag 30% full · scheduled M / W / F · next run Friday 4 PM</div>
+      </div>
+      <div class="thread-time">
+        <span class="time">6:30 PM</span>
+        <span class="tag">LIVE</span>
+      </div>
+    </div>
+
+    <!-- Hayward filter PSI alert (read) -->
+    <div class="thread" data-src="hayward">
+      <div class="thread-avatar"><img src="assets/hayward.png" alt="Hayward" /></div>
+      <div class="thread-sender">
+        <div class="sender-name">S270T filter</div>
+        <div class="sender-meta">Hayward · sand filter</div>
+      </div>
+      <div class="thread-content">
+        <div class="subject">PSI watch — 18, +2 on 30 days</div>
+        <div class="preview">Pressure climbed to 18 PSI · still in normal range · <strong>backwash suggested when ≥ 20</strong> · watching daily</div>
+      </div>
+      <div class="thread-time">
+        <span class="time">6:00 AM</span>
+        <span class="tag">WATCH</span>
+      </div>
+    </div>
+
+    <!-- THIS WEEK -->
+    <div class="day-bar">
+      <span class="day-title">Earlier this week</span>
+      <span class="count"><strong>5 messages</strong></span>
+    </div>
+
+    <!-- Leslie's promo (read) -->
+    <div class="thread" data-src="leslies">
+      <div class="thread-avatar">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0046A8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 4v16h14"/>
+          <path d="M3 22 Q 7 18, 11 22 T 19 22" stroke-width="1.6"/>
+        </svg>
+      </div>
+      <div class="thread-sender">
+        <div class="sender-name">Jessica R. · Leslie's</div>
+        <div class="sender-meta">Roseville · loyalty</div>
+      </div>
+      <div class="thread-content">
+        <div class="subject">$10 credit · CYA reducer in stock</div>
+        <div class="preview">"Saw your CYA report from Sun Country. We have <strong>Cyanuric Acid Reducer back in stock</strong> if a partial drain isn't doable. $10 loyalty credit applied."</div>
+      </div>
+      <div class="thread-time">
+        <span class="time">May 6</span>
+        <span class="tag">STORE</span>
+      </div>
+    </div>
+
+    <!-- Concierge: routine triggered (read) -->
+    <div class="thread" data-src="ai">
+      <div class="thread-avatar initials">P</div>
+      <div class="thread-sender">
+        <div class="sender-name">PoolGo concierge</div>
+        <div class="sender-meta">Routine fired</div>
+      </div>
+      <div class="thread-content">
+        <div class="subject">Morning chemistry check ran (silent)</div>
+        <div class="preview">FC was 1.8 ppm · within range · <strong>no action taken</strong> · routine ran 5:30 → 5:32 · confirmation suppressed per setting</div>
+      </div>
+      <div class="thread-time">
+        <span class="time">May 5</span>
+        <span class="tag">ROUTINE</span>
+      </div>
+    </div>
+
+    <!-- IC40 salt cell (read) -->
+    <div class="thread" data-src="pentair">
+      <div class="thread-avatar"><img src="assets/pentair.jpg" alt="Pentair" /></div>
+      <div class="thread-sender">
+        <div class="sender-name">IntelliChlor IC40</div>
+        <div class="sender-meta">Pentair · salt cell</div>
+      </div>
+      <div class="thread-content">
+        <div class="subject">Output bumped to 95% for 6 hours</div>
+        <div class="preview">Triggered by morning chemistry check · <strong>FC was 1.8 ppm</strong> · output reduced back to 85% at 11:30 AM · salt 3.2k healthy</div>
+      </div>
+      <div class="thread-time">
+        <span class="time">May 5</span>
+        <span class="tag">LIVE</span>
+      </div>
+    </div>
+
+    <!-- Anthony note (read) -->
+    <div class="thread" data-src="suncountry">
+      <div class="thread-avatar">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B07B00" stroke-width="2" stroke-linecap="round">
+          <circle cx="12" cy="12" r="4"/>
+          <line x1="12" y1="2" x2="12" y2="5"/>
+          <line x1="12" y1="19" x2="12" y2="22"/>
+          <line x1="2" y1="12" x2="5" y2="12"/>
+          <line x1="19" y1="12" x2="22" y2="12"/>
+        </svg>
+      </div>
+      <div class="thread-sender">
+        <div class="sender-name">Anthony T. · Sun Country</div>
+        <div class="sender-meta">Roseville</div>
+      </div>
+      <div class="thread-content">
+        <div class="subject">Stop by anytime, water testing's free</div>
+        <div class="preview">"Hey Ravi, just a reminder — bring a sample by whenever, free K-2006 with no appointment. Last time was great catching up."</div>
+      </div>
+      <div class="thread-time">
+        <span class="time">May 4</span>
+        <span class="tag">NOTE</span>
+      </div>
+    </div>
+
+    <!-- Polaris filter empty (read) -->
+    <div class="thread" data-src="polaris">
+      <div class="thread-avatar"><img src="assets/polaris.png" alt="Polaris" /></div>
+      <div class="thread-sender">
+        <div class="sender-name">VRX iQ+</div>
+        <div class="sender-meta">Polaris · robot</div>
+      </div>
+      <div class="thread-content">
+        <div class="subject">Debris bag full · empty before next cycle</div>
+        <div class="preview">Bag at <strong>92% capacity</strong> · resolved May 4 evening · 30% now</div>
+      </div>
+      <div class="thread-time">
+        <span class="time">May 4</span>
+        <span class="tag">RESOLVED</span>
+      </div>
+    </div>
+
+  </section>
+
+  <div class="footer-pad"></div>
+
+  <div class="page-caption"><span class="num">INBOX</span> · SHOWROOM · PURE BRAND APPLIED TO MESSAGES</div>
+
+</body>
+</html>

@@ -17,7 +17,7 @@ colors:
   # ink
   ink: "#0F1115"
   ink-soft: "#45494F"
-  ink-mute: "#7A8088"
+  ink-mute: "#6B7079"
   on-ink: "#FFFFFF"
 
   # primary (PoolGo accent)
@@ -363,3 +363,17 @@ Small inline element flagging provenance. Pill: 4px × 9px padding, `sm` radius,
 **Don't** auto-color critical states (red exclamation marks, yellow caution triangles). If a value is out of range, use a discrete `warn` source pill with the gold token, not a flashing icon.
 
 **Don't** invent a sub-brand for an OEM you haven't licensed visual assets from. If we don't have a real Jandy logo file on hand, fall back to `data-brand="jandy"` driving the stripe color, and a typographic treatment of the company name — not a guessed-at vector.
+
+## Notes on token usage
+
+The OEM brand colors (`pentair`, `hayward`, `polaris`, `leslies`, `suncountry`, `marina`, `pinch`, `jandy`, `raypak` and their `-soft` variants) and the source-legend colors (`source-live`, `source-imported`, `source-human`, `source-ai`) are applied **dynamically** via CSS custom properties keyed off a `data-brand` or `data-src` attribute on the card or row. They are not bound to a fixed component variant.
+
+The official DESIGN.md linter will flag these tokens as "defined but never referenced by any component" because the linter only inspects the YAML `components` map. This is expected. The tokens are wired in CSS like:
+
+```css
+.card[data-brand="pentair"] { --brand-accent: var(--pentair); --brand-soft: var(--pentair-soft); }
+.card::before { background: var(--brand-accent, var(--ink-mute)); }
+.timeline-row[data-src="suncountry"] { --row-accent: var(--suncountry); }
+```
+
+This pattern is intentional and load-bearing: the page composition reflects the *real* equipment / store / pro that produced each piece of data, and the tokens are the design-system contract that keeps that color logic consistent across surfaces.

@@ -6,15 +6,19 @@ These are throwaway-cheap iterations meant for review before porting into the re
 
 ## Live preview
 
-Once GitHub Pages finishes building, the rendered pages are at:
+The six consumer surfaces, all in the Pure direction:
 
-- **Command Center (My Pool)** — https://rkurani.github.io/poolgo-mocks/mocks/screen-cmd-showroom-pure.html
+- **My Pool** (Command Center) — https://rkurani.github.io/poolgo-mocks/mocks/screen-cmd-showroom-pure.html
 - **Care** (MyChart-for-pools) — https://rkurani.github.io/poolgo-mocks/mocks/screen-care-pure.html
-- **Folks · Discover** (Yelp-of-pool) — https://rkurani.github.io/poolgo-mocks/mocks/screen-discover-pure.html
+- **Equipment** (grid by Spaces) — https://rkurani.github.io/poolgo-mocks/mocks/screen-equipment-pure.html
+- **Routines** (Alexa-style + AI builder) — https://rkurani.github.io/poolgo-mocks/mocks/screen-routines-pure.html
+- **Folks** (Discover / Yelp-of-pool) — https://rkurani.github.io/poolgo-mocks/mocks/screen-discover-pure.html
+- **Inbox** (unified messages) — https://rkurani.github.io/poolgo-mocks/mocks/screen-inbox-pure.html
 
 ## Brand reference
 
-- [BRAND.md](BRAND.md) — positioning, pillars, voice, palette, typography, components.
+- [DESIGN.md](DESIGN.md) — the canonical design system in Google Labs's open DESIGN.md format. YAML tokens + 8 prose sections. Agents (Claude Code, Cursor, Stitch) read this as the contract.
+- [BRAND.md](BRAND.md) — earlier prose-only brand spec. DESIGN.md supersedes the visual sections; BRAND.md still holds positioning and voice.
 - [mocks/architecture.html](mocks/architecture.html) — the IA reference: 4 categories, 6 surfaces, 4 tile shapes, mapping of existing mocks.
 
 ## What's locked

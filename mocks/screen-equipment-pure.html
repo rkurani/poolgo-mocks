@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Equipment · Showroom (Pure) — PoolGo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================================
+       EQUIPMENT · PURE
+       Every device the homeowner has, grouped by Space.
+       OEM color inheritance is the visual signature here — this is
+       the screen where the brand-color system shines most.
+       ============================================================ */
+
+    :root {
+      --bg: #FFFFFF;
+      --surface: #FAFAFA;
+      --surface-2: #F5F5F4;
+      --line: #ECECEC;
+      --line-2: #D8D8D8;
+      --ink: #0F1115;
+      --ink-soft: #45494F;
+      --ink-mute: #6B7079;
+
+      --pool: #1FA0BF;
+      --pool-soft: #E2F3F8;
+      --pentair: #1A4F8B;
+      --pentair-soft: #E5ECF4;
+      --hayward: #D8A700;
+      --hayward-soft: #FBF1D0;
+      --polaris: #00759C;
+      --polaris-soft: #DCEDF4;
+      --jandy: #CC0033;
+      --jandy-soft: #FBE0E5;
+      --raypak: #E94B3C;
+      --raypak-soft: #FBE0DD;
+
+      --sage: #2A8540;
+      --gold: #B07B00;
+      --coral: #C75240;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg); color: var(--ink);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      font-feature-settings: 'tnum';
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+
+    /* ----- nav ----- */
+    .nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 32px; background: var(--bg);
+      border-bottom: 1px solid var(--line);
+      position: sticky; top: 0; z-index: 10;
+    }
+    .wm { font-weight: 700; font-size: 18px; letter-spacing: -0.03em; }
+    .wm .accent { color: var(--pool); font-weight: 800; }
+    .nav-tabs { display: flex; gap: 4px; }
+    .nav-tab {
+      padding: 8px 14px; border-radius: 8px;
+      font-size: 14px; font-weight: 500; color: var(--ink-mute);
+      letter-spacing: -0.005em;
+    }
+    .nav-tab:hover { color: var(--ink); background: var(--surface); }
+    .nav-tab.active { background: var(--ink); color: white; }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .nav-bell {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: var(--surface); position: relative;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--ink);
+    }
+    .nav-bell::after {
+      content: ''; position: absolute;
+      top: 8px; right: 9px; width: 7px; height: 7px;
+      background: var(--coral); border-radius: 50%;
+      border: 1.5px solid var(--surface);
+    }
+    .nav-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, #2A6098, #0E2F55);
+      color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 13px;
+    }
+
+    /* ----- header ----- */
+    .header {
+      max-width: 1280px; margin: 32px auto 0;
+      padding: 0 32px;
+      display: grid; grid-template-columns: 1fr auto;
+      gap: 28px; align-items: end;
+    }
+    .header h1 {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: clamp(32px, 4vw, 44px);
+      font-weight: 800;
+      letter-spacing: -0.04em; line-height: 1.02;
+      color: var(--ink);
+      margin: 0;
+    }
+    .header .lede {
+      margin-top: 10px;
+      font-size: 15px; color: var(--ink-soft);
+      max-width: 60ch;
+    }
+    .header .lede strong { color: var(--ink); font-weight: 600; }
+    .header-stat-row { display: flex; gap: 28px; }
+    .header-stat .num {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 32px; font-weight: 800;
+      letter-spacing: -0.04em; line-height: 1;
+      color: var(--ink);
+    }
+    .header-stat .label {
+      margin-top: 6px;
+      font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase;
+      color: var(--ink-mute); font-weight: 600;
+    }
+
+    /* ----- filter chips ----- */
+    .filter-bar {
+      max-width: 1280px; margin: 28px auto 0;
+      padding: 0 32px;
+      display: flex; gap: 8px; align-items: center;
+      flex-wrap: wrap;
+    }
+    .chip {
+      padding: 8px 14px; border-radius: 999px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      font-size: 13px; font-weight: 500;
+      color: var(--ink-soft); cursor: pointer;
+      letter-spacing: -0.005em;
+    }
+    .chip:hover { background: var(--surface); }
+    .chip.active {
+      background: var(--ink); color: white;
+      border-color: var(--ink);
+    }
+    .chip .count {
+      margin-left: 6px; font-weight: 700;
+      color: var(--ink-mute); font-size: 12px;
+    }
+    .chip.active .count { color: rgba(255,255,255,0.6); }
+
+    /* ----- section ----- */
+    .section {
+      max-width: 1280px; margin: 56px auto 0;
+      padding: 0 32px;
+    }
+    .section-head {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-bottom: 20px;
+    }
+    .section-title {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 22px; font-weight: 700;
+      letter-spacing: -0.03em;
+      margin: 0;
+    }
+    .section-meta {
+      font-size: 13px; color: var(--ink-mute); font-weight: 500;
+    }
+    .section-meta strong { color: var(--ink); font-weight: 600; }
+
+    /* ----- ai band ----- */
+    .ai-card {
+      background: var(--ink); color: white;
+      border-radius: 16px;
+      padding: 22px 28px;
+      position: relative; overflow: hidden;
+    }
+    .ai-card::after {
+      content: ''; position: absolute;
+      bottom: -50px; right: -50px;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(31,160,191,0.45) 0%, transparent 70%);
+    }
+    .ai-top {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 12px;
+      position: relative; z-index: 2;
+    }
+    .ai-mark {
+      width: 32px; height: 32px;
+      background: var(--pool); color: white;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 14px; letter-spacing: -0.04em;
+    }
+    .ai-meta {
+      font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase;
+      color: rgba(255,255,255,0.6); font-weight: 600;
+    }
+    .ai-body {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 16px; font-weight: 500; line-height: 1.5;
+      color: white; max-width: 70ch;
+      letter-spacing: -0.005em;
+      position: relative; z-index: 2;
+    }
+    .ai-body strong { font-weight: 700; }
+    .ai-body mark {
+      background: rgba(255,255,255,0.15); color: white;
+      padding: 0 4px; border-radius: 3px;
+    }
+
+    /* ----- equipment grid ----- */
+    .eq-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 1100px) { .eq-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 700px) { .eq-grid { grid-template-columns: 1fr; } }
+
+    .eq-card {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      position: relative;
+    }
+    .eq-card[data-brand="pentair"] { --brand-accent: var(--pentair); --brand-soft: var(--pentair-soft); }
+    .eq-card[data-brand="hayward"] { --brand-accent: var(--hayward); --brand-soft: var(--hayward-soft); }
+    .eq-card[data-brand="polaris"] { --brand-accent: var(--polaris); --brand-soft: var(--polaris-soft); }
+    .eq-card[data-brand="jandy"]   { --brand-accent: var(--jandy);   --brand-soft: var(--jandy-soft); }
+    .eq-card[data-brand="raypak"]  { --brand-accent: var(--raypak);  --brand-soft: var(--raypak-soft); }
+    .eq-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 3px; background: var(--brand-accent, var(--ink-mute));
+      z-index: 4;
+    }
+
+    .eq-photo {
+      height: 180px; position: relative;
+      background: var(--brand-soft, var(--surface));
+      display: flex; align-items: center; justify-content: center;
+      border-bottom: 1px solid var(--line);
+      overflow: hidden;
+    }
+    .eq-photo::after {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(circle at 30% 70%, rgba(255,255,255,0.5), transparent 60%),
+        linear-gradient(180deg, transparent 60%, rgba(15,17,21,0.04) 100%);
+      pointer-events: none;
+    }
+    .eq-photo img.product {
+      max-width: 75%; max-height: 80%; object-fit: contain;
+      position: relative; z-index: 2;
+      mix-blend-mode: multiply;
+    }
+    .eq-state-badge {
+      position: absolute; top: 14px; left: 14px;
+      background: white; color: var(--ink);
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      padding: 5px 9px; border-radius: 6px;
+      display: inline-flex; align-items: center; gap: 6px;
+      z-index: 3;
+      border: 1px solid var(--line);
+    }
+    .eq-state-badge .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--sage);
+    }
+    .eq-state-badge.idle .dot { background: var(--ink-mute); }
+    .eq-state-badge.warn .dot { background: var(--gold); }
+    .eq-logo-tile {
+      position: absolute; top: 14px; right: 14px;
+      width: 56px; height: 56px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 1px 3px rgba(15,17,21,0.06);
+      z-index: 3;
+      overflow: hidden;
+    }
+    .eq-logo-tile img { max-width: 80%; max-height: 80%; object-fit: contain; }
+
+    .eq-info { padding: 18px 20px 16px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+    .eq-cat {
+      font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--brand-accent, var(--ink-mute));
+      font-weight: 700;
+    }
+    .eq-name {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 18px; font-weight: 700;
+      letter-spacing: -0.025em; line-height: 1.15;
+      color: var(--ink);
+      margin: 0;
+    }
+    .eq-stat-row {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      padding: 10px 12px; border-radius: 10px;
+      background: var(--brand-soft, var(--surface));
+      margin-top: 4px;
+    }
+    .eq-stat .num {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 18px; font-weight: 700;
+      letter-spacing: -0.025em; line-height: 1;
+      color: var(--brand-accent, var(--ink));
+    }
+    .eq-stat .label {
+      font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase;
+      color: var(--ink-mute); font-weight: 600;
+      margin-top: 4px;
+    }
+    .eq-meta-row {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 10px; font-size: 12px; color: var(--ink-mute);
+      padding-top: 10px; border-top: 1px solid var(--line);
+      margin-top: auto;
+    }
+    .eq-meta-row strong { color: var(--ink); font-weight: 600; }
+    .eq-cta {
+      background: var(--bg); color: var(--ink);
+      border: 1px solid var(--line);
+      padding: 10px 14px; border-radius: 8px;
+      font-size: 13px; font-weight: 600;
+      letter-spacing: -0.005em;
+      transition: all 0.15s ease;
+    }
+    .eq-cta:hover {
+      background: var(--brand-accent, var(--ink));
+      color: white;
+      border-color: var(--brand-accent, var(--ink));
+    }
+
+    /* spaces sub-heading bar */
+    .space-bar {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+    .space-title {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 14px; font-weight: 700;
+      letter-spacing: 0.04em; text-transform: uppercase;
+      color: var(--ink);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .space-title .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--ink);
+    }
+    .space-title .count {
+      font-size: 12px; font-weight: 600;
+      color: var(--ink-mute); letter-spacing: 0;
+      text-transform: none;
+      margin-left: 4px;
+    }
+    .space-bar .right {
+      font-size: 12px; color: var(--ink-mute);
+    }
+    .space-bar .right strong { color: var(--ink); font-weight: 600; }
+
+    /* automation hub */
+    .hub-card {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 26px 28px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 24px; align-items: center;
+      position: relative; overflow: hidden;
+    }
+    .hub-card[data-brand="pentair"] { --brand-accent: var(--pentair); --brand-soft: var(--pentair-soft); }
+    .hub-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 3px; background: var(--brand-accent, var(--ink-mute));
+    }
+    .hub-mark {
+      width: 56px; height: 56px;
+      background: var(--brand-soft);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 1px 3px rgba(15,17,21,0.06);
+      overflow: hidden;
+    }
+    .hub-mark img { max-width: 80%; max-height: 80%; object-fit: contain; }
+    .hub-body { display: flex; flex-direction: column; gap: 4px; }
+    .hub-cat {
+      font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--brand-accent); font-weight: 700;
+    }
+    .hub-name {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 20px; font-weight: 700;
+      letter-spacing: -0.025em; color: var(--ink);
+    }
+    .hub-meta { font-size: 13px; color: var(--ink-soft); }
+    .hub-meta strong { color: var(--ink); font-weight: 600; }
+    .hub-stats {
+      display: flex; gap: 28px;
+    }
+    .hub-stat .num {
+      font-family: 'Inter Tight', sans-serif;
+      font-size: 22px; font-weight: 700;
+      letter-spacing: -0.03em; line-height: 1;
+      color: var(--brand-accent);
+    }
+    .hub-stat .label {
+      margin-top: 4px;
+      font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase;
+      color: var(--ink-mute); font-weight: 600;
+    }
+
+    /* page caption */
+    .page-caption {
+      position: fixed; bottom: 24px; left: 24px;
+      background: var(--ink); color: white;
+      font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase;
+      font-weight: 600;
+      padding: 8px 14px; border-radius: 999px; z-index: 100;
+    }
+    .page-caption .num { color: var(--pool); margin-right: 6px; }
+
+    .footer-pad { height: 80px; }
+  </style>
+</head>
+<body>
+
+  <!-- nav -->
+  <nav class="nav">
+    <div class="wm">PoolGo<span class="accent">.</span></div>
+    <div class="nav-tabs">
+      <a href="screen-cmd-showroom-pure.html" class="nav-tab">My Pool</a>
+      <a href="screen-care-pure.html" class="nav-tab">Care</a>
+      <a href="#" class="nav-tab active">Equipment</a>
+      <a href="screen-routines-pure.html" class="nav-tab">Routines</a>
+      <a href="screen-discover-pure.html" class="nav-tab">Folks</a>
+      <a href="screen-inbox-pure.html" class="nav-tab">Inbox</a>
+    </div>
+    <div class="nav-right">
+      <div class="nav-bell">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      </div>
+      <div class="nav-avatar">RK</div>
+    </div>
+  </nav>
+
+  <!-- header -->
+  <header class="header">
+    <div>
+      <h1>Equipment.</h1>
+      <p class="lede">Every device on, around, and inside The Big Blue. <strong>9 pieces of equipment, 3 brands, 2 connected via Wi-Fi.</strong> Each card carries the color of its maker, so you can tell at a glance who built what.</p>
+    </div>
+    <div class="header-stat-row">
+      <div class="header-stat">
+        <div class="num">9</div>
+        <div class="label">Total devices</div>
+      </div>
+      <div class="header-stat">
+        <div class="num">2</div>
+        <div class="label">Connected</div>
+      </div>
+      <div class="header-stat">
+        <div class="num">7y</div>
+        <div class="label">Avg age</div>
+      </div>
+      <div class="header-stat">
+        <div class="num">May 5</div>
+        <div class="label">Last service</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- filter chips -->
+  <div class="filter-bar">
+    <button class="chip active">All<span class="count">9</span></button>
+    <button class="chip">Pad<span class="count">4</span></button>
+    <button class="chip">In-pool<span class="count">3</span></button>
+    <button class="chip">Cleaners<span class="count">2</span></button>
+    <button class="chip">Connected<span class="count">2</span></button>
+    <span style="margin-left: auto; font-size: 12px; color: var(--ink-mute);">Sort · <strong style="color: var(--ink); font-weight: 600;">By Space</strong> · brand · age · last serviced</span>
+  </div>
+
+  <!-- AI summary -->
+  <section class="section">
+    <div class="ai-card">
+      <div class="ai-top">
+        <div class="ai-mark">P</div>
+        <div class="ai-meta">PoolGo concierge · equipment summary</div>
+      </div>
+      <p class="ai-body">Your IntelliFlo3 has run <strong>2,184 hours since install</strong>, well within its rated life. <mark>Filter PSI is creeping (16 → 18 over 30 days)</mark> — a backwash is suggested before next weekend. The Polaris robot's last cycle pulled 0.42 kWh, normal. No equipment alerts. The MasterTemp heater hasn't run in 11 days; Carlos noted the pilot is fine.</p>
+    </div>
+  </section>
+
+  <!-- Pad space -->
+  <section class="section">
+    <div class="space-bar">
+      <div class="space-title">
+        <span class="dot"></span>
+        Equipment pad
+        <span class="count">4 devices · all on the back wall</span>
+      </div>
+      <div class="right"><strong>Pentair</strong> · Hayward · Raypak</div>
+    </div>
+
+    <div class="eq-grid">
+
+      <!-- IntelliFlo3 pump -->
+      <div class="eq-card" data-brand="pentair">
+        <div class="eq-photo">
+          <span class="eq-state-badge"><span class="dot"></span>Running · 1,750 RPM</span>
+          <div class="eq-logo-tile"><img src="assets/pentair.jpg" alt="Pentair" /></div>
+          <img src="assets/intelliflo3.jpg" class="product" alt="Pentair IntelliFlo3" />
+        </div>
+        <div class="eq-info">
+          <div class="eq-cat">PUMP · VARIABLE-SPEED</div>
+          <h3 class="eq-name">IntelliFlo3 VSF</h3>
+          <div class="eq-stat-row">
+            <div class="eq-stat">
+              <div class="num">2.28</div>
+              <div class="label">kWh today</div>
+            </div>
+            <div class="eq-stat">
+              <div class="num">2,184</div>
+              <div class="label">hours total</div>
+            </div>
+            <div class="eq-stat">
+              <div class="num">18</div>
+              <div class="label">filter PSI</div>
+            </div>
+          </div>
+          <div class="eq-meta-row">
+            <span>Installed <strong>Mar 2024</strong> · <strong>Carlos</strong></span>
+            <button class="eq-cta">Open →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hayward filter -->
+      <div class="eq-card" data-brand="hayward">
+        <div class="eq-photo">
+          <span class="eq-state-badge warn"><span class="dot"></span>PSI climbing</span>
+          <div class="eq-logo-tile"><img src="assets/hayward.png" alt="Hayward" /></div>
+          <svg width="120" height="140" viewBox="0 0 120 140" style="position: relative; z-index: 2;">
+            <ellipse cx="60" cy="130" rx="44" ry="5" fill="rgba(15,17,21,0.12)"/>
+            <rect x="32" y="20" width="56" height="100" rx="28" fill="white" stroke="#D8A700" stroke-width="2"/>
+            <rect x="38" y="34" width="44" height="72" rx="22" fill="#FBF1D0"/>
+            <circle cx="60" cy="40" r="4" fill="#D8A700"/>
+            <text x="60" y="78" text-anchor="middle" font-family="Inter Tight" font-weight="800" font-size="11" fill="#8A6A1D" letter-spacing="0.05em">S270T</text>
+          </svg>
+        </div>
+        <div class="eq-info">
+          <div class="eq-cat">FILTER · SAND</div>
+          <h3 class="eq-name">Pro Series S270T</h3>
+          <div class="eq-stat-row">
+            <div class="eq-stat">
+              <div class="num">18</div>
+              <div class="label">PSI now</div>
+            </div>
+            <div class="eq-stat">
+              <div class="num">+2</div>
+              <div class="label">vs 30 d</div>
+            </div>
+            <div class="eq-stat">
+              <div class="num">42</div>
+              <div class="label">days since</div>
+            </div>
+          </div>
+          <div class="eq-meta-row">
+            <span>Backwash suggested · <strong>this weekend</strong></span>
+            <button class="eq-cta">Open →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MasterTemp heater -->
+      <div class="eq-card" data-brand="pentair">
+        <div class="eq-photo">
+          <span class="eq-state-badge idle"><span class="dot"></span>Idle · 11 d</span>
+          <div class="eq-logo-tile"><img src="assets/pentair.jpg" alt="Pentair" /></div>
+          <svg width="120" height="120" viewBox="0 0 120 120" style="position: relative; z-index: 2;">
+            <ellipse cx="60" cy="110" rx="42" ry="4" fill="rgba(15,17,21,0.12)"/>
+            <rect x="22" y="22" width="76" height="84" rx="6" fill="white" stroke="#1A4F8B" stroke-width="2"/>
+            <rect x="30" y="30" width="60" height="40" rx="3" fill="#E5ECF4"/>
+            <circle cx="38" cy="80" r="5" fill="#1A4F8B"/>
+            <circle cx="60" cy="80" r="5" fill="#1A4F8B" opacity="0.5"/>
+            <circle cx="82" cy="80" r="5" fill="#1A4F8B" opacity="0.5"/>
+            <text x="60" y="96" text-anchor="middle" font-family="Inter Tight" font-weight="800" font-size="9" fill="#1A4F8B" letter-spacing="0.06em">MASTERTEMP 400</text>
+          </svg>
+        </div>
+        <div class="eq-info">
+          <div class="eq-cat">HEATER · NATURAL GAS</div>
+          <h3 class="eq-name">MasterTemp 400</h3>
+          <div class="eq-stat-row">
+            <div class="eq-stat">
+              <div class="num">400k</div>
+              <div class="label">BTU rated</div>
+            </div>
+            <div class="eq-stat">
+              <div class="num">82°</div>
+              <div class="label">last set</div>
+            </div>
+            <div class="eq-stat">
+              <div class="num">11d</div>
+              <div class="label">since run</div>
+            </div>
+          </div>
+          <div class="eq-meta-row">
+            <span><strong>Carlos</strong> checked pilot · May 5</span>
+            <button class="eq-cta">Open →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pentair IntelliCenter automation -->
+      <div class="eq-card" data-brand="pentair">
+        <div class="eq-photo">
+          <span class="eq-state-badge"><span class="dot"></span>Online · Wi-Fi</span>
+          <div class="eq-logo-tile"><img src="assets/pentair.jpg" alt="Pentair" /></div>
+          <svg width="140" height="100" viewBox="0 0 140 100" style="position: relative; z-index: 2;">
+            <rect x="14" y="14" width="112" height="74" rx="8" fill="white" stroke="#1A4F8B" stroke-width="2"/>
+            <rect x="22" y="22" width="96" height="46" rx="3" fill="#0F1115"/>
+            <rect x="28" y="28" width="40" height="6" rx="1" fill="#1FA0BF"/>
+            <rect x="28" y="38" width="60" height="3" rx="1" fill="#45494F"/>
+            <rect x="28" y="44" width="48" height="3" rx="1" fill="#45494F"/>
+            <rect x="28" y="50" width="72" height="3" rx="1" fill="#1A4F8B"/>
+            <rect x="28" y="56" width="32" height="3" rx="1" fill="#45494F"/>
+            <circle cx="40" cy="78" r="3" fill="#2A8540"/>
+            <circle cx="55" cy="78" r="3" fill="#1A4F8B"/>
+            <circle cx="70" cy="78" r="3" fill="#1A4F8B"/>
+          </svg>
+        </div>
+        <div class="eq-info">
+          <div class="eq-cat">AUTOMATION · 8-CIRCUIT</div>
+          <h3 class="eq-name">IntelliCenter</h3>
+          <div class="eq-stat-row">
+            <div class="eq-stat">
+              <div class="num">8</div>
+              <div class="label">circuits</div>
+            </div>
+            <div class="eq-stat">
+              <div class="num">3</div>
+              <div class="label">schedules</div>
+            </div>
+            <div class="eq-stat">
+              <div class="num">99%</div>
+              <div class="label">uptime 30d</div>
+            </div>
+          </div>
+          <div class="eq-meta-row">
+            <span>Firmware <strong>2.04</strong> · last sync 2m ago</span>
+            <button class="eq-cta">Open →</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- In-Pool space -->
+  <section class="section">
+    <div class="space-bar">
+      <div class="space-title">
+        <span class="dot"></span>
+        In-pool
+        <span class="count">3 devices · cell, light, skimmer</span>
+      </div>
+      <div class="right"><strong>Pentair</strong> + integrated</div>
+    </div>
+
+    <div class="eq-grid">
+
+      <!-- IC40 salt cell -->
+      <div class="eq-card" data-brand="pentair">
+        <div class="eq-photo">
+          <span class="eq-state-badge"><span class="dot"></span>Producing · 3.2k ppm</span>
+          <div class="eq-logo-tile"><img src="assets/pentair.jpg" alt="Pentair" /></div>
+          <svg width="160" height="80" viewBox="0 0 160 80" style="position: relative; z-index: 2;">
+            <rect x="20" y="22" width="120" height="34" rx="3" fill="white" stroke="#1A4F8B" stroke-width="2"/>
+            <rect x="30" y="30" width="100" height="18" rx="1" fill="#E2F3F8"/>
+            <line x1="40" y1="30" x2="40" y2="48" stroke="#1A4F8B" stroke-width="1"/>
+            <line x1="50" y1="30" x2="50" y2="48" stroke="#1A4F8B" stroke-width="1"/>
+            <line x1="60" y1="30" x2="60" y2="48" stroke="#1A4F8B" stroke-width="1"/>
+            <line x1="70" y1="30" x2="70" y2="48" stroke="#1A4F8B" stroke-width="1"/>
+            <line x1="80" y1="30" x2="80" y2="48" stroke="#1A4F8B" stroke-width="1"/>
+            <line x1="90" y1="30" x2="90" y2="48" stroke="#1A4F8B" stroke-width="1"/>
+            <line x1="100" y1="30" x2="100" y2="48" stroke="#1A4F8B" stroke-width="1"/>
+            <line x1="110" y1="30" x2="110" y2="48" stroke="#1A4F8B" stroke-width="1"/>
+            <line x1="120" y1="30" x2="120" y2="48" stroke="#1A4F8B" stroke-width="1"/>
+            <text x="80" y="68" text-anchor="middle" font-family="Inter Tight" font-weight="800" font-size="9" fill="#1A4F8B" letter-spacing="0.05em">IC40 SALT CELL</text>
+          </svg>
+        </div>
+        <div class="eq-info">
+          <div class="eq-cat">SALT CELL · 40K GAL RATED</div>
+          <h3 class="eq-name">IntelliChlor IC40</h3>
+          <div class="eq-stat-row">
+            <div class="eq-stat">
+              <div class="num">3.2k</div>
+              <div class="label">salt ppm</div>
+            </div>
+            <div class="eq-stat">
+              <div class="num">85%</div>
+              <div class="label">output</div>
+            </div>
+            <div class="eq-stat">
+              <div class="num">3,400</div>
+              <div class="label">hours used</div>
+            </div>
+          </div>
+          <div class="eq-meta-row">
+            <span><strong>Carlos</strong> photo · no scale</span>
+            <button class="eq-cta">Open →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- IntelliBrite light -->
+      <div class="eq-card" data-brand="pentair">
+        <div class="eq-photo">
+          <span class="eq-state-badge idle"><span class="dot"></span>Off · last on Sat</span>
+          <div class="eq-logo-tile"><img src="assets/pentair.jpg" alt="Pentair" /></div>
+          <svg width="100" height="100" viewBox="0 0 100 100" style="position: relative; z-index: 2;">
+            <ellipse cx="50" cy="92" rx="36" ry="3" fill="rgba(15,17,21,0.12)"/>
+            <circle cx="50" cy="48" r="34" fill="white" stroke="#1A4F8B" stroke-width="2"/>
+            <circle cx="50" cy="48" r="26" fill="#E2F3F8"/>
+            <circle cx="50" cy="48" r="18" fill="#1FA0BF" opacity="0.7"/>
+            <circle cx="50" cy="48" r="8" fill="white" opacity="0.5"/>
+          </svg>
+        </div>
+        <div class="eq-info">
+          <div class="eq-cat">LIGHT · LED COLOR-CHANGE</div>
+          <h3 class="eq-name">IntelliBrite 5G</h3>
+          <div class="eq-stat-row">
+            <div class="eq-stat">
+              <div class="num">5</div>
+              <div class="label">colors</div>
+            </div>
+            <div class="eq-stat">
+              <div class="num">42W</div>
+              <div class="label">draw</div>
+            </div>
+            <div class="eq-stat">
+              <div class="num">4y</div>
+              <div class="label">install age</div>
+            </div>
+          </div>
+          <div class="eq-meta-row">
+            <span>Last used <strong>Saturday</strong> · cyan</span>
+            <button class="eq-cta">Open →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skimmer (no telemetry) -->
+      <div class="eq-card">
+        <div class="eq-photo">
+          <span class="eq-state-badge"><span class="dot"></span>Last cleaned · today</span>
+          <svg width="120" height="120" viewBox="0 0 120 120" style="position: relative; z-index: 2;">
+            <ellipse cx="60" cy="100" rx="40" ry="4" fill="rgba(15,17,21,0.12)"/>
+            <rect x="30" y="20" width="60" height="76" rx="6" fill="white" stroke="#6B7079" stroke-width="2"/>
+            <rect x="38" y="28" width="44" height="38" rx="3" fill="#FAFAFA"/>
+            <line x1="38" y1="36" x2="82" y2="36" stroke="#D8D8D8" stroke-width="1"/>
+            <line x1="38" y1="44" x2="82" y2="44" stroke="#D8D8D8" stroke-width="1"/>
+            <line x1="38" y1="52" x2="82" y2="52" stroke="#D8D8D8" stroke-width="1"/>
+            <rect x="48" y="74" width="24" height="14" rx="2" fill="#0F1115"/>
+          </svg>
+        </div>
+        <div class="eq-info">
+          <div class="eq-cat">SKIMMER · STANDARD</div>
+          <h3 class="eq-name">Skimmer basket</h3>
+          <div class="eq-stat-row">
+            <div class="eq-stat">
+              <div class="num">0</div>
+              <div class="label">leaves now</div>
+            </div>
+            <div class="eq-stat">
+              <div class="num">2x</div>
+              <div class="label">/ week clean</div>
+            </div>
+            <div class="eq-stat">
+              <div class="num">11y</div>
+              <div class="label">install age</div>
+            </div>
+          </div>
+          <div class="eq-meta-row">
+            <span><strong>Carlos</strong> emptied today</span>
+            <button class="eq-cta">Open →</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Cleaners space -->
+  <section class="section">
+    <div class="space-bar">
+      <div class="space-title">
+        <span class="dot"></span>
+        Cleaners
+        <span class="count">2 devices · run on schedule</span>
+      </div>
+      <div class="right"><strong>Polaris</strong> · Hayward</div>
+    </div>
+
+    <div class="eq-grid">
+
+      <!-- Polaris VRX robot -->
+      <div class="eq-card" data-brand="polaris">
+        <div class="eq-photo">
+          <span class="eq-state-badge"><span class="dot"></span>Idle · cycle 4 PM</span>
+          <div class="eq-logo-tile"><img src="assets/polaris.png" alt="Polaris" /></div>
+          <svg width="140" height="100" viewBox="0 0 140 100" style="position: relative; z-index: 2;">
+            <ellipse cx="70" cy="92" rx="50" ry="4" fill="rgba(15,17,21,0.12)"/>
+            <rect x="22" y="32" width="96" height="48" rx="14" fill="white" stroke="#00759C" stroke-width="2"/>
+            <rect x="34" y="40" width="72" height="22" rx="4" fill="#DCEDF4"/>
+            <rect x="40" y="46" width="60" height="3" rx="1" fill="#00759C"/>
+            <rect x="40" y="52" width="44" height="3" rx="1" fill="#00759C" opacity="0.6"/>
+            <circle cx="38" cy="78" r="8" fill="#0F1115"/>
+            <circle cx="38" cy="78" r="4" fill="#3A4248"/>
+            <circle cx="102" cy="78" r="8" fill="#0F1115"/>
+            <circle cx="102" cy="78" r="4" fill="#3A4248"/>
+          </svg>
+        </div>
+        <div class="eq-info">
+          <div class="eq-cat">ROBOT · ELECTRIC</div>
+          <h3 class="eq-name">VRX iQ+</h3>
+          <div class="eq-stat-row">
+            <div class="eq-stat">
+              <div class="num">0.42</div>
+              <div class="label">kWh / cycle</div>
+            </div>
+            <div class="eq-stat">
+              <div class="num">2.5h</div>
+              <div class="label">runtime</div>
+            </div>
+            <div class="eq-stat">
+              <div class="num">3y</div>
+              <div class="label">install age</div>
+            </div>
+          </div>
+          <div class="eq-meta-row">
+            <span>Schedule <strong>M / W / F</strong> · 4 PM</span>
+            <button class="eq-cta">Open →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hayward Aqua Clear -->
+      <div class="eq-card" data-brand="hayward">
+        <div class="eq-photo">
+          <span class="eq-state-badge idle"><span class="dot"></span>Stored · backup</span>
+          <div class="eq-logo-tile"><img src="assets/hayward.png" alt="Hayward" /></div>
+          <svg width="140" height="100" viewBox="0 0 140 100" style="position: relative; z-index: 2;">
+            <ellipse cx="70" cy="92" rx="50" ry="4" fill="rgba(15,17,21,0.12)"/>
+            <path d="M 30 80 L 30 50 L 50 30 L 90 30 L 110 50 L 110 80 Z" fill="white" stroke="#D8A700" stroke-width="2"/>
+            <rect x="44" y="46" width="52" height="22" rx="3" fill="#FBF1D0"/>
+            <text x="70" y="62" text-anchor="middle" font-family="Inter Tight" font-weight="800" font-size="9" fill="#8A6A1D" letter-spacing="0.05em">AQUA CLEAR</text>
+          </svg>
+        </div>
+        <div class="eq-info">
+          <div class="eq-cat">CLEANER · SUCTION-SIDE</div>
+          <h3 class="eq-name">Aqua Clear</h3>
+          <div class="eq-stat-row">
+            <div class="eq-stat">
+              <div class="num">—</div>
+              <div class="label">running</div>
+            </div>
+            <div class="eq-stat">
+              <div class="num">8y</div>
+              <div class="label">install age</div>
+            </div>
+            <div class="eq-stat">
+              <div class="num">backup</div>
+              <div class="label">role</div>
+            </div>
+          </div>
+          <div class="eq-meta-row">
+            <span>Stored in pump shed · <strong>spare</strong></span>
+            <button class="eq-cta">Open →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- placeholder add device -->
+      <div class="eq-card" style="border: 1.5px dashed var(--line); background: var(--surface);">
+        <div class="eq-photo" style="background: var(--surface); border-bottom: 1.5px dashed var(--line);">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#6B7079" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+        </div>
+        <div class="eq-info" style="align-items: center; text-align: center;">
+          <div class="eq-cat" style="color: var(--ink-mute);">ADD DEVICE</div>
+          <h3 class="eq-name" style="color: var(--ink-soft);">Connect more equipment</h3>
+          <p style="font-size: 13px; color: var(--ink-mute); margin: 0;">Pentair, Hayward, Polaris and 14 other brands. Manual entry also fine.</p>
+          <button class="eq-cta" style="margin-top: 8px;">Add device →</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Connected hub -->
+  <section class="section">
+    <div class="section-head">
+      <h2 class="section-title">Connected to the cloud</h2>
+      <span class="section-meta"><strong>2 of 9 devices</strong> are reporting telemetry</span>
+    </div>
+
+    <div class="hub-card" data-brand="pentair">
+      <div class="hub-mark"><img src="assets/pentair.jpg" alt="Pentair" /></div>
+      <div class="hub-body">
+        <div class="hub-cat">CLOUD HUB · WI-FI 5</div>
+        <div class="hub-name">Pentair Home — IntelliCenter bridge</div>
+        <div class="hub-meta"><strong>IntelliFlo3</strong> and <strong>IC40 salt cell</strong> are reporting through this hub. The Hayward filter and Polaris VRX run locally.</div>
+      </div>
+      <div class="hub-stats">
+        <div class="hub-stat">
+          <div class="num">2m</div>
+          <div class="label">last sync</div>
+        </div>
+        <div class="hub-stat">
+          <div class="num">99%</div>
+          <div class="label">uptime 30d</div>
+        </div>
+        <div class="hub-stat">
+          <div class="num">2.04</div>
+          <div class="label">firmware</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer-pad"></div>
+
+  <div class="page-caption"><span class="num">EQUIPMENT</span> · SHOWROOM · PURE BRAND APPLIED TO EQUIPMENT</div>
+
+</body>
+</html>
